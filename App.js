@@ -1,21 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { navigationRef } from './src/helpers/navigator';
+import { AppRegistry } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as StoreProvider } from 'react-redux';
+import { name as appName } from './app.json';
+import store from './src/store';
+import Navigator from './src/navigator';
+import Alert from './src/components/Alert';
+import theme from './src/theme';
 
-export default function App() {
+export default function Main() {
+
+  
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <StoreProvider store={store}>
+      <PaperProvider>
+        <NavigationContainer ref={navigationRef} theme={theme}>
+          <Navigator />
+          <Alert />
+        </NavigationContainer>
+      </PaperProvider>
+    </StoreProvider>
+    
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+AppRegistry.registerComponent(appName, () => Main);
