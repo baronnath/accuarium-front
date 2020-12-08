@@ -7,8 +7,8 @@ import { theme } from '../theme';
 
 type Props = React.ComponentProps<typeof Input> & { errorText?: string };
 
-const TextInput = ({ errorText, ...props }: Props) => (
-  <View style={styles.container}>
+const TextInput = ({ errorText, style, ...props }: Props) => (
+  <View style={[styles.container, style]}>
     <Input
       style={styles.input}
       selectionColor={theme.colors.primary}

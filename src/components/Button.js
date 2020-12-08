@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 10,
     backgroundColor: theme.colors.primary,
+    justifyContent: 'center',
   },
   label: {
     color: theme.colors.surface,

@@ -7,6 +7,7 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker } from 'react-native';
 import { ToggleButton } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -14,6 +15,7 @@ import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from '../../../components/SpeciesCard';
+import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
@@ -25,6 +27,7 @@ export default function AddSpecies({ navigation }) {
   const [page, setPage] = useState(0);
   const [types, setTypes] = useState(null);
   const [families, setFamilies] = useState(null);
+  const [groups, setGroups] = useState(null);
   const [depths, setDepths] = useState(null);
   const [behaviors, setBehaviors] = useState(null);
   const [feeds, setFeeds] = useState(null);
@@ -35,17 +38,31 @@ export default function AddSpecies({ navigation }) {
       image: null,
       name: null,
       otherNames: [],
+      type: null,
       family: null,
+      group: null,
+      minTemperature: null,
+      maxTemperature: null,
+      minPh: null,
+      maxPh: null,
+      miDPh: null,
+      maxDh: null,
     },
     errors:{
       image: null,
       name: null,
-      otherNames: [],
+      otherNames: null,
       type: null,
       family: null,
+      group: null,
+      minTemperature: null,
+      maxTemperature: null,
+      minDh: null,
+      maxDh: null,
     }
   }
   const [species, setSpecies] = useState(defaultSpecies);
+  const [otherName, setOtherName] = useState(null);
   const dispatch = useDispatch();
    
   useEffect(() => {
@@ -54,7 +71,7 @@ export default function AddSpecies({ navigation }) {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          dispatch(alertActions.error('Sorry, we need camera roll permissions to make this work!'));
         }
       }
     }
@@ -78,6 +95,15 @@ export default function AddSpecies({ navigation }) {
           handleAlert(err)
       });
 
+    // Get groups
+    axios.get(backend.url + '/groups')
+      .then(res => {
+          setGroups(res.data.groups);
+      })
+      .catch(err => {
+          handleAlert(err)
+      });
+
     // Get depth
     axios.get(backend.url + '/depths')
       .then(res => {
@@ -96,7 +122,7 @@ export default function AddSpecies({ navigation }) {
           handleAlert(err);          
       });
 
-      // Get feeds
+    // Get feeds
     axios.get(backend.url + '/feeds')
       .then(res => {
           setFeeds(res.data.feeds);
@@ -116,16 +142,47 @@ export default function AddSpecies({ navigation }) {
     }));
   }
 
+  function addTag(field, value) {
+    if(value && value.length){
+      setSpecies(prevSpecies => ({
+        ...prevSpecies,
+        values: { 
+          ...prevSpecies.values,
+          [field]: prevSpecies.values[field].concat(value)
+        }
+      }));
+      setOtherName(null);
+    }
+  }
+
+  function removeTag(field, name) {
+    console.log('remove');
+    let array = [...species.values[field]]; // make a separate copy of the array
+    let index = array.indexOf(name)
+    if (index !== -1) {
+      array.splice(index, 1);
+      setSpecies(prevSpecies => ({
+        ...prevSpecies,
+        values: { 
+          ...prevSpecies.values,
+          [field]: array
+        }
+      }));
+    }
+  }
+
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.cancelled) {
-      handleChange('image', result.uri);
+      handleChange('image', result);
     }
 
   };
@@ -138,81 +195,27 @@ export default function AddSpecies({ navigation }) {
         ...prevSpecies,
         errors: {
           name: validation.name,
+          minTemperature: validation.minTemperature,
+          maxTemperature: validation.maxTemperature,
+          minPh: validation.minPh,
+          maxPh: validation.maxPh,
+          minDh: validation.minDh,
+          maxDh: validation.maxDh,
         }
       }));
 
       return;
     }
 
-    let formData = new FormData();
-
-    formData.append('name', species.values.name);
-    formData.append('typeId', species.values.type);
-    formData.append('familyId', species.values.family);
-    
-    // Infer the type of the image
-    if(species.values.image){
-      let fileName = species.values.image.split('/').pop();
-      let match = /\.(\w+)$/.exec(fileName);
-      let fileType = match ? `image/${match[1]}` : `image`;
-      formData.append('image', {
-        uri: Platform.OS === 'android' ? species.values.image : species.values.image.replace('file://', ''),
-        name: species.values.name,
-        type: fileType,
-      });
-    }
-
-    axios
-      .post(backend.url + '/species', formData, {
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'multipart/form-data',
-              'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjVlOGNkZDNiODI5NjUyMzQ2NGM3NDYxYSIsImVtYWlsIjoiYWRtaW5AZGlvbG9neS5pbyIsIm5hbWUiOiJBZG1pbiIsInJvbGUiOnsiaWQiOiI1ZThjZGQzYjgyOTY1MjM0NjRjNzQ2MGUiLCJuYW1lIjoiYWRtaW4ifX0sImlhdCI6MTYwMjI4NzI3OCwiZXhwIjoxNjA0ODc5Mjc4fQ.c8NSjzVPlagHquv6PTXS5mEK4XUbbgepd8u75MYgnE4",
-          },
-
-      })
-      .catch(error => {
-          throw error;
-      });
-
-    var myHeaders = new Headers();
-
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Content-Type", "multipart/form-data");
-    myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjVlOGNkZDNiODI5NjUyMzQ2NGM3NDYxYSIsImVtYWlsIjoiYWRtaW5AZGlvbG9neS5pbyIsIm5hbWUiOiJBZG1pbiIsInJvbGUiOnsiaWQiOiI1ZThjZGQzYjgyOTY1MjM0NjRjNzQ2MGUiLCJuYW1lIjoiYWRtaW4ifX0sImlhdCI6MTYwMjQ2Njc2MSwiZXhwIjoxNjA1MDU4NzYxfQ.0sBn38ErtgnNkE_JN908yisLMRqC44-51zYP6osOVo4");
-
-
-    // axios.defaults.headers['Content-Type'] = 'multipart/form-data';
-    // axios.defaults.headers['Content-Type'] = `multipart/form-data; boundary=${formData._boundary}`;
-    // axios.post(backend.url + '/species', formData, { 
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "multipart/form-data",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "POST",
-    //     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    //     "Access-Control-Allow-Credentials": "true",
-    //   }
-    // })
-
-    // axios.post(backend.url + '/species', formData, { headers: { 'Content-Type': `multipart/form-data; boundary=${formData._boundary}` }})
-//     fetch(backend.url + '/species', {
-//   method: 'POST',
-//   headers: myHeaders,
-//   body: formData,
-//   redirect: 'follow'
-// })
-    // .then(res => {
-    //   console.log(res);
-    //   dispatch(alertActions.success(res.data.message));
-    //   setSpecies(defaultSpecies);
-    //   navigation.navigate('Livestock');
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    //   handleAlert(err);  
-    //   setLoading(false);
-    // });
+    axios.post(backend.url + '/species', species.values)
+    .then(res => {
+      dispatch(alertActions.success(res.data.message));
+      setSpecies(defaultSpecies);
+      navigation.navigate('Livestock');
+    })
+    .catch(err => {
+      handleAlert(err);  
+    });
   }
 
   function handleAlert(err){
@@ -224,75 +227,216 @@ export default function AddSpecies({ navigation }) {
   }
 
   return (
-    <Background justify="top">
-      <MenuButton />
-      <Header>
-        New species
-      </Header>
+    <KeyboardAwareScrollView
+      resetScrollToCoords={{x:0, y:0}}
+    >
+      <Background justify="top">
+        <MenuButton />
+        <Header>
+          New species
+        </Header>
 
-      <View style={styles.toggleContainer}>
-        { !types ?
-            <Spinner />
-          :
-            types.map(type => {     
-              return (
-                <ToggleButton
-                  icon={type.icon}xºx
-                  value={type._id}
-                  onPress={() => handleChange('type', type._id)}
-                  status={species.values.type == type._id ? 'checked' : 'unchecked'}
-                  style={styles.toggleButton}
-                  theme={theme}
-                  color={species.values.type == type._id ? theme.colors.primary : theme.colors.lightText}
-                  size={40}
-                />
-              )
-            })
-        }
-      </View>
+        <View style={styles.toggleContainer}>
+          { !types ?
+              <Spinner />
+            :
+              types.map(type => {     
+                return (
+                  <ToggleButton
+                    icon={type.icon}xºx
+                    value={type._id}
+                    onPress={() => handleChange('type', type._id)}
+                    status={species.values.type == type._id ? 'checked' : 'unchecked'}
+                    style={styles.toggleButton}
+                    theme={theme}
+                    color={species.values.type == type._id ? theme.colors.primary : theme.colors.lightText}
+                    size={40}
+                  />
+                )
+              })
+          }
+        </View>
 
-      <TextInput
-        label="Name"
-        name="name"
-        returnKeyType="next"
-        value={species.values.name}
-        onChangeText={(name) => handleChange('name', name)}
-        error={!!species.errors.name}
-        errorText={species.errors.name}
-        autoCapitalize="none"
-        autofill="name"
-      />
+        <TextInput
+          label="Name"
+          name="name"
+          returnKeyType="next"
+          value={species.values.name}
+          onChangeText={(name) => handleChange('name', name)}
+          error={!!species.errors.name}
+          errorText={species.errors.name}
+          autoCapitalize="none"
+          autofill="name"
+        />
 
-      <View style={styles.pickerContainer}>
-        { !families ?
-            <Spinner />
-          :
-            <Picker
-              selectedValue={species.values.family}
-              style={
-                styles.picker,
-                species.values.family ? { color: theme.colors.text } : { color: theme.colors.placeholder }
-              }
-              itemStyle={styles.itemPicker}
-              onValueChange={(family) => handleChange('family', family)}
-            >
-              <Picker.Item label="Select family" value={null} />
-              {
-                families.map(family => {    
-                  return (
-                    <Picker.Item label={ucFirst(family.name)} value={family._id} />
-                  )
-                })
-              }
-            </Picker>
-        }
-      </View>
+        <View style={styles.tagContainer}>
+          { species.values.otherNames &&
+            species.values.otherNames.map(name => {
+                return (
+                  <Tag onClose={() => removeTag('otherNames', name)}>{name}</Tag>
+                )
+              })
+          }
+        </View>
 
-      { species.values.image && <Image source={{ uri: species.values.image }} style={{ width: 200, height: 200 }} /> }
-      <Button onPress={pickImage} >Pick an image</Button>
-      <Button onPress={onSubmit} >Send</Button>
+        <View style={styles.inputRow}>
+          <TextInput
+            label="Another name"
+            name="otherName"
+            returnKeyType="next"
+            value={otherName}
+            onChangeText={(otherNames) => setOtherName(otherNames)}
+            autoCapitalize="none"
+            style={{flex:9, marginRight: 4, marginTop: 0}}
+          />
+          <Button
+            style={{flex: 1, marginTop: 6, marginBottom: 12, marginLeft: 4}}
+            onPress={() => addTag('otherNames', otherName)}
+          >Add</Button>
+        </View>
 
-    </Background>
+        <View style={styles.pickerContainer}>
+          { !families ?
+              <Spinner />
+            :
+              <Picker
+                selectedValue={species.values.family}
+                style={
+                  styles.picker,
+                  species.values.family ? { color: theme.colors.text } : { color: theme.colors.placeholder }
+                }
+                itemStyle={styles.itemPicker}
+                onValueChange={(family) => handleChange('family', family)}
+              >
+                <Picker.Item label="Select family" value={null} />
+                {
+                  families.map(family => {    
+                    return (
+                      <Picker.Item label={ucFirst(family.name)} value={family._id} />
+                    )
+                  })
+                }
+              </Picker>
+          }
+        </View>
+
+        <View style={styles.pickerContainer}>
+          { !groups ?
+              <Spinner />
+            :
+              <Picker
+                selectedValue={species.values.group}
+                style={
+                  styles.picker,
+                  species.values.group ? { color: theme.colors.text } : { color: theme.colors.placeholder }
+                }
+                itemStyle={styles.itemPicker}
+                onValueChange={(group) => handleChange('group', group)}
+              >
+                <Picker.Item label="Select group" value={null} />
+                {
+                  groups.map(group => {    
+                    return (
+                      <Picker.Item label={ucFirst(group.name)} value={group._id} />
+                    )
+                  })
+                }
+              </Picker>
+          }
+        </View>
+
+        { species.values.image && <Image source={{ uri: species.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} /> }
+        <Button onPress={pickImage} >Pick an image</Button>
+
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap}>
+            <TextInput
+              style={styles.inputLeft}
+              label="Min. temperature"
+              name="minTemperature"
+              returnKeyType="next"
+              value={species.values.minTemperature}
+              onChangeText={(minTemperature) => handleChange('minTemperature', minTemperature)}
+              error={!!species.errors.minTemperature}
+              errorText={species.errors.minTemperature}
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputRight}
+              label="Max. temperature"
+              name="maxTemperature"
+              returnKeyType="next"
+              value={species.values.maxTemperature}
+              onChangeText={(maxTemperature) => handleChange('maxTemperature', maxTemperature)}
+              error={!!species.errors.maxTemperature}
+              errorText={species.errors.maxTemperature}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap}>
+            <TextInput
+              style={styles.inputLeft}
+              label="Min. pH"
+              name="minPh"
+              returnKeyType="next"
+              value={species.values.minPh}
+              onChangeText={(minPh) => handleChange('minPh', minPh)}
+              error={!!species.errors.minPh}
+              errorText={species.errors.minPh}
+              autoCapitalize="none"
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputRight}
+              label="Max. pH"
+              name="maxPh"
+              returnKeyType="next"
+              value={species.values.maxPh}
+              onChangeText={(maxPh) => handleChange('maxPh', maxPh)}
+              error={!!species.errors.maxPh}
+              errorText={species.errors.maxPh}
+              autoCapitalize="none"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap}>
+            <TextInput
+              style={styles.inputLeft}
+              label="Min. dH"
+              name="minDh"
+              returnKeyType="next"
+              value={species.values.minDh}
+              onChangeText={(minDh) => handleChange('minDh', minDh)}
+              error={!!species.errors.minDh}
+              errorText={species.errors.minDh}
+              autoCapitalize="none"
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputRight}
+              label="Max. dH"
+              name="maxDh"
+              returnKeyType="next"
+              value={species.values.maxDh}
+              onChangeText={(maxDh) => handleChange('maxDh', maxDh)}
+              error={!!species.errors.maxDh}
+              errorText={species.errors.maxDh}
+              autoCapitalize="none"
+            />
+          </View>
+        </View>
+
+        <Button onPress={onSubmit} >Send</Button>
+
+      </Background>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -329,5 +473,33 @@ const styles = StyleSheet.create({
   },
   itemPicker: {
 
+  },
+  inputRow: {
+    width: '100%',
+    flexDirection: 'row',
+    marginBottom: 0,
+  },
+  inputWrap: {
+    marginBottom: 0,
+    flex: 1,
+  },
+  inputLeft: {
+    marginTop: 0,
+    marginBottom: 8,
+    paddingRight: 4,
+  },
+  inputRight: {
+    marginTop: 0,
+    marginBottom: 8,    
+    paddingLeft: 4,
+  },
+  tagContainer: {
+    flex:1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    borderTopColor: theme.colors.lightText,
+    borderTopWidth: 1,
+    paddingTop: 8,
+    width: '100%',
   }
 });

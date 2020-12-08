@@ -32,7 +32,7 @@
     }
   },
   "backend": {
-    "url": "http://192.168.0.17:8080"
+    "url": "http://192.168.0.19:8080"
   },
   "preferences": {
     "pagination": 10

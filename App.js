@@ -13,7 +13,9 @@ import theme from './src/theme';
 
 export default function Main() {
 
-  
+  // // Network calls debugger
+  // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
+  // global.FormData = global.originalFormData ? global.originalFormData : global.FormData;
 
   return (
     <StoreProvider store={store}>

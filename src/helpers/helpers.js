@@ -10,3 +10,15 @@ exports.isObject = (input) => {
 exports.ucFirst = (string) =>  {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+// Check integer
+exports.isInteger = (string) => {
+	return /^\d+$/.test(string);
+}
+
+// Check for decimal with max 2 digits
+exports.isDecimal = (string) => {
+	return /^\d+(\.\d{1,2})?$/.test(string);
+}
+
+
