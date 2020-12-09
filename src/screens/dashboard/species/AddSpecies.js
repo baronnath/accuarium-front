@@ -156,7 +156,6 @@ export default function AddSpecies({ navigation }) {
   }
 
   function removeTag(field, name) {
-    console.log('remove');
     let array = [...species.values[field]]; // make a separate copy of the array
     let index = array.indexOf(name)
     if (index !== -1) {
@@ -170,7 +169,6 @@ export default function AddSpecies({ navigation }) {
       }));
     }
   }
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

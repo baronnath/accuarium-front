@@ -18,7 +18,6 @@ import {
   DrawerContentScrollView,
   DrawerItem
 } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { actions as userActions } from '../../ducks/user';
 
@@ -64,7 +63,7 @@ function DrawerContent(props) {
                   <Drawer.Section style={styles.drawerSection}>
                       <DrawerItem 
                           icon={({color, size}) => (
-                              <Icon 
+                              <MaterialCommunityIcons 
                               name="card-bulleted-settings-outline" 
                               color={color}
                               size={size}
@@ -75,7 +74,7 @@ function DrawerContent(props) {
                       />
                       <DrawerItem 
                           icon={({color, size}) => (
-                              <Icon 
+                              <MaterialCommunityIcons 
                               name="fishbowl-outline" 
                               color={color}
                               size={size}
@@ -86,19 +85,19 @@ function DrawerContent(props) {
                       />
                       <DrawerItem 
                           icon={({color, size}) => (
-                              <Icon 
+                              <MaterialCommunityIcons 
                               type="MaterialCommunityIcons"
                               name="shaker-outline" 
                               color={color}
                               size={size}
                               />
                           )}
-                          label="New spcies"
+                          label="New species auh"
                           onPress={() => {props.navigation.navigate('AddSpecies')}}
                       />
                       <DrawerItem 
                           icon={({color, size}) => (
-                              <Icon 
+                              <MaterialCommunityIcons 
                               name="settings-outline" 
                               color={color}
                               size={size}
@@ -109,7 +108,7 @@ function DrawerContent(props) {
                       />
                       <DrawerItem 
                           icon={({color, size}) => (
-                              <Icon 
+                              <MaterialCommunityIcons 
                               name="account-check-outline" 
                               color={color}
                               size={size}
@@ -134,7 +133,7 @@ function DrawerContent(props) {
           <Drawer.Section style={styles.bottomDrawerSection}>
               <DrawerItem 
                   icon={({color, size}) => (
-                      <Icon 
+                      <MaterialCommunityIcons 
                       name="exit-to-app" 
                       color={color}
                       size={size}
