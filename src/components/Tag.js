@@ -6,20 +6,38 @@ import { Chip } from 'react-native-paper';
 import { theme } from '../theme';
 
 const Tag = ({callback, onClose, style, children, ...props}) => {
-  return (
-    <Chip
-      mode="outlined"
-      onPress={() => callback()}
-      onClose={() => onClose()} 
-      {...props}
-    >
-      {children}
-    </Chip>
-  );
+  if(!callback)
+    callback = () => {};
+
+  if(onClose){
+    return (
+      <Chip
+       style={[style, styles.chip]}
+        mode="outlined"
+        onClose={() => onClose()} 
+        onPress={() => callback()}
+        {...props}
+      >
+        {children}
+      </Chip>
+    );
+  }else{
+    return (
+      <Chip
+       style={[style, styles.chip]}
+        mode="outlined"
+        onPress={() => callback()}
+        {...props}
+      >
+        {children}
+      </Chip>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  chip: {
+    marginRight: 2,
   },
 });
 

@@ -7,8 +7,9 @@ import { axios }from '../../helpers/axios';
 import { ucFirst } from '../../helpers/helpers';
 import { backend } from '../../../app.json';
 import { Text, StyleSheet, View, ScrollView, Pressable } from 'react-native';
-import { DataTable, FAB, Portal, Provider } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { DataTable } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Fab from './Fab';
 import Background from '../../components/Background';
 import Header from '../../components/Header';
 import MenuButton from '../../components/MenuButton';
@@ -36,14 +37,9 @@ export default function Livestock({ navigation }) {
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const dispatch = useDispatch();
-  const [fab, setFab] = useState(false);
 
   const from = Math.min((page * preferences.pagination) + 1, totalResults);
   const to = Math.min((page + 1) * preferences.pagination, totalResults);
-
-  const onChangeFab = ({open}) => {
-    setFab(open);
-  }
 
   let timeout;
   const onChangeSearch = searchKey => {
@@ -96,6 +92,10 @@ export default function Livestock({ navigation }) {
       });
   }
 
+  function onRowPress(speciesId){
+    navigation.navigate('Species', {speciesId: speciesId});
+  }
+
   function handleAlert(err){
     let message;
     err.response
@@ -111,6 +111,7 @@ export default function Livestock({ navigation }) {
         <Header>
           Livestock
         </Header>
+        
         <Searchbar
           placeholder="Search"
           onChangeText={searchKey => onChangeSearch(searchKey)}
@@ -141,19 +142,25 @@ export default function Livestock({ navigation }) {
                   results.map(species => {     
                     return (
                       <DataTable.Row>
-                        <DataTable.Cell style={styles.columnFirst}>
+                        <DataTable.Cell
+                          style={styles.columnFirst}
+                          onPress={() => onRowPress(species._id)}
+                        >
                           <Text>
                             {species.name}
                           </Text>
                         </DataTable.Cell>
-                        <DataTable.Cell style={styles.columnSecond}>
+                        <DataTable.Cell
+                          style={styles.columnSecond}
+                          onPress={() => onRowPress(species._id)}
+                        >
                           <Text>
                             {species.family ? ucFirst(species.family.name) : '-'}
                           </Text>
                         </DataTable.Cell>
                         <DataTable.Cell style={styles.columnActions}>
-                          <Icon name="pencil-outline" size={24} />
-                          <Icon name="delete-outline" color={theme.colors.secondary} size={24} />
+                          <MaterialCommunityIcons name="pencil-outline" size={24} />
+                          <MaterialCommunityIcons name="delete-outline" color={theme.colors.secondary} size={24} />
                         </DataTable.Cell>
                       </DataTable.Row>
                     )
@@ -172,44 +179,7 @@ export default function Livestock({ navigation }) {
         </ScrollView>
 
       </Background>
-      <FAB.Group
-        style={{width: '100%'}}
-        open={fab}
-        icon={fab ? 'fish' : 'plus'}
-        actions={[
-          {
-            icon: 'shaker-outline',
-            label: 'Feed',
-            onPress: () => console.log('Pressed feed'),
-          },
-          {
-            icon: 'alert-outline',
-            label: 'Warning',
-            onPress: () => console.log('Pressed warning'),
-          },
-          {
-            icon: 'binoculars',
-            label: 'Behavior',
-            onPress: () => console.log('Pressed behavior'),
-          },
-          {
-            icon: 'approximately-equal',
-            label: 'Compatibility',
-            onPress: () => console.log('Pressed compatibility'),
-          },
-          {
-            icon: 'tag-outline',
-            label: 'Family',
-            onPress: () => console.log('Pressed family'),
-          }
-        ]}
-        onStateChange={onChangeFab}
-        onPress={() => {
-          if (fab) {
-            navigation.navigate('AddSpecies');
-          }
-        }}
-      />
+      <Fab />
     </>
   );
 }

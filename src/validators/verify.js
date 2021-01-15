@@ -7,7 +7,7 @@ export default (user) => {
 		code: codeValidator(user.values.code),
 	}
 
-	if(errors) return validation;
+	if(errors === true) return validation;
 
 	return false;
 }

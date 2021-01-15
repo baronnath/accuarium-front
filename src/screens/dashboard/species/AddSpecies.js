@@ -23,7 +23,6 @@ import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/species';
 
 export default function AddSpecies({ navigation }) {
-  const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [types, setTypes] = useState(null);
   const [families, setFamilies] = useState(null);
@@ -39,26 +38,30 @@ export default function AddSpecies({ navigation }) {
       name: null,
       otherNames: [],
       type: null,
-      family: null,
-      group: null,
+      familyId: null,
+      groupId: null,
       minTemperature: null,
       maxTemperature: null,
       minPh: null,
       maxPh: null,
       miDPh: null,
       maxDh: null,
+      minLength: null,
+      maxLength: null,
     },
     errors:{
       image: null,
       name: null,
       otherNames: null,
       type: null,
-      family: null,
-      group: null,
+      familyId: null,
+      groupId: null,
       minTemperature: null,
       maxTemperature: null,
       minDh: null,
       maxDh: null,
+      minLength: null,
+      maxLength: null,
     }
   }
   const [species, setSpecies] = useState(defaultSpecies);
@@ -241,7 +244,7 @@ export default function AddSpecies({ navigation }) {
               types.map(type => {     
                 return (
                   <ToggleButton
-                    icon={type.icon}xºx
+                    icon={type.icon}
                     value={type._id}
                     onPress={() => handleChange('type', type._id)}
                     status={species.values.type == type._id ? 'checked' : 'unchecked'}
@@ -298,13 +301,13 @@ export default function AddSpecies({ navigation }) {
               <Spinner />
             :
               <Picker
-                selectedValue={species.values.family}
+                selectedValue={species.values.familyId}
                 style={
                   styles.picker,
                   species.values.family ? { color: theme.colors.text } : { color: theme.colors.placeholder }
                 }
                 itemStyle={styles.itemPicker}
-                onValueChange={(family) => handleChange('family', family)}
+                onValueChange={(familyId) => handleChange('familyId', familyId)}
               >
                 <Picker.Item label="Select family" value={null} />
                 {
@@ -323,13 +326,13 @@ export default function AddSpecies({ navigation }) {
               <Spinner />
             :
               <Picker
-                selectedValue={species.values.group}
+                selectedValue={species.values.groupId}
                 style={
                   styles.picker,
                   species.values.group ? { color: theme.colors.text } : { color: theme.colors.placeholder }
                 }
                 itemStyle={styles.itemPicker}
-                onValueChange={(group) => handleChange('group', group)}
+                onValueChange={(groupId) => handleChange('groupId', groupId)}
               >
                 <Picker.Item label="Select group" value={null} />
                 {
@@ -426,6 +429,35 @@ export default function AddSpecies({ navigation }) {
               onChangeText={(maxDh) => handleChange('maxDh', maxDh)}
               error={!!species.errors.maxDh}
               errorText={species.errors.maxDh}
+              autoCapitalize="none"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap}>
+            <TextInput
+              style={styles.inputLeft}
+              label="Min. length"
+              name="minLength"
+              returnKeyType="next"
+              value={species.values.minLength}
+              onChangeText={(minLength) => handleChange('minLength', minLength)}
+              error={!!species.errors.minLength}
+              errorText={species.errors.minLength}
+              autoCapitalize="none"
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputRight}
+              label="Max. length"
+              name="maxLength"
+              returnKeyType="next"
+              value={species.values.maxLength}
+              onChangeText={(maxLength) => handleChange('maxLength', maxLength)}
+              error={!!species.errors.maxLength}
+              errorText={species.errors.maxLength}
               autoCapitalize="none"
             />
           </View>

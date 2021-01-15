@@ -15,7 +15,7 @@ export default (species) => {
 		maxDh: dhValidator(species.values.maxDh),
 	}
 
-	if(errors) return validation;
+	if(errors === true) return validation;
 
 	return false;
 }

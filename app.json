@@ -32,7 +32,8 @@
     }
   },
   "backend": {
-    "url": "http://192.168.0.19:8080"
+    "url": "http://192.168.0.19:8080",
+    "imagesUrl": "http://192.168.0.19:8080/images/"
   },
   "preferences": {
     "pagination": 10

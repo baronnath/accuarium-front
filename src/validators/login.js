@@ -8,7 +8,7 @@ export default (user) => {
 		password: passwordValidator(user.values.password),
 	}
 
-	if(errors) return validation;
+	if(errors === true) return validation;
 
 	return false;
 }

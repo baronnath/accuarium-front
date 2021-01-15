@@ -15,7 +15,7 @@ import Spinner from '../../../components/Spinner';
 import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
 
-export default function FishSearch({ navigation }) {
+export default function SpeciesSearch({ navigation }) {
 
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);

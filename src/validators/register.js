@@ -9,7 +9,7 @@ export default (user) => {
 		name: nameValidator(user.values.name)
 	}
 
-	if(errors) return validation;
+  if(errors === true) return validation;
 
 	return false;
 }

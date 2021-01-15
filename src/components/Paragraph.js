@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     lineHeight: 26,
-    color: theme.colors.secondary,
+    color: theme.colors.text,
     textAlign: 'center',
     marginBottom: 14,
   },
