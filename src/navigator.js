@@ -13,9 +13,10 @@ import Login from './screens/login';
 
 import Dashboard from './screens/dashboard';
 import AddSpecies from './screens/dashboard/species/AddSpecies';
+import Livestock from './screens/dashboard/Livestock';
 import Species from './screens/dashboard/species/Species';
-import SpeciesSearch from './screens/dashboard/species/SpeciesSearch';
 import Tanks from './screens/dashboard/tank/Tanks';
+import Tank from './screens/dashboard/tank/Tank';
 import AddTank from './screens/dashboard/tank/AddTank';
 
 import { actions as userActions } from './ducks/user';
@@ -40,12 +41,13 @@ export default function Navigator() {
     >
       { user.data != undefined && user.data.role.name == "admin" &&
         <>
-          <Stack.Screen name="AddTank" component={AddTank} />
+          <Stack.Screen name="Tanks" component={Tanks} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="AddSpecies" component={AddSpecies} />
           <Stack.Screen name="Species" component={Species} />
-          <Stack.Screen name="SpeciesSearch" component={SpeciesSearch} />
-          <Stack.Screen name="Tanks" component={Tanks} />
+          <Stack.Screen name="Livestock" component={Livestock} />
+          <Stack.Screen name="AddTank" component={AddTank} />
+          <Stack.Screen name="Tank" component={Tank} />
         </>
       }
       { user.data != undefined && user.data.accessToken ? (

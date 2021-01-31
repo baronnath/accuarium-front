@@ -16,7 +16,6 @@ import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Paragraph from '../../../components/Paragraph';
 import InputSuggestion from '../../../components/InputSuggestion';
-import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
@@ -299,7 +298,7 @@ export default function AddTank({ navigation }) {
       this[index] = species._id;
     }, tankData.species);
 
-    console.log(tank.values);
+    console.log(tankData);
 
     axios.post(backend.url + '/tank', tankData)
     .then(res => {
