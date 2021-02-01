@@ -41,11 +41,11 @@ export default function Navigator() {
     >
       { user.data != undefined && user.data.role.name == "admin" &&
         <>
-          <Stack.Screen name="Tanks" component={Tanks} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="AddSpecies" component={AddSpecies} />
           <Stack.Screen name="Species" component={Species} />
           <Stack.Screen name="Livestock" component={Livestock} />
+          <Stack.Screen name="Tanks" component={Tanks} />
           <Stack.Screen name="AddTank" component={AddTank} />
           <Stack.Screen name="Tank" component={Tank} />
         </>

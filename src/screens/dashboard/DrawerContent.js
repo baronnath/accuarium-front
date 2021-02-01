@@ -26,7 +26,6 @@ function DrawerContent(props) {
   const dispatch = useDispatch();
 
 	function signOut() {
-		console.log(user);
     dispatch(userActions.logout(user));
 	};
 
