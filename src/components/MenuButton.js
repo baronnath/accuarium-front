@@ -12,7 +12,7 @@ function MenuButton() {
 
   return (
     <TouchableOpacity onPress={navigation.openDrawer} style={styles.container}>
-      <Icon name="dots-vertical" size={24} color={theme.colors.primary}/>
+      <Icon name="menu" size={24} color={theme.colors.primary}/>
     </TouchableOpacity>
   );
 }
