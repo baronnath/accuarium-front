@@ -7,7 +7,7 @@ import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text } from 'react-native';
-import { ToggleButton } from 'react-native-paper';
+import { ToggleButton, Avatar, Title, Caption } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
@@ -67,17 +67,71 @@ export default function Tank({ route, navigation }) {
               {ucFirst(tank.name)}
             </Header>
 
-            <Paragraph>
-             Owner: {ucFirst(tank.user.name)} | {tank.user.email} 
-            </Paragraph>
+            <View style={{flexDirection:'row',marginTop: 15}}>
+              <Avatar.Image 
+                  source={{
+                      uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                  }}
+                  size={50}
+              />
+              <View style={{marginLeft:15, flexDirection:'column'}}>
+                <Title>{ucFirst(tank.user.name)}</Title>
+                <Caption>{tank.user.email}</Caption>
+              </View>
+            </View>
+
 
             <Image source={{ uri: `${backend.imagesUrl}tank/${tank._id}.jpg` }} style={styles.image} />
 
+            <View style={styles.row}>
+              <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
+                name="ruler-square" 
+                color={theme.colors.lightText}
+                size={30}
+              />
+              <Text style={styles.parameters}>
+                {tank.measures.width} x {tank.measures.height} x {tank.measures.length} mm
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
+                name="cube-outline" 
+                color={theme.colors.lightText}
+                size={30}
+              />
+              <Text style={styles.parameters}>
+                {tank.liters} L
+              </Text>
+            </View>
+
             <View style={styles.tagContainer}>
-              { tank.species.lenght &&
-                tank.species.otherNames.map(name => {
+              { tank.species.length &&
+                tank.species.map(species => {
                     return (
-                      <Tag>{name}</Tag>
+
+                      <View style={{flexDirection:'row',marginTop: 15}}>
+                        <Title>{tank.quantity[species._id]} x </Title>
+                        <Avatar.Image 
+                            source={{
+                                uri: `${backend.imagesUrl}species/${species._id}.jpg`
+                            }}
+                            size={50}
+                        />
+                        <View style={{marginLeft:15, flexDirection:'column'}}>
+                          <Title>
+                            {ucFirst(species.name)}
+                            {
+                              species._id == tank.mainSpecies ? 
+                              <MaterialCommunityIcons
+                                name="star" 
+                                color={theme.colors.primary}
+                                size={30}
+                              />
+                              : '' }
+                          </Title>
+                          <Caption>{species.scientificName}</Caption>
+                        </View>
+                      </View>
                     )
                   })
               }

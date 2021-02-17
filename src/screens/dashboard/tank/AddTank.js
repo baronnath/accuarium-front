@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { axios }from '../../../helpers/axios';
 import { ucFirst, isObject, clone } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
-import { ToggleButton } from 'react-native-paper';
+import {
+  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
+} from 'react-native';
+import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
@@ -37,6 +39,8 @@ export default function AddTank({ navigation }) {
         name: null
       },
       species: [],
+      speciesIds: [],
+      mainSpeciesId: null,
       quantity: {},
       image: null,
       width: null,
@@ -292,11 +296,15 @@ export default function AddTank({ navigation }) {
 
     // change objects to id strings
     let tankData = clone(tank.values);
+
     tankData.userId = tank.values.user._id;
     delete tankData.user;
+    
     tankData.species.forEach(function(species, index) {
-      this[index] = species._id;
+      // this[index] = species._id;
+      tankData.speciesIds.push(species._id);
     }, tankData.species);
+    delete tankData.species;
 
     console.log(tankData);
 
@@ -307,7 +315,6 @@ export default function AddTank({ navigation }) {
       // navigation.navigate('Tanks');
     })
     .catch(err => {
-      console.log(err);
       handleAlert(err);  
     });
   }
@@ -385,6 +392,14 @@ export default function AddTank({ navigation }) {
                             size={24}
                             color={theme.colors.lightText}
                           />
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Checkbox
+                          status={tank.values.mainSpeciesId == species._id ? 'checked' : 'unchecked'}
+                          onPress={() => {
+                            handleChange('mainSpeciesId',species._id);
+                          }}
+                        />
                       </TouchableOpacity>
                       <TouchableOpacity>
                           <MaterialCommunityIcons
