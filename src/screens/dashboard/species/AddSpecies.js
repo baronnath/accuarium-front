@@ -17,9 +17,12 @@ import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
+import Paragraph from '../../../components/Paragraph';
+import Separator from '../../../components/Separator';
 import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import validator from '../../../validators/species';
 
 export default function AddSpecies({ navigation }) {
@@ -66,6 +69,7 @@ export default function AddSpecies({ navigation }) {
   }
   const [species, setSpecies] = useState(defaultSpecies);
   const [otherName, setOtherName] = useState(null);
+  const [uploadFile, setUploadFile] = useState(null);
   const dispatch = useDispatch();
    
   useEffect(() => {
@@ -186,7 +190,18 @@ export default function AddSpecies({ navigation }) {
       handleChange('image', result);
     }
 
-  };
+  }
+
+  const pickDocument = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+
+    if (result.size) {
+      setUploadFile(result);
+    }
+    else{
+      setUploadFile(null);
+    }
+  }
 
   function onSubmit(){
     const validation = validator(species);
@@ -217,6 +232,33 @@ export default function AddSpecies({ navigation }) {
     .catch(err => {
       handleAlert(err);  
     });
+  }
+
+  function onUpload(){
+    if (!uploadFile) {
+      dispatch(alertActions.error('Please select a file to upload'));
+      return;
+    }
+
+    console.log(uploadFile)
+
+    let data = new FormData();
+    data.append('file',
+      {
+         uri: uploadFile.uri,
+         name: uploadFile.name,
+         type:'application/vnd.ms-excel'
+      });
+    
+    axios.post(backend.url + '/species/uploadFile', data)
+      .then(res => {
+        dispatch(alertActions.success(res.data.message));
+        // setUploadFile(null);
+        // navigation.navigate('Livestock');
+      })
+      .catch(err => {
+        handleAlert(err);  
+      });
   }
 
   function handleAlert(err){
@@ -463,7 +505,28 @@ export default function AddSpecies({ navigation }) {
           </View>
         </View>
 
-        <Button onPress={onSubmit} >Send</Button>
+        <Button onPress={onSubmit} >Save</Button>
+
+        <Separator/>
+
+        <Paragraph>or</Paragraph>
+
+        <View style={styles.inputRow}>
+          <TextInput
+            label="XLSX file"
+            name="uploadFile"
+            returnKeyType="next"
+            value={uploadFile ? uploadFile.name : ''}
+            editable={false}
+            autoCapitalize="none"
+            style={{flex:9, marginRight: 4, marginTop: 0}}
+          />
+          <Button
+            style={{flex: 1, marginTop: 6, marginBottom: 12, marginLeft: 4}}
+            onPress={pickDocument}
+          >...</Button>
+        </View>
+        <Button onPress={onUpload}>Upload</Button>
 
       </Background>
     </KeyboardAwareScrollView>
