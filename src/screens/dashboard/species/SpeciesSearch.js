@@ -66,7 +66,7 @@ export default function SpeciesSearch({ navigation }) {
     <Background justify="top">
       <MenuButton />
       <Header>
-        Livestock
+        Species search
       </Header>
       <Searchbar
         placeholder="Search"

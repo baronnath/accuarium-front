@@ -22,6 +22,9 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
 
 export default function Species({ route, navigation }) {
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+
   const { speciesId } = route.params;
   const [isLoading, setLoading] = useState(false);
   const [id, setId] = useState(false);
@@ -63,18 +66,18 @@ export default function Species({ route, navigation }) {
         { species ?
           <>
             <Header>
-              {ucFirst(species.name)}
+              {ucFirst(species.name[locale])}
             </Header>
 
             <Paragraph>
-             {ucFirst(species.family.name)} | {ucFirst(species.group.name)} 
+             {ucFirst(species.family.name[locale])} | {ucFirst(species.group.name[locale])} 
             </Paragraph>
 
             <Image source={{ uri: `${backend.imagesUrl}species/${species._id}.jpg` }} style={styles.image} />
 
             <View style={styles.tagContainer}>
               { species.otherNames &&
-                species.otherNames.map(name => {
+                species.otherNames[locale].map(name => {
                     return (
                       <Tag>{name}</Tag>
                     )

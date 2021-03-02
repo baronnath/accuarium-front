@@ -21,6 +21,8 @@ import { theme } from '../../theme';
 import { preferences } from '../../../app.json';
 
 export default function Livestock({ navigation }) {
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
 
   const [isLoading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -147,7 +149,7 @@ export default function Livestock({ navigation }) {
                           onPress={() => onRowPress(species._id)}
                         >
                           <Text>
-                            {species.name}
+                            {species.name[locale]}
                           </Text>
                         </DataTable.Cell>
                         <DataTable.Cell
@@ -155,7 +157,7 @@ export default function Livestock({ navigation }) {
                           onPress={() => onRowPress(species._id)}
                         >
                           <Text>
-                            {species.family ? ucFirst(species.family.name) : '-'}
+                            {species.family ? ucFirst(species.family.name[locale]) : '-'}
                           </Text>
                         </DataTable.Cell>
                         <DataTable.Cell style={styles.columnActions}>

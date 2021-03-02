@@ -39,7 +39,7 @@ export default function Navigator() {
     <Stack.Navigator
       screenOptions={navigator.screenOptions}
     >
-      { user.data != undefined && user.data.role.name == "admin" &&
+      { user.data != undefined && user.data.role.name.en == "admin" &&
         <>
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="AddSpecies" component={AddSpecies} />

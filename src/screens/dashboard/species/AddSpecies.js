@@ -26,6 +26,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import validator from '../../../validators/species';
 
 export default function AddSpecies({ navigation }) {
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+
   const [page, setPage] = useState(0);
   const [types, setTypes] = useState(null);
   const [families, setFamilies] = useState(null);
@@ -355,7 +358,7 @@ export default function AddSpecies({ navigation }) {
                 {
                   families.map(family => {    
                     return (
-                      <Picker.Item label={ucFirst(family.name)} value={family._id} />
+                      <Picker.Item label={ucFirst(family.name[locale])} value={family._id} />
                     )
                   })
                 }
@@ -380,7 +383,7 @@ export default function AddSpecies({ navigation }) {
                 {
                   groups.map(group => {    
                     return (
-                      <Picker.Item label={ucFirst(group.name)} value={group._id} />
+                      <Picker.Item label={ucFirst(group.name[locale])} value={group._id} />
                     )
                   })
                 }
