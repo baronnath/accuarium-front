@@ -27,6 +27,9 @@ import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/species';
 
 export default function AddTank({ navigation }) {
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+
   const [page, setPage] = useState(0);
   const [species, setSpecies] = useState([]);
   const [users, setUsers] = useState([]);
@@ -156,7 +159,7 @@ export default function AddTank({ navigation }) {
       // check if the species has already been added
       const speciesFound = tank.values.species.find( species => { return species._id === value._id });
       if(isObject(speciesFound)){
-        dispatch(alertActions.error(`${value.name} has already been added.`));
+        dispatch(alertActions.error(`${species.name[locale]} has already been added.`));
       }
       else{
         addElement('species', value);
@@ -375,7 +378,7 @@ export default function AddTank({ navigation }) {
             tank.values.species.map(species => {
                 return (
                   <View style={{flexDirection:'row', width: '100%'}}>
-                      <Paragraph>{species.name}</Paragraph>
+                      <Paragraph>{species.name[locale]}</Paragraph>
                       <TouchableOpacity>
                           <MaterialCommunityIcons
                             onPress={() => {removeQuantity(species._id) }}

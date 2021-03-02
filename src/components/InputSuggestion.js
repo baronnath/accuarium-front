@@ -1,11 +1,15 @@
 // src/components/InputSuggestion.js
 
 import React, { memo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { theme } from '../theme';
 
 function InputSuggestion({ data, callback, attr = null, style, ...props }){
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+
   return (
 
     	<FlatList style={styles.container}
@@ -13,7 +17,7 @@ function InputSuggestion({ data, callback, attr = null, style, ...props }){
           keyExtractor={(item) => {return item._id}}
           renderItem={({ item, index, separators }) => (
             <TouchableOpacity onPress={() => attr ? callback(item[attr]) : callback(item) } style={[styles.item, style]}>
-              <Text>{item.name}</Text>
+              <Text>{item.name[locale]}</Text>
             </TouchableOpacity>
           )}
       />
