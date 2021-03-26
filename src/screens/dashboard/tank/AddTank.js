@@ -22,6 +22,7 @@ import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { actions as alertActions } from '../../../ducks/alert';
+import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/species';
@@ -320,14 +321,6 @@ export default function AddTank({ navigation }) {
     .catch(err => {
       handleAlert(err);  
     });
-  }
-
-  function handleAlert(err){
-    let message;
-    err.response
-        ? message = err.response.data.message
-        : message = 'Server connection error'
-    dispatch(alertActions.error(message));
   }
 
   return (

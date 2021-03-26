@@ -1,6 +1,6 @@
-// src/helpers/globalFunctions.js
+// src/helpers/global.js
 
-import { actions as alertActions } from '../../ducks/alert';
+import { actions as alertActions } from '../ducks/alert';
 
 export function handleAlert(err){
   let message;

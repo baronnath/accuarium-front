@@ -19,6 +19,7 @@ import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
+import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
@@ -46,14 +47,6 @@ export default function Tank({ route, navigation }) {
       });
 
   }, [tankId, id]);
-
-  function handleAlert(err){
-    let message;
-    err.response
-        ? message = err.response.data.message
-        : message = 'Server connection error'
-    dispatch(alertActions.error(message));
-  }
 
   return (
     <KeyboardAwareScrollView

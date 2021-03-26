@@ -13,6 +13,7 @@ import SpeciesCard from '../../../components/SpeciesCard';
 // import { Searchbar } from 'react-native-paper';
 import Spinner from '../../../components/Spinner';
 import { actions as alertActions } from '../../../ducks/alert';
+import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 
 export default function SpeciesSearch({ navigation }) {
@@ -52,14 +53,6 @@ export default function SpeciesSearch({ navigation }) {
           handleAlert(err);  
           setLoading(false);
       });
-  }
-
-  function handleAlert(err){
-    let message;
-    err.response
-        ? message = err.response.data.message
-        : message = 'Server connection error'
-    dispatch(alertActions.error(message));
   }
 
   return (

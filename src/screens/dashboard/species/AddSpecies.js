@@ -20,6 +20,7 @@ import Spinner from '../../../components/Spinner';
 import Paragraph from '../../../components/Paragraph';
 import Separator from '../../../components/Separator';
 import { actions as alertActions } from '../../../ducks/alert';
+import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
@@ -262,14 +263,6 @@ export default function AddSpecies({ navigation }) {
       .catch(err => {
         handleAlert(err);  
       });
-  }
-
-  function handleAlert(err){
-    let message;
-    err.response
-        ? message = err.response.data.message
-        : message = 'Server connection error'
-    dispatch(alertActions.error(message));
   }
 
   return (

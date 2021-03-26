@@ -17,6 +17,7 @@ import Searchbar from '../../components/Searchbar';
 import SpeciesCard from '../../components/SpeciesCard';
 import Spinner from '../../components/Spinner';
 import { actions as alertActions } from '../../ducks/alert';
+import { handleAlert } from '../../helpers/global';
 import { theme } from '../../theme';
 import { preferences } from '../../../app.json';
 
@@ -96,14 +97,6 @@ export default function Livestock({ navigation }) {
 
   function onRowPress(speciesId){
     navigation.navigate('Species', {speciesId: speciesId});
-  }
-
-  function handleAlert(err){
-    let message;
-    err.response
-        ? message = err.response.data.message
-        : message = 'Server connection error'
-    dispatch(alertActions.error(message));
   }
 
   return (
