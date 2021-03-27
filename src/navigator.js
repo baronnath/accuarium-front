@@ -18,6 +18,7 @@ import Species from './screens/dashboard/species/Species';
 import Tanks from './screens/dashboard/tank/Tanks';
 import Tank from './screens/dashboard/tank/Tank';
 import AddTank from './screens/dashboard/tank/AddTank';
+import AddCompatibility from './screens/dashboard/compatibility/AddCompatibility';
 
 import { actions as userActions } from './ducks/user';
 
@@ -48,6 +49,7 @@ export default function Navigator() {
           <Stack.Screen name="Tanks" component={Tanks} />
           <Stack.Screen name="AddTank" component={AddTank} />
           <Stack.Screen name="Tank" component={Tank} />
+          <Stack.Screen name="AddCompatibility" component={AddCompatibility} />
         </>
       }
       { user.data != undefined && user.data.accessToken ? (

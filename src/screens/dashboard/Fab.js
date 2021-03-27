@@ -36,7 +36,7 @@ export default function Fab() {
         {
           icon: 'approximately-equal',
           label: 'Compatibility',
-          onPress: () => console.log('Pressed compatibility'),
+          onPress: () => navigation.navigate('AddCompatibility'),
         },
         {
           icon: 'tag-outline',

@@ -15,6 +15,7 @@ import SpeciesSearch from './dashboard/species/SpeciesSearch';
 import Tanks from './dashboard/tank/Tanks';
 import AddTank from './dashboard/tank/AddTank';
 import Tank from './dashboard/tank/Tank';
+import AddCompatibility from './dashboard/compatibility/AddCompatibility';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 export default function Dashboard({ navigation }) {
@@ -30,7 +31,7 @@ export default function Dashboard({ navigation }) {
       <Drawer.Screen name="SpeciesSearch" component={SpeciesSearch} />
       <Drawer.Screen name="Tanks" component={Tanks} />
       <Drawer.Screen name="AddTank" component={AddTank} />
-      <Drawer.Screen name="Tank" component={Tank} />
+      <Drawer.Screen name="AddCompatibility" component={AddCompatibility} />
     </Drawer.Navigator>
   );
 }
