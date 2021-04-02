@@ -8,8 +8,8 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Paragraph = ({ children }: Props) => (
-  <Text style={styles.text}>{children}</Text>
+const Paragraph = ({ style, children, ...props }: Props) => (
+  <Text style={[styles.text,style]}>{children}</Text>
 );
 
 const styles = StyleSheet.create({

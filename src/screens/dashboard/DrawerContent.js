@@ -97,6 +97,18 @@ function DrawerContent(props) {
                         icon={({color, size}) => (
                             <MaterialCommunityIcons 
                             type="MaterialCommunityIcons"
+                            name="approximately-equal" 
+                            color={color}
+                            size={size}
+                            />
+                        )}
+                        label="Compatibilities"
+                        onPress={() => {props.navigation.navigate('Compatibilities')}}
+                    />
+                    <DrawerItem 
+                        icon={({color, size}) => (
+                            <MaterialCommunityIcons 
+                            type="MaterialCommunityIcons"
                             name="shaker-outline" 
                             color={color}
                             size={size}

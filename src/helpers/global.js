@@ -1,5 +1,6 @@
 // src/helpers/global.js
 
+import store from '../store';
 import { actions as alertActions } from '../ducks/alert';
 
 export function handleAlert(err){
@@ -7,5 +8,5 @@ export function handleAlert(err){
   err.response
       ? message = err.response.data.message
       : message = 'Server connection error'
-  dispatch(alertActions.error(message));
+  store.dispatch(alertActions.error(message));
 }
