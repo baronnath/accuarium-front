@@ -53,8 +53,6 @@ export default function AddCompatibility({ navigation }) {
       return;
     }
 
-    console.log(uploadFile)
-
     let data = new FormData();
     data.append('file',
       {
