@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    padding: 20,
+    padding: theme.container.padding,
     maxWidth: theme.container.maxWidth,
     alignSelf: 'center',
     alignItems: 'center',

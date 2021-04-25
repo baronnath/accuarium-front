@@ -38,6 +38,7 @@ function Alert(){
 const styles = StyleSheet.create({
 	container: {
     maxWidth: theme.container.maxWidth,
+    paddingHorizontal: theme.container.padding,
     flex: 1,
     alignSelf: 'center',
     alignItems: 'center',

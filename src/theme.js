@@ -21,6 +21,10 @@ export const theme = {
     disabled: color('#000000').alpha(0.26).rgb().string(),
   },
   container: {
-    maxWidth: 340,
-  }
+    maxWidth: 400,
+    padding: 20,
+  },
+  bottomNav: {
+    height: 50,
+  },
 };

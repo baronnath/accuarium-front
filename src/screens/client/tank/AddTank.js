@@ -6,12 +6,13 @@ import { axios }from '../../../helpers/axios';
 import { ucFirst, isObject, clone } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
-  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
+  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity, Dimensions, SafeAreaView
 } from 'react-native';
 import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Carousel from 'react-native-snap-carousel';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -65,6 +66,32 @@ export default function AddTank({ navigation }) {
   const [userKey, setUserKey] = useState(null);
   const [speciesKey, setSpeciesKey] = useState(null);
   const dispatch = useDispatch();
+
+  const sliderWidth = Dimensions.get('window').width - (2*theme.container.padding);
+  const sliderHeight = Dimensions.get('window').height - getStatusBarHeight() - theme.bottomNav.height;
+  const [index, setIndex] = useState(0);
+  const [carouselItems] =useState([
+    {
+        title:"Item 1",
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam turpis nisi, hendrerit sit amet luctus ut, luctus sit amet ipsum. Donec varius sapien blandit arcu egestas condimentum. Quisque at aliquet tortor. Ut eu nisi elit. Sed molestie tristique condimentum. Phasellus non diam erat. Cras interdum urna justo, nec mattis leo suscipit a. Nullam mollis ante risus, vitae feugiat enim consequat eu. Vestibulum molestie porttitor ipsum, vitae aliquam metus interdum vel. Curabitur nulla eros, ultrices sit amet consequat a, tincidunt posuere lorem. Mauris vestibulum egestas nisi sit amet suscipit. Aliquam erat volutpat. Nunc mattis tincidunt ligula, at tincidunt odio aliquam at. Cras facilisis nisi eget augue egestas condimentum. Fusce maximus, nulla quis pellentesque rhoncus, ligula massa euismod magna, sit amet tristique ipsum mi vel eros. Phasellus fermentum iaculis justo. Nulla non faucibus risus, a rhoncus velit. Suspendisse eget semper nisl. Curabitur condimentum vel nulla nec laoreet. Maecenas vitae feugiat lacus. Donec malesuada ante sed sem ultrices porttitor. Nunc eget dignissim nulla. Nam et tincidunt risus. Phasellus vitae nibh ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nulla lacus, sodales eu ex ac, scelerisque facilisis dolor. Nunc dolor erat, varius et consectetur sit amet, maximus in mauris.",
+    },
+    {
+        title:"Item 2",
+        text: "Text 2",
+    },
+    {
+        title:"Item 3",
+        text: "Text 3",
+    },
+    {
+        title:"Item 4",
+        text: "Text 4",
+    },
+    {
+        title:"Item 5",
+        text: "Text 5",
+    },
+  ]);
 
   async function handleChange(field, value) {
     setTank(prevTank => ({
@@ -143,188 +170,36 @@ export default function AddTank({ navigation }) {
     });
   }
 
+  function _renderItem({item,index}){
+      return (
+        <View style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: sliderHeight,
+            flex: 1
+          }}>
+          <Text style={{fontSize: 30}}>{item.title}</Text>
+          <Text>{item.text}</Text>
+        </View>
+
+      )
+  }
+
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
     >
-      <Background justify="top">
-        <Header>
-          New tank
-        </Header>
+      <Background>
 
-        <TextInput
-          label="Tank alias"
-          name="name"
-          returnKeyType="next"
-          onChangeText={(name) => handleChange('name', name)}
-          value={tank.values.name}
-          error={!!tank.errors.name}
-          errorText={tank.errors.name}
-          autoCapitalize="none"
-          autofill="name"
-        />
-
-        <View style={{width: '100%'}}>
-          <TextInput
-            label="User"
-            name="user"
-            returnKeyType="next"
-            value={userKey}
-            onChangeText={(userKey) => onChangeUser(userKey)}
-            onFocus={()=> setUserFocused(true)}
-            autoCapitalize="none"
-            autofill="user"
-          />
-          { users && userFocused &&
-            <InputSuggestion
-              data={users}
-              callback={addUser}
-              onPress={()=> setUserFocused(false)}
+        <View style={{ flex: 1}}>
+            <Carousel
+              data={carouselItems}
+              sliderWidth={sliderWidth}
+              itemWidth={sliderWidth}
+              renderItem={_renderItem}
+              onSnapToItem = { index => setIndex(index) }
             />
-          }
         </View>
-        
-
-        <View style={styles.tagContainer}>
-          { tank.values.species &&
-            tank.values.species.map(species => {
-                return (
-                  <View style={{flexDirection:'row', width: '100%'}}>
-                      <Paragraph>{species.name[locale]}</Paragraph>
-                      <TouchableOpacity>
-                          <MaterialCommunityIcons
-                            onPress={() => {removeQuantity(species._id) }}
-                            name="minus-circle-outline"
-                            size={24}
-                            color={theme.colors.lightText}
-                          />
-                      </TouchableOpacity>
-                      <Paragraph>{tank.values.quantity[species._id]}</Paragraph>
-                      <TouchableOpacity>
-                          <MaterialCommunityIcons
-                            onPress={() => { addQuantity(species._id) }}
-                            name="plus-circle-outline"
-                            size={24}
-                            color={theme.colors.lightText}
-                          />
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                        <Checkbox
-                          status={tank.values.mainSpeciesId == species._id ? 'checked' : 'unchecked'}
-                          onPress={() => {
-                            handleChange('mainSpeciesId',species._id);
-                          }}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                          <MaterialCommunityIcons
-                            onPress={() => { removeSpecies(species._id) }}
-                            name="close"
-                            size={18}
-                            color={theme.colors.lightText}
-                          />
-                      </TouchableOpacity>
-                  </View>
-                )
-              })
-          }
-        </View>
-
-        <View style={{width: '100%'}}>
-          <TextInput
-            label="Add species"
-            name="species"
-            returnKeyType="next"
-            onChangeText={speciesKey => onChangeSpecies(speciesKey)}
-            onFocus={()=> setSpeciesFocused(true)}
-            // onBlur={()=> setSpeciesFocused(false)}
-            value={speciesKey}
-            autoCapitalize="none"
-            style={{marginTop: 0}}
-          />
-          { species  && speciesFocused &&
-            <InputSuggestion
-              data={species}
-              onPress={()=> setSpeciesFocused(false)}
-              callback={addSpecies}
-            />
-          }
-
-        </View>
-
-        { tank.values.image && <Image source={{ uri: tank.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} /> }
-        <Button onPress={pickImage} >Pick an image</Button>
-
-        <View style={styles.inputRow}>
-          <View style={styles.inputWrap}>
-            <TextInput
-              style={styles.inputLeft}
-              label="Width"
-              name="width"
-              returnKeyType="next"
-              value={tank.values.width}
-              onChangeText={(width) => handleChange('width', width)}
-              error={!!tank.errors.width}
-              errorText={tank.errors.width}
-            />
-          </View>
-          <View style={styles.inputWrap}>
-            <TextInput 
-              style={styles.inputLeft}
-              label="Height"
-              name="height"
-              returnKeyType="next"
-              value={species.values.height}
-              onChangeText={(height) => handleChange('height', height)}
-              error={!!tank.errors.height}
-              errorText={tank.errors.height}
-            />
-          </View>
-          <View style={styles.inputWrap}>
-            <TextInput 
-              style={styles.inputRight}
-              label="Length"
-              name="length"
-              returnKeyType="next"
-              value={tank.values.length}
-              onChangeText={(length) => handleChange('length', length)}
-              error={!!tank.errors.length}
-              errorText={tank.errors.length}
-            />
-          </View>
-        </View>
-
-        <View style={styles.inputRow}>
-          <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
-            <Button
-              style={styles.inputRight,{height: 58, marginTop: 6}}
-              onPress={() => calculateLiters()}
-            >
-              <MaterialCommunityIcons
-                name="calculator-variant"
-                size={28}
-              />
-            </Button>
-          </View>
-          <View style={styles.inputWrap, {flex: 8}}>
-            <TextInput
-              label="Liters"
-              name="liters"
-              returnKeyType="next"
-              onChangeText={(liters) => handleChange('liters', liters)}
-              value={tank.values.liters}
-              error={!!tank.errors.liters}
-              errorText={tank.errors.liters}
-              autoCapitalize="none"
-              autofill="liters"
-              style={styles.inputLeft}
-            />
-          </View>
-          
-        </View>
-
-
-        <Button onPress={onSubmit} >Send</Button>
 
       </Background>
     </KeyboardAwareScrollView>

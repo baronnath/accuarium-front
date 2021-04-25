@@ -17,7 +17,7 @@ import Login from './screens/login';
 import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
 import Tank from './screens/client/tank/Tank';
-import AddTank from './screens/dashboard/tank/AddTank';
+import AddTank from './screens/client/tank/AddTank';
 
 import Dashboard from './screens/dashboard';
 import AddSpecies from './screens/dashboard/species/AddSpecies';
@@ -158,6 +158,7 @@ export default function Navigator() {
 
 const styles = StyleSheet.create({
   bottomNav: {
+    height: theme.bottomNav.height,
     backgroundColor: theme.colors.primary,
   },
 });
