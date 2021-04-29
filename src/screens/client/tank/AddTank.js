@@ -6,12 +6,11 @@ import { axios }from '../../../helpers/axios';
 import { ucFirst, isObject, clone } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
-  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity, Dimensions, SafeAreaView
+  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
 } from 'react-native';
 import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Carousel from 'react-native-snap-carousel';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
@@ -23,31 +22,21 @@ import InputSuggestion from '../../../components/InputSuggestion';
 import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
+import Slider from '../../../components/Slider';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
-import validator from '../../../validators/species';
+import validator from '../../../validators/tank';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
 
-  const [page, setPage] = useState(0);
-  const [species, setSpecies] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [speciesFocused, setSpeciesFocused] = useState(false);
-  const [userFocused, setUserFocused] = useState(false);
   const defaultTank = {
     values: {
       name: null,
-      user: {
-        name: null
-      },
-      species: [],
-      speciesIds: [],
-      mainSpeciesId: null,
-      quantity: {},
+      userId: user._id,
       image: null,
       width: null,
       length: null,
@@ -63,35 +52,103 @@ export default function AddTank({ navigation }) {
     }
   }
   const [tank, setTank] = useState(defaultTank);
-  const [userKey, setUserKey] = useState(null);
-  const [speciesKey, setSpeciesKey] = useState(null);
   const dispatch = useDispatch();
 
-  const sliderWidth = Dimensions.get('window').width - (2*theme.container.padding);
-  const sliderHeight = Dimensions.get('window').height - getStatusBarHeight() - theme.bottomNav.height;
-  const [index, setIndex] = useState(0);
-  const [carouselItems] =useState([
-    {
-        title:"Item 1",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam turpis nisi, hendrerit sit amet luctus ut, luctus sit amet ipsum. Donec varius sapien blandit arcu egestas condimentum. Quisque at aliquet tortor. Ut eu nisi elit. Sed molestie tristique condimentum. Phasellus non diam erat. Cras interdum urna justo, nec mattis leo suscipit a. Nullam mollis ante risus, vitae feugiat enim consequat eu. Vestibulum molestie porttitor ipsum, vitae aliquam metus interdum vel. Curabitur nulla eros, ultrices sit amet consequat a, tincidunt posuere lorem. Mauris vestibulum egestas nisi sit amet suscipit. Aliquam erat volutpat. Nunc mattis tincidunt ligula, at tincidunt odio aliquam at. Cras facilisis nisi eget augue egestas condimentum. Fusce maximus, nulla quis pellentesque rhoncus, ligula massa euismod magna, sit amet tristique ipsum mi vel eros. Phasellus fermentum iaculis justo. Nulla non faucibus risus, a rhoncus velit. Suspendisse eget semper nisl. Curabitur condimentum vel nulla nec laoreet. Maecenas vitae feugiat lacus. Donec malesuada ante sed sem ultrices porttitor. Nunc eget dignissim nulla. Nam et tincidunt risus. Phasellus vitae nibh ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nulla lacus, sodales eu ex ac, scelerisque facilisis dolor. Nunc dolor erat, varius et consectetur sit amet, maximus in mauris.",
-    },
-    {
-        title:"Item 2",
-        text: "Text 2",
-    },
-    {
-        title:"Item 3",
-        text: "Text 3",
-    },
-    {
-        title:"Item 4",
-        text: "Text 4",
-    },
-    {
-        title:"Item 5",
-        text: "Text 5",
-    },
-  ]);
+  const sliderItems = [
+      <>
+        <Text>Chose a name for your new project</Text>
+        <TextInput
+          label="Tank alias"
+          name="name"
+          returnKeyType="next"
+          onChangeText={(name) => handleChange('name', name)}
+          value={tank.values.name}
+          error={!!tank.errors.name}
+          errorText={tank.errors.name}
+          autoCapitalize="none"
+          autofill="name"
+        />
+      </>,
+      <>
+        <Text>Pick an image as your tank avatar</Text>
+        { tank.values.image && <Image source={{ uri: tank.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} /> }
+        <Button onPress={() => pickImage()} >Pick an image</Button>
+      </>,
+      <>
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap}>
+            <TextInput
+              style={styles.inputLeft}
+              label="Width"
+              name="width"
+              returnKeyType="next"
+              value={tank.values.width}
+              onChangeText={(width) => handleChange('width', width)}
+              error={!!tank.errors.width}
+              errorText={tank.errors.width}
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputLeft}
+              label="Height"
+              name="height"
+              returnKeyType="next"
+              value={tank.values.height}
+              onChangeText={(height) => handleChange('height', height)}
+              error={!!tank.errors.height}
+              errorText={tank.errors.height}
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <TextInput 
+              style={styles.inputRight}
+              label="Length"
+              name="length"
+              returnKeyType="next"
+              value={tank.values.length}
+              onChangeText={(length) => handleChange('length', length)}
+              error={!!tank.errors.length}
+              errorText={tank.errors.length}
+            />
+          </View>
+        </View>
+      </>,
+      <>
+        <View style={styles.inputRow}>
+          <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
+            <Button
+              style={styles.inputRight,{height: 58, marginTop: 6}}
+              onPress={() => calculateLiters()}
+            >
+              <MaterialCommunityIcons
+                name="calculator-variant"
+                size={28}
+              />
+            </Button>
+          </View>
+          <View style={styles.inputWrap, {flex: 8}}>
+            <TextInput
+              label="Liters"
+              name="liters"
+              returnKeyType="next"
+              onChangeText={(liters) => handleChange('liters', liters)}
+              value={tank.values.liters}
+              error={!!tank.errors.liters}
+              errorText={tank.errors.liters}
+              autoCapitalize="none"
+              autofill="liters"
+              style={styles.inputLeft}
+            />
+          </View>
+          
+        </View>
+      </>,
+      <>
+        <Text>That's all you need for this new project!</Text>
+        <Button onPress={onSubmit}>Save tank</Button>
+      </>,
+  ];
 
   async function handleChange(field, value) {
     setTank(prevTank => ({
@@ -126,13 +183,13 @@ export default function AddTank({ navigation }) {
   }
 
   function onSubmit(){
-    const validation = validator(species);
+    const validation = validator(tank);
     
     if (validation !== false) {
       setTank(prevTank => ({
         ...prevTank,
         errors: {
-          // name: validation.name,
+          name: validation.name,
           // minTemperature: validation.minTemperature,
           // maxTemperature: validation.maxTemperature,
           // minPh: validation.minPh,
@@ -145,44 +202,17 @@ export default function AddTank({ navigation }) {
       return;
     }
 
-    // change objects to id strings
-    let tankData = clone(tank.values);
+    alert(tank.values.userId)
 
-    tankData.userId = tank.values.user._id;
-    delete tankData.user;
-    
-    tankData.species.forEach(function(species, index) {
-      // this[index] = species._id;
-      tankData.speciesIds.push(species._id);
-    }, tankData.species);
-    delete tankData.species;
-
-    console.log(tankData);
-
-    axios.post(backend.url + '/tank', tankData)
+    axios.post(backend.url + '/tank', tank.values)
     .then(res => {
-      dispatch(alertActions.success(res.data.message));
+      dispatch(alertActions.success('Now add some fish to your tank'));
       // setTank(defaultTank);
-      // navigation.navigate('Tanks');
+      // navigation.navigate('Species');
     })
     .catch(err => {
       handleAlert(err);  
     });
-  }
-
-  function _renderItem({item,index}){
-      return (
-        <View style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: sliderHeight,
-            flex: 1
-          }}>
-          <Text style={{fontSize: 30}}>{item.title}</Text>
-          <Text>{item.text}</Text>
-        </View>
-
-      )
   }
 
   return (
@@ -191,15 +221,7 @@ export default function AddTank({ navigation }) {
     >
       <Background>
 
-        <View style={{ flex: 1}}>
-            <Carousel
-              data={carouselItems}
-              sliderWidth={sliderWidth}
-              itemWidth={sliderWidth}
-              renderItem={_renderItem}
-              onSnapToItem = { index => setIndex(index) }
-            />
-        </View>
+        <Slider items={sliderItems} />            
 
       </Background>
     </KeyboardAwareScrollView>

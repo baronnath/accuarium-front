@@ -19,6 +19,7 @@ export const theme = {
     background: '#f6f6f6',
     placeholder: color('#000000').alpha(0.54).rgb().string(),
     disabled: color('#000000').alpha(0.26).rgb().string(),
+    transparent: color('#000000').alpha(0).rgb().string(),
   },
   container: {
     maxWidth: 400,

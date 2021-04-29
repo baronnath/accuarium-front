@@ -30,9 +30,21 @@ export default function Tanks({ navigation }) {
   const [tanks, setTanks] = useState(false);
   const user = useSelector(state => state.user.data);
 
-  useEffect(()=>{
-     // Get tank data
-    axios.get(backend.url + '/tank', {params: {userId: user._id}})
+  // useEffect(()=>{
+  //    // Get tank data
+  //   axios.get(backend.url + '/tank', {params: {userId: user._id}})
+  //     .then(res => {
+  //         setTanks(res.data.tanks);
+  //         setLoading(false);
+  //     })
+  //     .catch(err => {
+  //         handleAlert(err);          
+  //     });
+  // },[user]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      axios.get(backend.url + '/tank', {params: {userId: user._id}})
       .then(res => {
           setTanks(res.data.tanks);
           setLoading(false);
@@ -40,7 +52,8 @@ export default function Tanks({ navigation }) {
       .catch(err => {
           handleAlert(err);          
       });
-  },[user]);
+    }, [user])
+  );
   
   // function onRowPress(tankId){
   //   navigation.navigate('Tank', {tankId: tankId});
@@ -61,14 +74,18 @@ export default function Tanks({ navigation }) {
             <Spinner />
           :
             tanks.length ?
-            tanks.map(tank => {     
-
+            tanks.map(tank => {
+              return (
+                <>   
+                  <Text>{tank.name}</Text>
+                </>
+              );
             })
             :
-            <>
+            <View style={styles.centerContainer}>
               <Paragraph style={styles.paragraph}>No tanks yet. What you waiting for?</Paragraph>
               <Button style={styles.callButton} onPress={() => navigation.navigate('AddTank')}>Create tank</Button>
-            </>
+            </View>
           }
 
         </ScrollView>
@@ -80,7 +97,7 @@ export default function Tanks({ navigation }) {
 
 
 const styles = StyleSheet.create({
-  background: {
+  centerContainer: {
     flex: 1,
     width: '100%',
     flexDirection:'column',
@@ -129,7 +146,5 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
