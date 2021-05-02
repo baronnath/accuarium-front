@@ -7,14 +7,14 @@ import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text, ScrollView } from 'react-native';
-import { ToggleButton, DataTable } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 import Searchbar from '../../../components/Searchbar';
 import Paragraph from '../../../components/Paragraph';
-import SpeciesCard from '../../../components/SpeciesCard';
+import TankCard from '../../../components/TankCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -30,18 +30,6 @@ export default function Tanks({ navigation }) {
   const [tanks, setTanks] = useState(false);
   const user = useSelector(state => state.user.data);
 
-  // useEffect(()=>{
-  //    // Get tank data
-  //   axios.get(backend.url + '/tank', {params: {userId: user._id}})
-  //     .then(res => {
-  //         setTanks(res.data.tanks);
-  //         setLoading(false);
-  //     })
-  //     .catch(err => {
-  //         handleAlert(err);          
-  //     });
-  // },[user]);
-
   useFocusEffect(
     React.useCallback(() => {
       axios.get(backend.url + '/tank', {params: {userId: user._id}})
@@ -54,33 +42,42 @@ export default function Tanks({ navigation }) {
       });
     }, [user])
   );
-  
-  // function onRowPress(tankId){
-  //   navigation.navigate('Tank', {tankId: tankId});
-  // }
 
   return (
     <>
-      <Background justify="top">
+      <Background justify="top" style={styles.background}>
 
         <Header>
           Tanks
         </Header>
 
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
 
           { isLoading ?
             <Spinner />
           :
             tanks.length ?
-            tanks.map(tank => {
-              return (
-                <>   
-                  <Text>{tank.name}</Text>
-                </>
-              );
-            })
+        
+              <>
+                <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+                  {
+                    tanks.map(tank => {
+                      return (
+                          <TankCard tank={tank}></TankCard>
+                      );
+                    })
+                  }
+                 
+                </ScrollView>
+                <FAB
+                  style={styles.fab}
+                  small
+                  label="New tank"
+                  icon="plus"
+                  uppercase={false}
+                  onPress={() => navigation.navigate('AddTank')}
+                />
+              </>
             :
             <View style={styles.centerContainer}>
               <Paragraph style={styles.paragraph}>No tanks yet. What you waiting for?</Paragraph>
@@ -88,7 +85,6 @@ export default function Tanks({ navigation }) {
             </View>
           }
 
-        </ScrollView>
 
       </Background>
     </>
@@ -104,47 +100,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  paragraph: {
-    color: theme.colors.disabled
-  },
-  callButton: {
-    backgroundColor: theme.colors.accent
-  },
-  image: {
-    marginVertical: 10,
-    width: '100%',
-    height: 200
-  },
-  tagContainer: {
-    flex:1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    borderTopColor: theme.colors.lightText,
-    borderTopWidth: 1,
-    paddingTop: 8,
-    width: '100%',
-    justifyContent: 'center',
-
-  },
-  row: {
-    flex: 1,
-    marginVertical: 10,
-    marginLeft: '50%',
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  listIcon: {
-    marginRight: 8,
-  },
-  parameters: {
-    position: 'absolute',
-    left: 45,
-  },
   scroll: {
     alignSelf: 'stretch',
   },
-  scrollContainer: {
-    flex: 1,
+  background: {
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });

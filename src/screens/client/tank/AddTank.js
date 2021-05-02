@@ -31,6 +31,7 @@ import validator from '../../../validators/tank';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
+  const dispatch = useDispatch();
   const locale = user.locale;
 
   const defaultTank = {
@@ -52,7 +53,6 @@ export default function AddTank({ navigation }) {
     }
   }
   const [tank, setTank] = useState(defaultTank);
-  const dispatch = useDispatch();
 
   const sliderItems = [
       <>
@@ -199,8 +199,12 @@ export default function AddTank({ navigation }) {
         }
       }));
 
+
+      dispatch(alertActions.error('Tank data is not correct'));
+
       return;
     }
+
 
     axios.post(backend.url + '/tank', tank.values)
     .then(res => {

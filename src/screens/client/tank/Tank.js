@@ -23,10 +23,12 @@ import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
+  const dispatch = useDispatch();
   const { tankId } = route.params;
   const [isLoading, setLoading] = useState(false);
   const [id, setId] = useState(false);
   const [tank, setTank] = useState(false);
+  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -39,7 +41,7 @@ export default function Tank({ route, navigation }) {
     // Get tank data
     axios.get(backend.url + '/tank', {params: {tankId: tankId}})
       .then(res => {
-          console.log(res.data.tanks);
+          dispatch(alertActions.success('Now add some fish to your tank'));
           setTank(res.data.tanks);
       })
       .catch(err => {
