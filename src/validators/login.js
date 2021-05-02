@@ -1,8 +1,10 @@
 // src/validators/login.js
 
-let errors = false;
+let errors;
 
 export default (user) => {
+  errors = false;
+
 	const validation =  {
 		email: emailValidator(user.values.email),
 		password: passwordValidator(user.values.password),

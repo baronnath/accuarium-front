@@ -1,8 +1,10 @@
 // src/validators/verify.js
 
-let errors = false;
+let errors;
 
 export default (user) => {
+	errors = false;
+
 	const validation =  {
 		code: codeValidator(user.values.code),
 	}

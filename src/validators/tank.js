@@ -2,9 +2,11 @@
 
 import helpers from '../helpers/helpers';
 
-let errors = false;
+let errors;
 
 export default (tank) => {
+	errors = false;
+
 	const validation =  {
 		name: nameValidator(tank.values.name),
 	}
@@ -23,5 +25,4 @@ function nameValidator (name) {
 
   return false;
 };
-
 

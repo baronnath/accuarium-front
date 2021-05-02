@@ -2,9 +2,11 @@
 
 import helpers from '../helpers/helpers';
 
-let errors = false;
+let errors;
 
 export default (species) => {
+	errors = false;
+	
 	const validation =  {
 		name: nameValidator(species.values.name),
 		minTemperature: temperatureValidator(species.values.minTemperature),
