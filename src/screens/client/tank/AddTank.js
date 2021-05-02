@@ -202,13 +202,11 @@ export default function AddTank({ navigation }) {
       return;
     }
 
-    alert(tank.values.userId)
-
     axios.post(backend.url + '/tank', tank.values)
     .then(res => {
       dispatch(alertActions.success('Now add some fish to your tank'));
-      // setTank(defaultTank);
-      // navigation.navigate('Species');
+      setTank(defaultTank);
+      navigation.navigate('Species');
     })
     .catch(err => {
       handleAlert(err);  
