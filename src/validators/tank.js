@@ -4,9 +4,9 @@ import helpers from '../helpers/helpers';
 
 let errors = false;
 
-export default (species) => {
+export default (tank) => {
 	const validation =  {
-		name: nameValidator(species.values.name),
+		name: nameValidator(tank.values.name),
 	}
 
 	if(errors === true) return validation;
