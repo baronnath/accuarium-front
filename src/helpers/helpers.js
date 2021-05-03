@@ -35,4 +35,9 @@ exports.clone = (input) => {
 	return _.cloneDeep(input);
 }
 
+// Replace comma to period
+exports.commaToPeriod = (string) => {
+	return string.replace(/,/g, '.');
+}
+
 

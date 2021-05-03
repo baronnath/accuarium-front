@@ -24,7 +24,7 @@ import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';
 import { actions as alertActions } from '../../../ducks/alert';
-import { handleAlert } from '../../../helpers/global';
+import { handleAlert, calculateVolume } from '../../../helpers/global';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/tank';
@@ -176,10 +176,19 @@ export default function AddTank({ navigation }) {
   };
 
   function calculateLiters() {
-    const { width, height, length } = tank.values;
-    const liters = width * height * length / 1000;
-    handleChange('liters', String(liters));
-    dispatch(alertActions.success(`Your tank is ${liters} liters`));
+    const dimensions = {
+      width: tank.values.width,
+      height: tank.values.height,
+      length: tank.values.length,
+    }
+    calculateVolume(dimensions)
+      .then((liters) => {
+        handleChange('liters', String(liters));
+        dispatch(alertActions.success(`Your tank is ${liters} liters`));
+      })
+      .catch((err) => {
+        dispatch(alertActions.error(err));
+      });
   }
 
   function onSubmit(){
@@ -208,7 +217,7 @@ export default function AddTank({ navigation }) {
 
     axios.post(backend.url + '/tank', tank.values)
     .then(res => {
-      dispatch(alertActions.success('Now add some fish to your tank'));
+      dispatch(alertActions.success('Now add some fishes to your tank'));
       setTank(defaultTank);
       navigation.navigate('Species');
     })
