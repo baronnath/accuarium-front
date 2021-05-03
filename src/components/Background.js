@@ -22,7 +22,8 @@ const Background = ({ justify, style, children }: Props) => (
     <KeyboardAvoidingView
       style={[
         justify == 'top' ? styles.containerTop : styles.containerCenter,
-        styles.container
+        styles.container,
+        style
       ]}
       behavior="padding">
           {children}
