@@ -18,6 +18,7 @@ import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
 import Tank from './screens/client/tank/Tank';
 import AddTank from './screens/client/tank/AddTank';
+import Profile from './screens/client/profile/Profile';
 
 import Dashboard from './screens/dashboard';
 import AddSpecies from './screens/dashboard/species/AddSpecies';
@@ -117,8 +118,7 @@ export default function Navigator() {
       <ProfileStack.Navigator
         screenOptions={screenOptions}
       >
-        <ProfileStack.Screen name="Tanks" component={Tanks} />
-        <ProfileStack.Screen name="Tank" component={Tank} />
+        <ProfileStack.Screen name="Profile" component={Profile} />
       </ProfileStack.Navigator>
     );
   }
