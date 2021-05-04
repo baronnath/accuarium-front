@@ -23,7 +23,6 @@ import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
-  const dispatch = useDispatch();
   const { tankId } = route.params;
   const [isLoading, setLoading] = useState(false);
   const [id, setId] = useState(false);
@@ -41,11 +40,10 @@ export default function Tank({ route, navigation }) {
     // Get tank data
     axios.get(backend.url + '/tank', {params: {tankId: tankId}})
       .then(res => {
-          dispatch(alertActions.success('Now add some fish to your tank'));
-          setTank(res.data.tanks);
+        setTank(res.data.tanks);
       })
       .catch(err => {
-          handleAlert(err);          
+        handleAlert(err);          
       });
 
   }, [tankId, id]);
@@ -55,7 +53,6 @@ export default function Tank({ route, navigation }) {
       resetScrollToCoords={{x:0, y:0}}
     >
       <Background justify="top">
-        <MenuButton />
         { tank ?
           <>
             <Header>
@@ -85,7 +82,7 @@ export default function Tank({ route, navigation }) {
                 size={30}
               />
               <Text style={styles.parameters}>
-                {tank.measures.width} x {tank.measures.height} x {tank.measures.length} mm
+                { tank.measures.width && tank.measures.width } x { tank.measures.height && tank.measures.height } x { tank.measures.length && tank.measures.length } mm
               </Text>
             </View>
             <View style={styles.row}>
@@ -95,44 +92,18 @@ export default function Tank({ route, navigation }) {
                 size={30}
               />
               <Text style={styles.parameters}>
-                {tank.liters} L
+                { tank.liters && tank.liters } L
               </Text>
             </View>
-
             <View style={styles.tagContainer}>
-              { tank.species.length &&
+              { tank.species &&
                 tank.species.map(species => {
                     return (
-
-                      <View style={{flexDirection:'row',marginTop: 15}}>
-                        <Title>{tank.quantity[species._id]} x </Title>
-                        <Avatar.Image 
-                            source={{
-                                uri: `${backend.imagesUrl}species/${species._id}.jpg`
-                            }}
-                            size={50}
-                        />
-                        <View style={{marginLeft:15, flexDirection:'column'}}>
-                          <Title>
-                            {ucFirst(species.name)}
-                            {
-                              species._id == tank.mainSpecies ? 
-                              <MaterialCommunityIcons
-                                name="star" 
-                                color={theme.colors.primary}
-                                size={30}
-                              />
-                              : '' }
-                          </Title>
-                          <Caption>{species.scientificName}</Caption>
-                        </View>
-                      </View>
+                      <Text>Ciao pescao</Text>
                     )
                   })
               }
             </View>
-
-            
           </>
           :
           <Spinner/>

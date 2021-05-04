@@ -3,7 +3,7 @@
 import React, { useState, memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Avatar, Button, Card, Menu } from 'react-native-paper';
+import { Avatar, Button, Card, Menu, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { axios } from '../helpers/axios';
@@ -41,23 +41,24 @@ const TankCard = ({ tank, ...props }) => {
 
   const tankMenu = 
     <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={menuButton}>
-          <Menu.Item icon="square-edit-outline" onPress={() => {}} title="Edit" />
-          <Menu.Item icon="delete-forever-outline" onPress={() => {deleteTank()}} title="Remove" />
-        </Menu>
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={menuButton}>
+      <Menu.Item icon="square-edit-outline" onPress={() => {}} title="Edit" />
+      <Menu.Item icon="delete-forever-outline" onPress={() => {deleteTank()}} title="Remove" />
+    </Menu>
   ;
 
   return(
     <Card
       style={styles.card}
       theme={theme}
+      onPress={() => navigation.navigate('Tank', { tankId : tank._id }) }
       {...props}
     >
       <Card.Title
         title={tank.name}
-        subtitle="Card Subtitle"
+        subtitle={ tank.liters ? <Text>{tank.liters} L</Text> : '' }
         right={(props) => tankMenu}
         rightStyle={styles.rightStyle}
       />
