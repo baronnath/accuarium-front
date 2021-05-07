@@ -18,12 +18,14 @@ import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
 import Tank from './screens/client/tank/Tank';
 import AddTank from './screens/client/tank/AddTank';
+import Species from './screens/client/species/Species';
+import SpeciesSearch from './screens/client/species/SpeciesSearch';
 import Profile from './screens/client/profile/Profile';
 
 import Dashboard from './screens/dashboard';
 import AddSpecies from './screens/dashboard/species/AddSpecies';
 import Livestock from './screens/dashboard/Livestock';
-import Species from './screens/dashboard/species/Species';
+import DashboardSpecies from './screens/dashboard/species/Species';
 import DashboardTanks from './screens/dashboard/tank/Tanks';
 import DashboardTank from './screens/dashboard/tank/Tank';
 import DashboardAddTank from './screens/dashboard/tank/AddTank';
@@ -60,9 +62,9 @@ export default function Navigator() {
         activeColor={theme.colors.background}
         inactiveColor={theme.colors.disabled}
         barStyle={styles.bottomNav}
-        initialRouteName="Tanks"
+        initialRouteName="Species"
       >
-        <Tab.Screen name="Livestock"
+        <Tab.Screen name="Species"
           component={SpeciesNav}
           options={{
             tabBarIcon: ({ color, size  }) => (
@@ -95,7 +97,7 @@ export default function Navigator() {
       <SpeciesStack.Navigator
         screenOptions={screenOptions}
       >
-        <SpeciesStack.Screen name="Livestock" component={Livestock} />
+        <SpeciesStack.Screen name="SpeciesSearch" component={SpeciesSearch} />
         <SpeciesStack.Screen name="Species" component={Species} />
       </SpeciesStack.Navigator>
     );
@@ -131,7 +133,7 @@ export default function Navigator() {
         <>
           <AppStack.Screen name="Dashboard" component={Dashboard} />
           <AppStack.Screen name="AddSpecies" component={AddSpecies} />
-          <AppStack.Screen name="Species" component={Species} />
+          <AppStack.Screen name="Species" component={DashboardSpecies} />
           <AppStack.Screen name="Livestock" component={Livestock} />
           <AppStack.Screen name="Tanks" component={DashboardTanks} />
           <AppStack.Screen name="AddTank" component={DashboardAddTank} />
