@@ -7,7 +7,7 @@ import { theme } from '../theme';
 
 type Props = React.ComponentProps<typeof PaperButton>;
 
-const Button = ({ mode, style, children, ...props }: Props) => (
+const Button = ({ mode, style, children, ...props }) => (
   <PaperButton
     style={[
       styles.button,

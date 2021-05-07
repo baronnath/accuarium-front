@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Header = ({ children }: Props) => (
+const Header = ({ children }) => (
   <Text style={styles.header}>{children}</Text>
 );
 
