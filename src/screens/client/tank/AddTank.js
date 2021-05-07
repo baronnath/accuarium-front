@@ -56,7 +56,8 @@ export default function AddTank({ navigation }) {
 
   const sliderItems = [
       <>
-        <Text>Chose a name for your new project</Text>
+        <MaterialCommunityIcons name="fishbowl-outline" size={150} color={theme.colors.accent} />
+        <Paragraph>Choose a name for your new project</Paragraph>
         <TextInput
           label="Tank alias"
           name="name"
@@ -70,11 +71,21 @@ export default function AddTank({ navigation }) {
         />
       </>,
       <>
-        <Text>Pick an image as your tank avatar</Text>
-        { tank.values.image && <Image source={{ uri: tank.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} /> }
+        {
+          tank.values.image ?
+            <Image source={{ uri: tank.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} />
+            :
+            <>
+              <MaterialCommunityIcons name="camera-plus" size={100} color={theme.colors.accent} onPress={() => pickImage()} />
+              <Paragraph >Pick an image as your tank avatar</Paragraph>
+            </>
+
+        }
         <Button onPress={() => pickImage()} >Pick an image</Button>
       </>,
       <>
+        <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
+        <Paragraph >Your tank measures</Paragraph>
         <View style={styles.inputRow}>
           <View style={styles.inputWrap}>
             <TextInput
@@ -141,12 +152,13 @@ export default function AddTank({ navigation }) {
               style={styles.inputLeft}
             />
           </View>
-          
         </View>
+        <Paragraph >Click on the formula to calculate your tank volume</Paragraph>
       </>,
       <>
-        <Text>That's all you need for this new project!</Text>
-        <Button onPress={onSubmit}>Save tank</Button>
+        <MaterialCommunityIcons name="cube-outline" size={100} color={theme.colors.accent} />
+        <Paragraph>You are all set!</Paragraph>
+        <Button onPress={onSubmit}>Save</Button>
       </>,
   ];
 
@@ -276,6 +288,7 @@ const styles = StyleSheet.create({
   inputRow: {
     width: '100%',
     flexDirection: 'row',
+    marginTop: 30,
     marginBottom: 0,
   },
   inputWrap: {

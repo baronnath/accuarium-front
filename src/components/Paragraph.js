@@ -8,17 +8,17 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Paragraph = ({ style, children, ...props }: Props) => (
+const Paragraph = ({ style, children, ...props }) => (
   <Text style={[styles.text,style]}>{children}</Text>
 );
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 26,
     color: theme.colors.text,
     textAlign: 'center',
-    marginBottom: 14,
+    marginBottom: 10,
   },
 });
 
