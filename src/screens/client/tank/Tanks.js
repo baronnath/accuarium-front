@@ -19,6 +19,7 @@ import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
@@ -26,20 +27,14 @@ import { preferences } from '../../../../app.json';
 
 export default function Tanks({ navigation }) {
 
-  const [isLoading, setLoading] = useState(true);
-  const [tanks, setTanks] = useState(false);
   const user = useSelector(state => state.user.data);
+  const tanks = useSelector(state => state.tanks.data);
+  const isLoading = useSelector(state => state.tanks.isLoading);
+  const dispatch = useDispatch();
 
   useFocusEffect(
     React.useCallback(() => {
-      axios.get(backend.url + '/tank', {params: {userId: user._id}})
-      .then(res => {
-          setTanks(res.data.tanks);
-          setLoading(false);
-      })
-      .catch(err => {
-          handleAlert(err);          
-      });
+      dispatch(tankActions.getTankByUser(user._id));
     }, [user])
   );
 
