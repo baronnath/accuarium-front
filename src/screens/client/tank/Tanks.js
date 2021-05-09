@@ -51,7 +51,7 @@ export default function Tanks({ navigation }) {
           { isLoading ?
             <Spinner />
           :
-            tanks.length ?
+            !!tanks.length ?
         
               <>
                 <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>

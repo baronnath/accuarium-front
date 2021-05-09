@@ -12,6 +12,7 @@ import Modal from './Modal';
 import { backend } from '../../app';
 import { theme } from '../theme';
 import { handleAlert } from '../helpers/global';
+import { actions as tankActions } from '../ducks/tank';
 import { actions as alertActions } from '../ducks/alert';
 
 
@@ -27,17 +28,19 @@ const TankCard = ({ tank, ...props }) => {
   function closeMenu () { setVisible(false); }
 
   function deleteTank() {
-    axios.delete(backend.url + '/tank', {params: {tankId: tank._id}})
-      .then(res => {
-        dispatch(alertActions.success(res.data.message));
-        navigation.push('Tanks');
-      })
-      .catch(err => {
-        handleAlert(err);          
-      })
-      .finally(() => {
-        setModalVisible(false);
-      });
+    dispatch(tankActions.delete({tankId: tank._id}));
+    setModalVisible(false);
+    // axios.delete(backend.url + '/tank', {params: {tankId: tank._id}})
+    //   .then(res => {
+    //     dispatch(alertActions.success(res.data.message));
+    //     navigation.push('Tanks');
+    //   })
+    //   .catch(err => {
+    //     handleAlert(err);          
+    //   })
+    //   .finally(() => {
+    //     setModalVisible(false);
+    //   });
   }
 
   const menuButton = <MaterialCommunityIcons {...props} size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
