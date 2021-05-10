@@ -12,19 +12,22 @@ export default (state = {}, action) => {
     switch (action.type) {
         case types.ALERT_SUCCESS:
             return {
+                ...state,
                 type: 'success',
                 message: action.message,
                 visible: true
             };
         case types.ALERT_ERROR:
             return {
+                ...state,
                 type: 'error',
                 message: action.message,
                 visible: true
             };
         case types.ALERT_CLEAR:
             return {
-                type: 'success',
+                ...state,
+                type: '',
                 message: '',
                 visible: false
             };
