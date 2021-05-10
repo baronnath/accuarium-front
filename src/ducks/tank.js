@@ -39,14 +39,22 @@ export default (state = defaultState, action) => {
           ...state,
           isLoading: false,
       };
-    // Registration
     case types.GETTANK_SUCCESS:
-    case types.ADDSPECIES_SUCCESS:
       return {
           ...state,
           data: action.payload.tanks,
           isLoading: false,
       };
+    // Add species to tank: find modified tank in state and update only the affected tank
+    case types.ADDSPECIES_SUCCESS:
+    	const index = state.data.findIndex(tank => action.payload.tank._id === tank._id);
+    	const data = [...state.data];
+    	data[index] = action.payload.tank;
+    	return {
+    		...state,
+    		data: data,
+        isLoading: false,
+    	}
     case types.DELETE_SUCCESS:
     	return {
     		...state,
@@ -60,6 +68,7 @@ export default (state = defaultState, action) => {
 
 const defaultState = {
 	isLoading: true,
+	data: [],
 };
 
 // Actions
@@ -90,8 +99,8 @@ function _getTank(params){
                 }
             ).catch(
                 err => {
-                		handleAlert(err);
                     dispatch(error());
+                		handleAlert(err);
                 }
             );
     };
@@ -105,7 +114,7 @@ function addSpecies(params){
 	return dispatch => {
         dispatch(request());
 
-        axios.put(backend.url + '/tank/addspecies', {params: params})
+        axios.put(backend.url + '/tank/addspecies', params)
             .then(
                 res => { 
                     dispatch(success(res.data));
@@ -113,8 +122,8 @@ function addSpecies(params){
                 }
             ).catch(
                 err => {
-                		handleAlert(err);
                     dispatch(error());
+                		handleAlert(err);
                 }
             );
     };

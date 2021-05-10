@@ -3,10 +3,11 @@
 import React, { useState, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Avatar, Card, Menu, Text } from 'react-native-paper';
+import { Avatar, Card, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { axios } from '../helpers/axios';
+import Paragraph from './Paragraph';
 import Button from './Button';
 import Modal from './Modal';
 import { backend } from '../../app';
@@ -30,17 +31,6 @@ const TankCard = ({ tank, ...props }) => {
   function deleteTank() {
     dispatch(tankActions.delete({tankId: tank._id}));
     setModalVisible(false);
-    // axios.delete(backend.url + '/tank', {params: {tankId: tank._id}})
-    //   .then(res => {
-    //     dispatch(alertActions.success(res.data.message));
-    //     navigation.push('Tanks');
-    //   })
-    //   .catch(err => {
-    //     handleAlert(err);          
-    //   })
-    //   .finally(() => {
-    //     setModalVisible(false);
-    //   });
   }
 
   const menuButton = <MaterialCommunityIcons {...props} size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
@@ -65,7 +55,7 @@ const TankCard = ({ tank, ...props }) => {
       >
         <Card.Title
           title={tank.name}
-          subtitle={ tank.liters ? <Text>{tank.liters} L</Text> : '' }
+          subtitle={ tank.liters ? <Paragraph>{tank.liters} L</Paragraph> : '' }
           right={(props) => tankMenu}
           rightStyle={styles.rightStyle}
         />
@@ -73,8 +63,8 @@ const TankCard = ({ tank, ...props }) => {
       </Card>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="alert-circle-outline" size={60} color={theme.colors.accent} />
-        <Text style={styles.modalTitle}>Are you sure?</Text>
-        <Text style={styles.modalParagraph}>You won't be able to revert this</Text>
+        <Paragraph style={styles.modalTitle}>Are you sure?</Paragraph>
+        <Paragraph style={styles.modalParagraph}>You won't be able to revert this</Paragraph>
         <View style={styles.buttonsContainer}>
           <Button
             onPress={() => deleteTank()}

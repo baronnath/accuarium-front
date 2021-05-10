@@ -34,6 +34,7 @@ export default function Species({ route, navigation }) {
   useFocusEffect(
     React.useCallback(() => {
       setId(speciesId);
+      dispatch(tankActions.getTankByUser(user._id));
     }, [])
   );
    
