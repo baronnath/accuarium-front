@@ -17,7 +17,10 @@ exports.isString = (string) => {
 
 // Capitalize first string letter 
 exports.ucFirst = (string) =>  {
+	if(exports.isString(string))
     return string.charAt(0).toUpperCase() + string.slice(1);
+  else
+  	return string;
 }
 
 // Check integer
