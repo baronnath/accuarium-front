@@ -15,6 +15,7 @@ import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from '../../../components/SpeciesCard';
 import Spinner from '../../../components/Spinner';
+import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
@@ -72,6 +73,7 @@ export default function SpeciesSearch({ navigation }) {
   useFocusEffect(
     React.useCallback(() => {
       dispatchSearch();
+      dispatch(tankActions.getTankByUser(user._id));
     }, [])
   );
 
