@@ -29,3 +29,11 @@ export function calculateVolume(dimensions) {
     	resolve(liters);
     });
 }
+
+export function findMainSpecies(species) {
+  const main = species.find(sp => sp.main);
+  if(main)
+    return main;
+  else
+    return null;
+}
