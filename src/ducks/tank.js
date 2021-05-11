@@ -89,20 +89,20 @@ function getTankByUser(id) {
 }
 
 function _getTank(params){
-	return dispatch => {
-        dispatch(request());
+		return dispatch => {
+      dispatch(request());
 
-        axios.get(backend.url + '/tank', {params: params})
-            .then(
-                res => { 
-                    dispatch(success(res.data));
-                }
-            ).catch(
-                err => {
-                    dispatch(error());
-                		handleAlert(err);
-                }
-            );
+      axios.get(backend.url + '/tank', {params: params})
+        .then(
+            res => { 
+                dispatch(success(res.data));
+            }
+        ).catch(
+            err => {
+                dispatch(error());
+            		handleAlert(err);
+            }
+        );
     };
 
     function request() { return { type: types.GETTANK_REQUEST } }

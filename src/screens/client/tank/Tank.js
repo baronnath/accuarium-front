@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
-import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Platform, Image, Picker, Text } from 'react-native';
+import { StyleSheet, View, Image, ScrollView} from 'react-native';
 import { ToggleButton, Avatar, Title, Caption } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
@@ -18,16 +17,23 @@ import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
-import { handleAlert } from '../../../helpers/global';
+import { handleAlert, findMainSpecies } from '../../../helpers/global';
+import { ucFirst } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
   const { tankId } = route.params;
-  const [isLoading, setLoading] = useState(false);
+
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+  const tank = useSelector(state => state.tanks.data);
+  const isLoading = useSelector(state => state.tanks.isLoading);
+  const dispatch = useDispatch();
+
   const [id, setId] = useState(false);
-  const [tank, setTank] = useState(false);
-  
+  const [mainSpecies, setMainSpecies] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -36,77 +42,48 @@ export default function Tank({ route, navigation }) {
   );
    
   useEffect(() => {
+    dispatch(tankActions.getTank(tankId))
+  }, [tankId]);
 
-    // Get tank data
-    axios.get(backend.url + '/tank', {params: {tankId: tankId}})
-      .then(res => {
-        setTank(res.data.tanks);
-      })
-      .catch(err => {
-        handleAlert(err);          
-      });
+  useEffect(() => {
+    if(tank.species)
+      setMainSpecies(findMainSpecies(tank.species));
+  }, [tank]);
 
-  }, [tankId, id]);
+
 
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
     >
       <Background justify="top">
-        { tank ?
-          <>
-            <Header>
-              {ucFirst(tank.name)}
-            </Header>
+        { isLoading ?
 
-            <View style={{flexDirection:'row',marginTop: 15}}>
-              <Avatar.Image 
-                  source={{
-                      uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
-                  }}
-                  size={50}
-              />
-              <View style={{marginLeft:15, flexDirection:'column'}}>
-                <Title>{ucFirst(tank.user.name)}</Title>
-                <Caption>{tank.user.email}</Caption>
-              </View>
-            </View>
+            <Spinner/>
+            :
 
+            !!tank &&
+              <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+                <Header></Header>
+                <View style={styles.rowContainer}>
+                  <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
+                  <View style={styles.titleContainer}>
+                    <Paragraph style={{color: theme.colors.lightText, marginBottom: 0}}>{ucFirst(tank.name)}</Paragraph>
+                    <Paragraph style={{fontSize: 50, lineHeight: 50, fontWeight: 'bold', marginBottom: 0}}>{tank.liters} L</Paragraph>
+                    {
+                      !!mainSpecies &&
+                        <View style={styles.rowContainer}>
+                          <MaterialCommunityIcons style={{pmarginTop: 0}} name="star-circle" size={20} />
+                          <Paragraph style={{marginLeft: 5, marginBottom: 0}}>{mainSpecies.species.name[locale]}</Paragraph>
+                        </View>
+                    }
+                  </View>
+                </View>
+                <Header>
+                  {tank.name}
+                </Header>
 
-            <Image source={{ uri: `${backend.imagesUrl}tank/${tank._id}.jpg` }} style={styles.image} />
-
-            <View style={styles.row}>
-              <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
-                name="ruler-square" 
-                color={theme.colors.lightText}
-                size={30}
-              />
-              <Text style={styles.parameters}>
-                { tank.measures.width && tank.measures.width } x { tank.measures.height && tank.measures.height } x { tank.measures.length && tank.measures.length } mm
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
-                name="cube-outline" 
-                color={theme.colors.lightText}
-                size={30}
-              />
-              <Text style={styles.parameters}>
-                { tank.liters && tank.liters } L
-              </Text>
-            </View>
-            <View style={styles.tagContainer}>
-              { tank.species &&
-                tank.species.map(species => {
-                    return (
-                      <Text>Ciao pescao</Text>
-                    )
-                  })
-              }
-            </View>
-          </>
-          :
-          <Spinner/>
+              </ScrollView>
         }
 
       </Background>
@@ -119,14 +96,25 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     width: '100%',
+  },
+  scrollContainer: {
+    flex: 1,
+    width: '100%',
     flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  scroll: {
+    alignSelf: 'stretch',
+  },
+  rowContainer: {
+    flexDirection:'row',
+    alignItems: 'center',
+  },
   image: {
     marginVertical: 10,
     width: '100%',
-    height: 200
+    height: 200,
   },
   tagContainer: {
     flex:1,
@@ -146,6 +134,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  titleContainer: {
+    flex:3,
+    alignItems:'flex-start',
   },
   listIcon: {
     marginRight: 8,

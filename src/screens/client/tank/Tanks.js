@@ -28,6 +28,7 @@ import { preferences } from '../../../../app.json';
 export default function Tanks({ navigation }) {
 
   const user = useSelector(state => state.user.data);
+  const locale = user.locale;
   const tanks = useSelector(state => state.tanks.data);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
