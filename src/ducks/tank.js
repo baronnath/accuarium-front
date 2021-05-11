@@ -133,20 +133,20 @@ function addSpecies(params){
     function error() { return { type: types.ADDSPECIES_ERROR } }
 }
 
-function _delete(tank) {
+function _delete(tankId) {
   return dispatch => {
-      dispatch(request(id));
+      dispatch(request());
 
-      axios.delete(backend.url + '/tank', {params: tank})
+      axios.delete(backend.url + '/tank', {params: {tankId: tankId}})
         .then(
           res => {
-        		dispatch(alertActions.success(res.data.message));
             dispatch(success(res.data));
+        		dispatch(alertActions.success(res.data.message));
           }
         ).catch(
           err => {
-        		handleAlert(err);
             dispatch(error());
+        		handleAlert(err);
           }
         );
   };

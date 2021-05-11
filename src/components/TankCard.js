@@ -29,7 +29,7 @@ const TankCard = ({ tank, ...props }) => {
   function closeMenu () { setVisible(false); }
 
   function deleteTank() {
-    dispatch(tankActions.delete({tankId: tank._id}));
+    dispatch(tankActions.delete(tank._id));
     setModalVisible(false);
   }
 
