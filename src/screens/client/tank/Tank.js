@@ -73,15 +73,58 @@ export default function Tank({ route, navigation }) {
                     {
                       !!mainSpecies &&
                         <View style={styles.rowContainer}>
-                          <MaterialCommunityIcons style={{pmarginTop: 0}} name="star-circle" size={20} />
+                          <MaterialCommunityIcons style={{pmarginTop: 0}} name="star-circle" size={20} color={theme.colors.lightText}/>
                           <Paragraph style={{marginLeft: 5, marginBottom: 0}}>{mainSpecies.species.name[locale]}</Paragraph>
                         </View>
                     }
                   </View>
                 </View>
-                <Header>
-                  {tank.name}
-                </Header>
+                <View style={styles.box}>
+                  <View style={styles.rowContainer}>
+                    <View style={styles.parameters}>
+                      <FontAwesome5
+                        name="temperature-high" 
+                        color={theme.colors.lightText}
+                        size={25}
+                      />
+                    </View>
+                    <View style={[styles.rowContainer, styles.parameters]}>
+                        <MaterialCommunityIcons style={{marginVertical: -10, marginTop: 1}}
+                          name="alpha-p" 
+                          color={theme.colors.lightText}
+                          size={35}
+                        />
+                        <MaterialCommunityIcons style={{marginLeft:-25 ,marginVertical: -8}}
+                          name="alpha-h" 
+                          color={theme.colors.lightText}
+                          size={40}
+                        />
+                    </View>
+                    <View style={[styles.rowContainer, styles.parameters]}>
+                        <MaterialCommunityIcons style={{transform: [{rotateX: '180deg'}, {rotateY: '180deg'}]}}
+                          name="alpha-p" 
+                          color={theme.colors.lightText}
+                          size={35}
+                        />
+                        <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -25}]}
+                          name="alpha-h" 
+                          color={theme.colors.lightText}
+                          size={40}
+                        />
+                    </View>
+                  </View>
+                  <View style={styles.rowContainer}>
+                    <Paragraph style={styles.values}>
+                      15-25º
+                    </Paragraph>
+                    <Paragraph style={styles.values}>
+                      15-25º
+                    </Paragraph>
+                    <Paragraph style={styles.values}>
+                      15-25º
+                    </Paragraph>
+                  </View>
+                </View>
 
               </ScrollView>
         }
@@ -109,41 +152,33 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection:'row',
+  },
+  box: {
+    flex:1,
+    width: '80%',
+    marginVertical: 40,
+    padding: 15,
+    paddingTop: 30,
+    borderColor: theme.colors.disabled,
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  parameters: {
+    flex:1,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  values: {
+    flex:1,
   },
   image: {
     marginVertical: 10,
     width: '100%',
     height: 200,
   },
-  tagContainer: {
-    flex:1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    borderTopColor: theme.colors.lightText,
-    borderTopWidth: 1,
-    paddingTop: 8,
-    width: '100%',
-    justifyContent: 'center',
 
-  },
-  row: {
-    flex: 1,
-    marginVertical: 10,
-    marginLeft: '50%',
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
   titleContainer: {
     flex:3,
     alignItems:'flex-start',
-  },
-  listIcon: {
-    marginRight: 8,
-  },
-  parameters: {
-    position: 'absolute',
-    left: 45,
   },
 });
