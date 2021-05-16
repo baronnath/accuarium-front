@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 30,
+    lineHeight: 30,
   },
   modalParagraph: {
     color: theme.colors.lightText,
