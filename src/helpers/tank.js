@@ -29,3 +29,17 @@ export function findMainSpecies(species) {
   else
     return null;
 }
+
+export function splitSpeciesByDepth(species) {
+  let splitted = {
+    surface: [],
+    medium: [],
+    bottom: []
+  };
+
+  species.forEach(sp => {
+    splitted[sp.species.depth.name.en].push(sp.species);
+  });
+
+  return splitted;
+}
