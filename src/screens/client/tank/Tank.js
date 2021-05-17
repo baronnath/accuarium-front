@@ -1,4 +1,4 @@
-// src/screens/dashboard/tank/Tank.js
+// src/screens/client/tank/Tank.js
 
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,13 +12,12 @@ import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
 import Paragraph from '../../../components/Paragraph';
-import SpeciesCard from '../../../components/SpeciesCard';
+import GraphicTank from './GraphicTank';
 import Modal from '../../../components/Modal';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Svg, { Circle, Rect, Path } from 'react-native-svg';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
@@ -37,6 +36,7 @@ export default function Tank({ route, navigation }) {
 
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
+  const [speciesByDepth, setSpeciesByDepth] = useState({});
   const [isModalVisible, setModalVisible] = useState(false);
 
   useFocusEffect(
@@ -50,9 +50,9 @@ export default function Tank({ route, navigation }) {
   }, [tankId]);
 
   useEffect(() => {
-    if(tank.species)
+    if(tank.species){
       setMainSpecies(findMainSpecies(tank.species));
-
+    }
   }, [tank]);
 
 
@@ -138,13 +138,9 @@ export default function Tank({ route, navigation }) {
                   </View>
                 </View>
 
-                <View style={styles.speciesContainer}>
-                  <Svg height="18" width="100%">
-                    <Path x="3" y="0" width="100%" height="100" stroke={theme.colors.lightText} strokeWidth="2" d="M 1 1.898 c 7.047 0 7.047 10.205 14.095 10.205 c 7.048 0 7.048 -10.205 14.095 -10.205 c 7.046 0 7.046 10.205 14.093 10.205 c 7.047 0 7.047 -10.205 14.095 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.047 0 7.047 -10.205 14.093 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.047 0 7.047 -10.205 14.095 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.048 0 7.048 -10.205 14.096 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.099 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.046 0 7.046 -10.205 14.093 -10.205 c 7.048 0 7.048 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.099 -10.205 c 7.048 0 7.048 10.205 14.097 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.099 10.205 c 7.05 0 7.05 -10.205 14.101 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.05 0 7.05 -10.205 14.1 -10.205 c 7.05 0 7.05 10.205 14.1 10.205 c 7.051 0 7.051 -10.205 14.102 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.051 0 7.051 -10.205 14.103 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.054 0 7.054 -10.205 14.108 -10.205 c 7.054 0 7.054 10.205 14.108 10.205"/>
-                  </Svg>
-                  {/* Split species array by depth and display */}
-
-                </View>
+                { tank.species &&
+                  <GraphicTank species={tank.species} />
+                }
 
               </ScrollView>
         }
