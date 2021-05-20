@@ -73,13 +73,13 @@ export default function Tank({ route, navigation }) {
                 <View style={styles.rowContainer}>
                   <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
                   <View style={styles.titleContainer}>
-                    <Paragraph style={{color: theme.colors.lightText, marginBottom: 0}}>{ucFirst(tank.name)}</Paragraph>
-                    <Paragraph style={{fontSize: 50, lineHeight: 50, fontWeight: 'bold', marginBottom: 0}}>{tank.liters} L</Paragraph>
+                    <Paragraph style={styles.tankName} fontWeight="light" >{ucFirst(tank.name)}</Paragraph>
+                    <Header style={styles.volume}>{tank.liters} L</Header>
                     {
                       !!mainSpecies &&
                         <View style={styles.rowContainer}>
-                          <MaterialCommunityIcons style={{pmarginTop: 0}} name="star-circle" size={20} color={theme.colors.lightText}/>
-                          <Paragraph style={{marginLeft: 5, marginBottom: 0}}>{mainSpecies.species.name[locale]}</Paragraph>
+                          <MaterialCommunityIcons style={{marginTop: 0}} name="star-circle" size={20} color={theme.colors.lightText}/>
+                          <Paragraph style={styles.mainSpecies}>{mainSpecies.species.name[locale]}</Paragraph>
                         </View>
                     }
                   </View>
@@ -126,13 +126,13 @@ export default function Tank({ route, navigation }) {
                     </View>
                   </View>
                   <View style={styles.rowContainer}>
-                    <Paragraph style={styles.values}>
+                    <Paragraph style={styles.values} fontWeight="bold">
                       25º
                     </Paragraph>
-                    <Paragraph style={styles.values}>
+                    <Paragraph style={styles.values} fontWeight="bold">
                       6.5
                     </Paragraph>
-                    <Paragraph style={styles.values}>
+                    <Paragraph style={styles.values} fontWeight="bold">
                       10
                     </Paragraph>
                   </View>
@@ -170,8 +170,24 @@ const styles = StyleSheet.create({
   scroll: {
     alignSelf: 'stretch',
   },
+  tankName: {
+    color: theme.colors.lightText,
+    marginBottom: 0,
+    lineHeight: 30,
+  },
+  volume: {
+    fontSize: 50,
+    lineHeight: 38,
+    paddingBottom: 0,
+  },
+  mainSpecies: {
+    marginLeft: 5,
+    marginVertical: 0,
+    lineHeight: 20,
+  },
   rowContainer: {
     flexDirection:'row',
+    justifyContent: 'center',
   },
   box: {
     flex:1,
@@ -191,7 +207,6 @@ const styles = StyleSheet.create({
   },
   values: {
     flex:1,
-    fontWeight: 'bold',
     fontSize: 20,
   },
   infoIcon: {

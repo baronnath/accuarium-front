@@ -38,7 +38,7 @@ export function splitSpeciesByDepth(species) {
   };
 
   species.forEach(sp => {
-    splitted[sp.species.depth.name.en].push(sp.species);
+    splitted[sp.species.depth.name.en].push(sp);
   });
 
   return splitted;

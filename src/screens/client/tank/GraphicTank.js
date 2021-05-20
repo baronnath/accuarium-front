@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     fontStyle: 'italic',
+    marginLeft: 5,
   },
   separator: {
     borderWidth: 5,
