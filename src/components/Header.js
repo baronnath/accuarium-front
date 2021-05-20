@@ -2,23 +2,31 @@
 
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import { useFonts, Aleo_700Bold } from '@expo-google-fonts/aleo';
 import { theme } from '../theme';
 
-type Props = {
-  children: React.ReactNode;
-};
+const Header = ({ style, children }) => {
+	let [fontsLoaded] = useFonts({
+    Aleo_700Bold,
+  });
 
-const Header = ({ children }) => (
-  <Text style={styles.header}>{children}</Text>
-);
+	return(
+		!fontsLoaded ?
+			<AppLoading />
+		:
+	  	<Text style={[styles.header,style]}>{children}</Text>
+	);
+};
 
 const styles = StyleSheet.create({
   header: {
     fontSize: 26,
     color: theme.colors.primary,
-    fontWeight: 'bold',
+    fontFamily: 'Aleo_700Bold',
     paddingVertical: 14,
   },
 });
+
 
 export default memo(Header);
