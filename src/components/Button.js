@@ -7,7 +7,7 @@ import { theme } from '../theme';
 
 type Props = React.ComponentProps<typeof PaperButton>;
 
-const Button = ({ mode, style, children, ...props }) => (
+const Button = ({ mode, style, icon, children, ...props }) => (
   <PaperButton
     style={[
       styles.button,
@@ -19,6 +19,7 @@ const Button = ({ mode, style, children, ...props }) => (
       mode === 'outlined' && { color: theme.colors.primary },
     ]}
     mode={mode}
+    icon={icon} 
     theme={theme}
     {...props}
   >
