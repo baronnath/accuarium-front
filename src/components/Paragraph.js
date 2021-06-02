@@ -40,9 +40,6 @@ const Paragraph = ({ style, fontStyle, fontWeight, children }) => {
 	else
 		fontOptions = styles.regular;
 
-	console.log(fontOptions);
-  	
-
 	return(
 		!fontsLoaded ?
 			<AppLoading />
