@@ -23,7 +23,7 @@ export default function Home({ navigation }) {
       <Button mode="outlined" onPress={() => navigation.navigate('Register')}>
         Sign up
       </Button>
-      <Button mode="outlined" onPress={() => navigation.navigate('Dashboard')}>
+      <Button mode="outlined" onPress={() => navigation.navigate('Tanks')}>
         Dashboard
       </Button>
       <Button mode="outlined" onPress={() => signOut()}>

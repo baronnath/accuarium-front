@@ -6,11 +6,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { Text, StyleSheet, View, ScrollView, Pressable } from 'react-native';
+import { Text, StyleSheet, View, FlatList } from 'react-native';
 import { DataTable } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
+import Paragraph from '../../../components/Paragraph';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from '../../../components/SpeciesCard';
@@ -28,6 +29,7 @@ export default function SpeciesSearch({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [grid, setGrid] = useState(true);
   const [page, setPage] = useState(0);
+  const [isFinalPage, setIsFinalPage] = useState(false);
   const [sort, setSort] = useState({
     field: 'name',
     direction: 'ascending'
@@ -87,7 +89,12 @@ export default function SpeciesSearch({ navigation }) {
     }
     axios.get(backend.url + '/species/search', {params: params})
       .then(res => {
-          setResults(res.data.species);
+          const newResutls = res.data.species;
+          console.log(!!newResutls.length)
+          if(!!newResutls.length)
+            setResults(prevResults => [...prevResults, ...newResutls]);
+          else
+            setIsFinalPage(true);
           setTotalResults(res.data.total);
           setLoading(false);
       })
@@ -95,6 +102,10 @@ export default function SpeciesSearch({ navigation }) {
           handleAlert(err);  
           setLoading(false);
       });
+  }
+
+  function onScrollEnd() {
+    setPage(page + 1);
   }
 
   function switchGrid(speciesId){
@@ -122,22 +133,24 @@ export default function SpeciesSearch({ navigation }) {
           value={query}
         />
 
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-          
-          { isLoading ?
-              <Spinner />
-            :
-              <>
-                {
-                  results.map(species => {     
-                    return (
-                      <SpeciesCard species={species} grid={grid}></SpeciesCard>
-                    )
-                  })
-                }
-              </>
-          }
-        </ScrollView>
+        <FlatList
+          style={styles.flatList}
+          contentContainerStyle={styles.flatListContainer}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={results}
+          keyExtractor={result => result._id}
+          renderItem={({item}) => (
+              <SpeciesCard species={item} grid={grid} key={item._id} />
+          )}
+          onEndReached={isFinalPage ? null : onScrollEnd}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={ isLoading && <Spinner /> }
+        />
+
+        { isFinalPage &&
+          <Paragraph style={{paddingTop: 20}}>No more species</Paragraph>
+        }
 
       </Background>
     </>
@@ -146,26 +159,18 @@ export default function SpeciesSearch({ navigation }) {
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
   },
   flatList:{
     width: '100%',
   },
   flatListContainer: {
-    flex: 1,
     flexDirection: 'column',
-    height: '100%',
     width: '100%',
   },
   flatContainer: {
     marginTop: 20,
     width: '100%',
-  },
-  scroll: {
-    width: '100%',
-  },
-  scrollContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   columnFirst: {
       flex: 4,
