@@ -21,5 +21,9 @@ export function navigate(name, params) {
   navigationRef.current?.navigate(name, params);
 }
 
+export function route() {
+  return navigationRef.current.getCurrentRoute();
+}
+
 
 
