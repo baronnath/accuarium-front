@@ -137,10 +137,13 @@ function addSpecies(params){
 function _delete(tankId) {
   return dispatch => {
       dispatch(request());
+      const route = navigator.route();
 
       axios.delete(backend.url + '/tank', {params: {tankId: tankId}})
         .then(
           res => {
+            if(route.name == 'Tank')
+              navigator.navigate('Tanks');
             dispatch(success(res.data));
         		dispatch(alertActions.success(res.data.message));
           }

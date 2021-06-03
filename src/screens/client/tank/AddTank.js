@@ -232,6 +232,7 @@ export default function AddTank({ navigation }) {
     .then(res => {
       dispatch(alertActions.success('Now add some fishes to your tank'));
       setTank(defaultTank);
+      navigation.navigate('Tanks');
       navigation.navigate('Species');
     })
     .catch(err => {
