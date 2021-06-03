@@ -9,12 +9,12 @@ import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text, ScrollView } from 'react-native';
 import { FAB } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import TankCard from './TankCard';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 import Searchbar from '../../../components/Searchbar';
 import Paragraph from '../../../components/Paragraph';
-import TankCard from '../../../components/TankCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';

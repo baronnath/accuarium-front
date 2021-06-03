@@ -6,11 +6,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Image, ScrollView} from 'react-native';
-import { ToggleButton, Avatar, Title, Caption } from 'react-native-paper';
+import { Menu } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import TankDeleteModal from './TankDeleteModal';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
+import OptionsMenu from '../../../components/OptionsMenu';
 import Paragraph from '../../../components/Paragraph';
 import GraphicTank from './GraphicTank';
 import Modal from '../../../components/Modal';
@@ -37,6 +39,9 @@ export default function Tank({ route, navigation }) {
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
   const [speciesByDepth, setSpeciesByDepth] = useState({});
+  const [isMenuVisible, setMenuVisible] = useState(false);
+  const [isMenuModalVisible, setMenuModalVisible] = useState(false);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
   useFocusEffect(
@@ -55,7 +60,10 @@ export default function Tank({ route, navigation }) {
     }
   }, [tank]);
 
+  function openMenu () { setMenuVisible(true); }
+  function closeMenu () { setMenuVisible(false); }
 
+  const menuButton = <MaterialCommunityIcons size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
 
   return (
     <KeyboardAwareScrollView
@@ -70,6 +78,15 @@ export default function Tank({ route, navigation }) {
             !!tank &&
               <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 <Header></Header>
+                <OptionsMenu>
+                  <Menu
+                    visible={isMenuVisible}
+                    onDismiss={closeMenu}
+                    anchor={menuButton}>
+                    <Menu.Item icon="square-edit-outline" onPress={() => {}} title="Edit" />
+                    <Menu.Item icon="delete-forever-outline" onPress={() => { setMenuVisible(false), setDeleteModalVisible(true) }} title="Remove" />
+                  </Menu>
+                </OptionsMenu>
                 <View style={styles.rowContainer}>
                   <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
                   <View style={styles.titleContainer}>
@@ -150,6 +167,7 @@ export default function Tank({ route, navigation }) {
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
         <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the main tank species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>
       </Modal>
+      <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} />
     </KeyboardAwareScrollView>
   );
 }
