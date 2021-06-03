@@ -57,9 +57,10 @@ export default (state = defaultState, action) => {
         isLoading: false,
     	}
     case types.DELETE_SUCCESS:
+      const filtered = state.data.filter(tank => action.payload.tanks._id !== tank._id);
     	return {
     		...state,
-        data: state.data.filter(tank => action.payload.tanks._id !== tank._id),
+        data: filtered,
         isLoading: false,
     	};
     default:
