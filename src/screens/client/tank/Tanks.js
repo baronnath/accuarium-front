@@ -59,7 +59,7 @@ export default function Tanks({ navigation }) {
                   {
                     tanks.map(tank => {
                       return (
-                          <TankCard tank={tank}></TankCard>
+                          <TankCard tank={tank} key={tank._id} ></TankCard>
                       );
                     })
                   }

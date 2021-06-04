@@ -29,7 +29,7 @@ export default function SpeciesSearch({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [grid, setGrid] = useState(true);
   const [page, setPage] = useState(0);
-  const [isFinalPage, setIsFinalPage] = useState(false);
+  const [isFinalPage, setFinalPage] = useState(false);
   const [sort, setSort] = useState({
     field: 'name',
     direction: 'ascending'
@@ -44,14 +44,12 @@ export default function SpeciesSearch({ navigation }) {
   const [totalResults, setTotalResults] = useState(0);
   const dispatch = useDispatch();
 
-  const from = Math.min((page * preferences.pagination) + 1, totalResults);
-  const to = Math.min((page + 1) * preferences.pagination, totalResults);
-
   let timeout;
   const onChangeSearch = searchKey => {
     clearTimeout(timeout);
     setResults([]);
     setPage(0);
+    setFinalPage(false);
     setQuery(searchKey);
   }
 
@@ -69,13 +67,13 @@ export default function SpeciesSearch({ navigation }) {
   }
   
   useEffect(()=>{
-    timeout = setTimeout(() => dispatchSearch(query), 400);
+    timeout = setTimeout(() => dispatchSearch(query), 800);
   },[query, page, sort]);
   
   useFocusEffect(
     React.useCallback(() => {
-      dispatchSearch();
-      dispatch(tankActions.getTankByUser(user._id));
+      // dispatchSearch();
+      // dispatch(tankActions.getTankByUser(user._id));
     }, [])
   );
 
@@ -94,7 +92,7 @@ export default function SpeciesSearch({ navigation }) {
           if(!!newResutls.length)
             setResults(prevResults => [...prevResults, ...newResutls]);
           else
-            setIsFinalPage(true);
+            setFinalPage(true);
           setTotalResults(res.data.total);
           setLoading(false);
       })
@@ -139,19 +137,19 @@ export default function SpeciesSearch({ navigation }) {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           data={results}
-          keyExtractor={result => result._id}
+          keyExtractor={(item) => item._id}
           renderItem={({item}) => (
-              <SpeciesCard species={item} grid={grid} key={item._id} />
+              <SpeciesCard species={item} grid={grid} />
           )}
           onEndReached={isFinalPage ? null : onScrollEnd}
           onEndReachedThreshold={0.5}
-          ListFooterComponent={ isLoading && <Spinner /> }
-        />
-
-        { isFinalPage &&
-          <Paragraph style={{paddingTop: 20}}>No more species</Paragraph>
-        }
-
+          ListFooterComponent={
+            isLoading
+              ? <Spinner />
+              : isFinalPage &&
+                <Paragraph style={{paddingVertical: 20}}>No more species</Paragraph> 
+          }
+        />  
       </Background>
     </>
   );

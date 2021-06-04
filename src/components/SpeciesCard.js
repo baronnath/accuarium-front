@@ -103,6 +103,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
                 tanks.map(tank => {
                   return (
                     <List.Item
+                      key={tank._id}
                       style={styles.list}
                       title={tank.name}
                       description={tank.liters && `${tank.liters} L`}
