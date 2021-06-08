@@ -15,7 +15,7 @@ exports.isString = (string) => {
 	  return false;
 }
 
-// Capitalize first string letter 
+// Capitalize first string letter
 exports.ucFirst = (string) =>  {
 	if(exports.isString(string))
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -38,9 +38,12 @@ exports.clone = (input) => {
 	return _.cloneDeep(input);
 }
 
+// Check empty object
+exports.isEmpty = (object) => {
+  return _.isEmpty(object);
+}
+
 // Replace comma to period
 exports.commaToPeriod = (string) => {
 	return string.replace(/,/g, '.');
 }
-
-
