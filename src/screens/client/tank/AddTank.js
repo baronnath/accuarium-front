@@ -23,6 +23,7 @@ import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';
+import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { calculateVolume } from '../../../helpers/tank';
@@ -32,26 +33,19 @@ import validator from '../../../validators/tank';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
-  const dispatch = useDispatch();
   const locale = user.locale;
+  const dispatch = useDispatch();
+
+  const [errors, setErrors] = useState({});
 
   const defaultTank = {
-    values: {
-      name: null,
-      userId: user._id,
-      image: null,
-      width: null,
-      length: null,
-      height: null,
-      liters: null,
-    },
-    errors:{
-      name: null,
-      width: null,
-      length: null,
-      height: null,
-      liters: null,
-    }
+    name: null,
+    userId: user._id,
+    image: null,
+    width: null,
+    length: null,
+    height: null,
+    liters: null,
   }
   const [tank, setTank] = useState(defaultTank);
 
@@ -64,17 +58,17 @@ export default function AddTank({ navigation }) {
           name="name"
           returnKeyType="next"
           onChangeText={(name) => handleChange('name', name)}
-          value={tank.values.name}
-          error={!!tank.errors.name}
-          errorText={tank.errors.name}
+          value={tank.name}
+          error={!!errors.name}
+          errorText={errors.name}
           autoCapitalize="none"
           autofill="name"
         />
       </>,
       <>
         {
-          tank.values.image ?
-            <Image source={{ uri: tank.values.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} />
+          tank.image ?
+            <Image source={{ uri: tank.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} />
             :
             <>
               <MaterialCommunityIcons name="camera-plus" size={100} color={theme.colors.accent} onPress={() => pickImage()} />
@@ -94,34 +88,34 @@ export default function AddTank({ navigation }) {
               label="Width"
               name="width"
               returnKeyType="next"
-              value={tank.values.width}
+              value={tank.width}
               onChangeText={(width) => handleChange('width', width)}
-              error={!!tank.errors.width}
-              errorText={tank.errors.width}
+              error={!!errors.width}
+              errorText={errors.width}
             />
           </View>
           <View style={styles.inputWrap}>
-            <TextInput 
+            <TextInput
               style={styles.inputLeft}
               label="Height"
               name="height"
               returnKeyType="next"
-              value={tank.values.height}
+              value={tank.height}
               onChangeText={(height) => handleChange('height', height)}
-              error={!!tank.errors.height}
-              errorText={tank.errors.height}
+              error={!!errors.height}
+              errorText={errors.height}
             />
           </View>
           <View style={styles.inputWrap}>
-            <TextInput 
+            <TextInput
               style={styles.inputRight}
               label="Length"
               name="length"
               returnKeyType="next"
-              value={tank.values.length}
+              value={tank.length}
               onChangeText={(length) => handleChange('length', length)}
-              error={!!tank.errors.length}
-              errorText={tank.errors.length}
+              error={!!errors.length}
+              errorText={errors.length}
             />
           </View>
         </View>
@@ -145,9 +139,9 @@ export default function AddTank({ navigation }) {
               name="liters"
               returnKeyType="next"
               onChangeText={(liters) => handleChange('liters', liters)}
-              value={tank.values.liters}
-              error={!!tank.errors.liters}
-              errorText={tank.errors.liters}
+              value={tank.liters}
+              error={!!errors.liters}
+              errorText={errors.liters}
               autoCapitalize="none"
               autofill="liters"
               style={styles.inputLeft}
@@ -166,10 +160,7 @@ export default function AddTank({ navigation }) {
   async function handleChange(field, value) {
     setTank(prevTank => ({
       ...prevTank,
-      values: { 
-        ...prevTank.values,
-        [field]: value
-      }
+      [field]: value
     }));
   }
 
@@ -190,9 +181,9 @@ export default function AddTank({ navigation }) {
 
   function calculateLiters() {
     const dimensions = {
-      width: tank.values.width,
-      height: tank.values.height,
-      length: tank.values.length,
+      width: tank.width,
+      height: tank.height,
+      length: tank.length,
     }
     calculateVolume(dimensions)
       .then((liters) => {
@@ -206,20 +197,19 @@ export default function AddTank({ navigation }) {
 
   function onSubmit(){
     const validation = validator(tank);
-    
+    console.log('VAL',validation);
+
     if (validation !== false) {
-      setTank(prevTank => ({
-        ...prevTank,
-        errors: {
-          name: validation.name,
-          // minTemperature: validation.minTemperature,
-          // maxTemperature: validation.maxTemperature,
-          // minPh: validation.minPh,
-          // maxPh: validation.maxPh,
-          // minDh: validvalueation.minDh,
-          // maxDh: validation.maxDh,
-        }
-      }));
+
+      setErrors({
+        name: validation.name,
+        // minTemperature: validation.minTemperature,
+        // maxTemperature: validation.maxTemperature,
+        // minPh: validation.minPh,
+        // maxPh: validation.maxPh,
+        // minDh: validvalueation.minDh,
+        // maxDh: validation.maxDh,
+      });
 
 
       dispatch(alertActions.error('Tank data is not correct'));
@@ -228,15 +218,16 @@ export default function AddTank({ navigation }) {
     }
 
 
-    axios.post(backend.url + '/tank', tank.values)
+    axios.post(backend.url + '/tank', tank)
     .then(res => {
       dispatch(alertActions.success('Now add some fishes to your tank'));
+      dispatch(tankActions.getTankByUser(user._id));
       setTank(defaultTank);
       navigation.navigate('Tanks');
       navigation.navigate('Species');
     })
     .catch(err => {
-      handleAlert(err);  
+      handleAlert(err);
     });
   }
 
@@ -246,7 +237,7 @@ export default function AddTank({ navigation }) {
     >
       <Background>
 
-        <Slider items={sliderItems} />            
+        <Slider items={sliderItems} />
 
       </Background>
     </KeyboardAwareScrollView>
@@ -304,7 +295,7 @@ const styles = StyleSheet.create({
   },
   inputRight: {
     marginTop: 0,
-    marginBottom: 8,    
+    marginBottom: 8,
   },
   tagContainer: {
     flex:1,

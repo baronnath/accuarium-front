@@ -8,7 +8,7 @@ export default (tank) => {
 	errors = false;
 
 	const validation =  {
-		name: nameValidator(tank.values.name),
+		name: nameValidator(tank.name),
 	}
 
 	if(errors === true) return validation;
@@ -25,4 +25,3 @@ function nameValidator (name) {
 
   return false;
 };
-
