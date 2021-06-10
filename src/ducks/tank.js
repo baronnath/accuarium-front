@@ -13,6 +13,9 @@ export const types = {
 	GETTANK_REQUEST: 'GETTANK_REQUEST',
 	GETTANK_SUCCESS: 'GETTANK_SUCCESS',
 	GETTANK_ERROR: 'GETTANK_ERROR',
+  UPDATETANK_REQUEST: 'UPDDATETANK_REQUEST',
+  UPDATETANK_SUCCESS: 'UPDATETANK_SUCCESS',
+  UPDATETANK_ERROR: 'UPDATETANK_ERROR',
 	ADDSPECIES_REQUEST: 'ADDSPECIES_REQUEST',
 	ADDSPECIES_SUCCESS: 'ADDSPECIES_SUCCESS',
 	ADDSPECIES_ERROR: 'ADDSPECIES_ERROR',
@@ -25,7 +28,8 @@ export const types = {
 export default (state = defaultState, action) => {
 	switch(action.type){
     // Request
-		case types.GETTANK_REQUEST:
+    case types.GETTANK_REQUEST:
+		case types.UPDATETANK_REQUEST:
 		case types.ADDSPECIES_REQUEST:
 		case types.DELETE_REQUEST:
       return { 
@@ -34,6 +38,7 @@ export default (state = defaultState, action) => {
       };
     // Error
     case types.GETTANK_ERROR:
+    case types.UPDATETANK_ERROR:
     case types.ADDSPECIES_ERROR:
     case types.DELETE_ERROR:
       return {
@@ -46,7 +51,8 @@ export default (state = defaultState, action) => {
           data: action.payload.tanks,
           isLoading: false,
       };
-    // Add species to tank: find modified tank in state and update only the affected tank
+    // Find modified tank in state and update only the affected tank
+    case types.UPDATETANK_SUCCESS:
     case types.ADDSPECIES_SUCCESS:
     	const index = state.data.findIndex(tank => action.payload.tank._id === tank._id);
     	const data = [...state.data];
@@ -78,6 +84,7 @@ export const actions = {
     getTank,
     getTankByUser,
     getTanksByUser: getTankByUser,
+    updateTank,
     addSpecies,
     delete: _delete
 };	
@@ -110,6 +117,43 @@ function _getTank(params){
     function request() { return { type: types.GETTANK_REQUEST } }
     function success(data) { return { type: types.GETTANK_SUCCESS, payload: data } }
     function error() { return { type: types.GETTANK_ERROR } }
+}
+
+function updateTank(tank){
+  return dispatch => {
+        dispatch(request());
+
+        const params = {
+          tankId: tank._id,
+          name: tank.name,
+          length: tank.measures.length,
+          width: tank.measures.width,
+          height: tank.measures.height,
+          liters: tank.liters,
+        }
+
+        console.log('LIT',params);
+
+        axios.put(backend.url + '/tank', params)
+            .then(
+                res => {
+                    console.log('AYY',res.data.message);
+
+                    // navigator.navigate('Tanks');
+                    dispatch(success(res.data));
+                    dispatch(alertActions.success(res.data.message));
+                }
+            ).catch(
+                err => {
+                    dispatch(error());
+                    handleAlert(err);
+                }
+            );
+    };
+
+    function request() { return { type: types.UPDATETANK_REQUEST } }
+    function success(data) { return { type: types.UPDATETANK_SUCCESS, payload: data } }
+    function error() { return { type: types.UPDATETANK_ERROR } }
 }
 
 function addSpecies(params){

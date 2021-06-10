@@ -38,7 +38,6 @@ export default function Tank({ route, navigation }) {
 
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
-  const [speciesByDepth, setSpeciesByDepth] = useState({});
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isMenuModalVisible, setMenuModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -49,7 +48,7 @@ export default function Tank({ route, navigation }) {
       setId(tankId);
     }, [])
   );
-   
+
   useEffect(() => {
     dispatch(tankActions.getTank(tankId))
   }, [tankId]);
@@ -83,8 +82,21 @@ export default function Tank({ route, navigation }) {
                     visible={isMenuVisible}
                     onDismiss={closeMenu}
                     anchor={menuButton}>
-                    <Menu.Item icon="square-edit-outline" onPress={() => {}} title="Edit" />
-                    <Menu.Item icon="delete-forever-outline" onPress={() => { setMenuVisible(false), setDeleteModalVisible(true) }} title="Remove" />
+                    <Menu.Item
+                      icon="square-edit-outline"
+                      onPress={ () => {
+                        navigation.navigate('EditTank', { tankId : tank._id })
+                      }}
+                      title="Edit"
+                    />
+                    <Menu.Item
+                      icon="delete-forever-outline"
+                      onPress={ () => {
+                        setMenuVisible(false),
+                        setDeleteModalVisible(true)
+                      }}
+                      title="Remove"
+                    />
                   </Menu>
                 </OptionsMenu>
                 <View style={styles.rowContainer}>
@@ -112,31 +124,31 @@ export default function Tank({ route, navigation }) {
                   <View style={styles.rowContainer}>
                     <View style={styles.parameters}>
                       <FontAwesome5
-                        name="temperature-high" 
+                        name="temperature-high"
                         color={theme.colors.lightText}
                         size={25}
                       />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
                         <MaterialCommunityIcons style={{marginVertical: -10, marginTop: 1}}
-                          name="alpha-p" 
+                          name="alpha-p"
                           color={theme.colors.lightText}
                           size={35}
                         />
                         <MaterialCommunityIcons style={{marginLeft:-25 ,marginVertical: -8}}
-                          name="alpha-h" 
+                          name="alpha-h"
                           color={theme.colors.lightText}
                           size={40}
                         />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
                         <MaterialCommunityIcons style={{transform: [{rotateX: '180deg'}, {rotateY: '180deg'}]}}
-                          name="alpha-p" 
+                          name="alpha-p"
                           color={theme.colors.lightText}
                           size={35}
                         />
                         <MaterialCommunityIcons style={{marginLeft: -25}}
-                          name="alpha-h" 
+                          name="alpha-h"
                           color={theme.colors.lightText}
                           size={40}
                         />
