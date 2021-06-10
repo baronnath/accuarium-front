@@ -7,15 +7,15 @@ import { commaToPeriod } from './helpers';
 export function calculateVolume(dimensions) {
     let { width, height, length } = dimensions;
 
-   	width = commaToPeriod(width);
-   	height = commaToPeriod(height);
-   	length = commaToPeriod(length);
-
     return new Promise((resolve, reject) => {
     	if(!width || !height || !length)
     		reject('Please fill your tank dimensions');
     	if(isNaN(width) || isNaN(height) || isNaN(length))
     		reject('Dimensions values must be numbers');
+
+      width = commaToPeriod(width.toString());
+      height = commaToPeriod(height.toString());
+      length = commaToPeriod(length.toString());
 
     	const liters = width * height * length / 1000;
     	resolve(liters);
