@@ -9,7 +9,7 @@ import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
 import Searchbar from '../../../components/Searchbar';
-import SpeciesCard from '../../../components/SpeciesCard';
+import SpeciesCard from '../../client/species/SpeciesCard';
 // import { Searchbar } from 'react-native-paper';
 import Spinner from '../../../components/Spinner';
 import { actions as alertActions } from '../../../ducks/alert';

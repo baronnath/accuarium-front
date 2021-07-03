@@ -1,4 +1,4 @@
-// src/components/SpeciesCard.js
+// src/screens/species/SpeciesCard.js
 
 import React, { useState, memo } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
@@ -6,15 +6,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Avatar, Card, Menu, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { axios } from '../helpers/axios';
-import Paragraph from './Paragraph';
-import Button from './Button';
-import Modal from './Modal';
-import { backend } from '../../app';
-import { theme } from '../theme';
-import { handleAlert } from '../helpers/global';
-import { actions as tankActions } from '../ducks/tank';
-import { actions as alertActions } from '../ducks/alert';
+import { axios } from '../../../helpers/axios';
+import Paragraph from '../../../components/Paragraph';
+import Button from '../../../components/Button';
+import Modal from '../../../components/Modal';
+import { backend } from '../../../../app.json';
+import { theme } from '../../../theme';
+import { handleAlert } from '../../../helpers/global';
+import { actions as tankActions } from '../../../ducks/tank';
+import { actions as alertActions } from '../../../ducks/alert';
 
 
 const SpeciesCard = ({ species, grid, ...props }) => {
@@ -59,7 +59,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
             {...props}
           >
             <Card.Title
-              title={species.name.es}
+              title={species.name[locale]}
               subtitle={ species.scientificName}
               right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => {setTankModalVisible(true)}} />}
               rightStyle={styles.rightStyle}
@@ -74,7 +74,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
             {...props}
           >
             <Card.Title
-              title={species.name.es}
+              title={species.name[locale]}
               subtitle={ species.scientificName}
               left={(props) => <Image style={styles.listImage} source={{ uri: speciesImage }} />}
               right={

@@ -14,7 +14,7 @@ import Header from '../../../components/Header';
 import Paragraph from '../../../components/Paragraph';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
-import SpeciesCard from '../../../components/SpeciesCard';
+import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';

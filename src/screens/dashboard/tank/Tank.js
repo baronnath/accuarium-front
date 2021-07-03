@@ -13,7 +13,6 @@ import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
 import Paragraph from '../../../components/Paragraph';
-import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';

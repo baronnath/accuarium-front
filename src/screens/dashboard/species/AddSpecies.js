@@ -14,7 +14,6 @@ import MenuButton from '../../../components/MenuButton';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Searchbar from '../../../components/Searchbar';
-import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import Paragraph from '../../../components/Paragraph';

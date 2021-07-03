@@ -19,7 +19,6 @@ import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Paragraph from '../../../components/Paragraph';
 import InputSuggestion from '../../../components/InputSuggestion';
-import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';

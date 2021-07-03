@@ -16,7 +16,6 @@ import MenuButton from '../../../components/MenuButton';
 import Searchbar from '../../../components/Searchbar';
 import Fab from '../Fab';
 import Paragraph from '../../../components/Paragraph';
-import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
