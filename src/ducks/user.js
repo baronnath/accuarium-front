@@ -3,7 +3,7 @@
 // import history from '../history';
 // import { initStates } from "../components/helpers/stateLoader/stateLoader"
 import * as navigator from '../helpers/navigator.js';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { axios, setHeaders }from '../helpers/axios';
 import { backend } from '../../app.json';
 import { actions as alertActions } from './alert';
