@@ -29,7 +29,9 @@ const SpeciesCard = ({ species, grid, ...props }) => {
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
 
-  const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
+  // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
+  const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
+  
 
   function openMenu () { setVisible(true); }
   function closeMenu () { setVisible(false); }

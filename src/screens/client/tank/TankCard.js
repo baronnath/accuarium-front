@@ -1,4 +1,4 @@
-// src/components/TankCard.js
+// src/screens/tank/TankCard.js
 
 import React, { useState, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -30,13 +30,26 @@ const TankCard = ({ tank, ...props }) => {
 
   const menuButton = <MaterialCommunityIcons {...props} size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
 
-  const tankMenu = 
+  const tankMenu =
     <Menu
       visible={visible}
       onDismiss={closeMenu}
       anchor={menuButton}>
-      <Menu.Item icon="square-edit-outline" onPress={() => {}} title="Edit" />
-      <Menu.Item icon="delete-forever-outline" onPress={() => { setVisible(false), setDeleteModalVisible(true) }} title="Remove" />
+      <Menu.Item
+        icon="square-edit-outline"
+        onPress={() => {
+          navigation.navigate('EditTank', { tankId : tank._id })
+        }}
+        title="Edit"
+      />
+      <Menu.Item
+        icon="delete-forever-outline"
+        onPress={() => {
+          setVisible(false),
+          setDeleteModalVisible(true)
+        }}
+        title="Remove"
+      />
     </Menu>
   ;
 

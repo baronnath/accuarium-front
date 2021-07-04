@@ -13,6 +13,7 @@ import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import EditSpeciesCard from '../species/EditSpeciesCard';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -21,7 +22,6 @@ import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Paragraph from '../../../components/Paragraph';
 import InputSuggestion from '../../../components/InputSuggestion';
-import SpeciesCard from '../../../components/SpeciesCard';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';
@@ -118,6 +118,63 @@ export default function EditTank({ route, navigation }) {
       .catch((err) => {
         dispatch(alertActions.error(err));
       });
+  }
+
+  function handleSpecies(id, action) {
+    const index = editedTank.species.findIndex((species) => species.species._id == id);
+    let species = [...editedTank.species];
+    let sp = {};
+
+    if(action == 'add'){
+      sp = {
+        ...species[index],
+        quantity: ++species[index].quantity
+      }
+    }
+
+    if(action == 'remove'){
+      if (species[index].quantity <= 1)
+        return;
+      sp = {
+        ...species[index],
+        quantity: --species[index].quantity
+      }
+    }
+
+    if(action == 'main'){
+      const main = !species[index].main;
+
+      // clear the main from previous species
+      species.forEach((sp,index) => {
+        species[index].main = false;
+      });
+
+      sp = {
+        ...species[index],
+        main: main,
+      }
+    }
+
+    species[index] = sp;
+
+    setEditedTank(prevTank => ({
+      ...prevTank,
+      species: species
+    }));
+  }
+
+  function removeSpecies(id) {
+    let species = [...editedTank.species];
+    let sp = species.find((sp, index) => {
+      if(sp.species._id == id){
+        species.splice(index, 1);
+        setEditedTank(prevTank => ({
+          ...prevTank,
+          species: species
+        }));
+        return true;
+      }
+    });
   }
 
   function onSubmit(){
@@ -235,9 +292,28 @@ export default function EditTank({ route, navigation }) {
               </View>
               <Paragraph>Click on the formula to calculate your tank volume</Paragraph>
               { !!editedTank['species'].length && 
-                <View style={[styles.inputRow, styles.subheader]}>
-                  <MaterialCommunityIcons style={styles.subheaderIcon} name="fish" size={30} color={theme.colors.text} />
-                  <Subheader>Species</Subheader>
+                <View style={styles.speciesContainer}>
+                  <View style={[styles.inputRow, styles.subheader]}>
+                    <MaterialCommunityIcons style={styles.subheaderIcon} name="fish" size={30} color={theme.colors.text} />
+                    <Subheader>Species</Subheader>
+                  </View>
+                  <FlatList
+                    style={styles.flatList}
+                    contentContainerStyle={styles.flatListContainer}
+                    showsHorizontalScrollIndicator={false}
+                    data={editedTank.species}
+                    keyExtractor={species => species._id}
+                    renderItem={({item}) => (
+                        <EditSpeciesCard
+                          species={item.species}
+                          quantity={item.quantity}
+                          main={item.main}
+                          removeSpecies={removeSpecies}
+                          handleSpecies={handleSpecies}
+                        />
+                    )}
+                    ListFooterComponent={ isLoading && <Spinner /> }
+                  />
                 </View>
               }
               <Button onPress={onSubmit}>Save</Button>
@@ -253,7 +329,8 @@ const styles = StyleSheet.create({
   background: {
   },
   formContainer: {
-    alignItems: 'flex-start',
+    flex: 1,
+    alignSelf: 'stretch',
   },
   subheader:{
     paddingTop: 20,
@@ -261,6 +338,16 @@ const styles = StyleSheet.create({
   subheaderIcon: {
     paddingVertical: 3,
     paddingRight: 5,
+  },
+  speciesContainer: {
+    alignSelf: 'stretch',
+  },
+  flatList:{
+    width: '100%',
+  },
+  flatListContainer: {
+    flexDirection: 'column',
+    width: '100%',
   },
   toggleContainer:{
     flexDirection: 'row',
@@ -324,5 +411,5 @@ const styles = StyleSheet.create({
   item: {
     flex:1,
     width: '100%',
-  }
+  },
 });

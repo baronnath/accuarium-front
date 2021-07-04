@@ -23,7 +23,7 @@ const TextInput = ({ errorText, style, ...props }: Props) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    flex: 1,
     marginVertical: 12,
   },
   input: {
