@@ -46,13 +46,13 @@ export default (state = defaultState, action) => {
           isLoading: false,
       };
     case types.GETTANK_SUCCESS:
+    case types.UPDATETANK_SUCCESS:
       return {
           ...state,
           data: action.payload.tanks,
           isLoading: false,
       };
     // Find modified tank in state and update only the affected tank
-    case types.UPDATETANK_SUCCESS:
     case types.ADDSPECIES_SUCCESS:
     	const index = state.data.findIndex(tank => action.payload.tank._id === tank._id);
     	const data = [...state.data];
@@ -130,9 +130,10 @@ function updateTank(tank){
           width: tank.measures.width,
           height: tank.measures.height,
           liters: tank.liters,
+          species: tank.species,
         }
 
-        console.log('LIT',params);
+        // console.log('LIT',params);
 
         axios.put(backend.url + '/tank', params)
             .then(
@@ -145,6 +146,7 @@ function updateTank(tank){
                 }
             ).catch(
                 err => {
+                    console.log('AUU',res.data.message);
                     dispatch(error());
                     handleAlert(err);
                 }

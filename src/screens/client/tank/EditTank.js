@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
-import { axios }from '../../../helpers/axios';
 import { ucFirst, isObject, clone } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
@@ -27,6 +26,7 @@ import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
+import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies, calculateVolume } from '../../../helpers/tank';
@@ -39,7 +39,7 @@ export default function EditTank({ route, navigation }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
-  const tank = useSelector(state => state.tanks.data);
+  const [tank, setTank] = useState({});
   const [editedTank, setEditedTank] = useState({});
   const [errors, setErrors] = useState({});
   const isLoading = useSelector(state => state.tanks.isLoading);
@@ -57,19 +57,26 @@ export default function EditTank({ route, navigation }) {
   );
 
   useEffect(() => {
-    dispatch(tankActions.getTank(tankId));
+    Api.getTank(tankId)
+      .then(
+          res => { 
+            setTank(res.data.tanks);
+          }
+      ).catch(
+          err => {
+            handleAlert(err);
+          }
+      );
   }, [tankId]);
 
   useEffect(() => {
-    // Only after tank state is updated, avoid first load loop
-    if(isInitialMount.current){
-      isInitialMount.current = false;
-    }
-    else {
+    // // Only after tank state is updated, avoid first load loop
+    // if(isInitialMount.current){
+    //   isInitialMount.current = false;
+    // }
+    // else {
       setEditedTank(helpers.clone(tank));
-      if(editedTank.species)
-        setMainSpecies(findMainSpecies(editedTank.species));
-    }
+    // }
   }, [tank]);
 
   async function handleChange(field, value) {
@@ -178,7 +185,16 @@ export default function EditTank({ route, navigation }) {
   }
 
   function onSubmit(){
-    const validation = validator(editedTank);
+    let tankData = helpers.clone(editedTank); 
+
+    // remove species object, only id is required  
+    if(!!tankData.species.length){
+      tankData.species.forEach((sp,index) => {
+        tankData.species[index].species = sp.species._id;
+      });
+    }
+
+    const validation = validator(tankData);
 
     if (validation !== false) {
       setErrors({
@@ -196,7 +212,7 @@ export default function EditTank({ route, navigation }) {
       return;
     }
 
-    dispatch(tankActions.updateTank(editedTank));
+    dispatch(tankActions.updateTank(tankData));
   }
 
   return (

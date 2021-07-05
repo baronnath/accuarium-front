@@ -47,8 +47,6 @@ export default function Tanks({ navigation }) {
           Tanks
         </Header>
 
-        
-
           { isLoading ?
             <Spinner />
           :

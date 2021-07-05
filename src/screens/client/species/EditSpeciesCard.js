@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listImage: {
-    backgroundColor: 'red',
+    backgroundColor: theme.colors.primary,
     width: 50,
     height: 50,
     borderRadius: 5,

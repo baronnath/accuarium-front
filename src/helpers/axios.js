@@ -1,6 +1,7 @@
 // src/helpers/axios.js
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { backend } from '../../app.json';
 
 const ax = require('axios');
 // const http	= require('http');
@@ -23,4 +24,24 @@ export const setHeaders = async (token) => {
 		token = user.accessToken;
 	}
 	axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+}
+
+export class Api {
+
+	static getTank(id) {
+		return this.#getTank({tankId: id});
+	}
+
+	static getTankByUser(id) {
+		return this.#getTank({userId: id});
+	}
+
+	static #getTank(params){
+		return axios.get(backend.url + '/tank', {params: params});
+	}
+
+	static getSpecies(speciesId) {
+		return axios.get(backend.url + '/species', {params: {speciesId: speciesId}});
+	}
+
 }

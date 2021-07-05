@@ -38,6 +38,7 @@ const TankCard = ({ tank, ...props }) => {
       <Menu.Item
         icon="square-edit-outline"
         onPress={() => {
+          setVisible(false),
           navigation.navigate('EditTank', { tankId : tank._id })
         }}
         title="Edit"
