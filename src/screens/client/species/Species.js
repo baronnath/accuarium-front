@@ -11,6 +11,7 @@ import { ToggleButton } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
+import Subheader from '../../../components/Subheader';
 import MenuButton from '../../../components/MenuButton';
 import Paragraph from '../../../components/Paragraph';
 import Tag from '../../../components/Tag';
@@ -54,12 +55,21 @@ export default function Species({ route, navigation }) {
       resetScrollToCoords={{x:0, y:0}}
     >
       <Background justify="top">
-        <MenuButton />
         { species ?
           <>
-            <Header>
+            <View style={styles.topLeft}>
+              <MaterialCommunityIcons
+                name={species.type.icon} 
+                color={theme.colors.lightText}
+                size={26}
+              />
+            </View>
+            <Header style={styles.header}>
               {ucFirst(species.name[locale])}
             </Header>
+            <Paragraph style={styles.subheader} fontStyle="italic">
+              {species.scientificName}
+            </Paragraph>
 
             <Paragraph>
              {ucFirst(species.family.name[locale])} | {ucFirst(species.group.name[locale])} 
@@ -148,6 +158,19 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  topLeft: {
+    alignSelf: 'stretch',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    marginLeft: 10,
+  },
+  header: {
+    paddingBottom: 0,
+  },
+  subheader: {
+    paddingTop: 0,
+    color: theme.colors.lightText,
   },
   image: {
     marginVertical: 10,
