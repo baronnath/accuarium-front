@@ -48,10 +48,10 @@ export default function GraphicTank({ species }) {
               speciesDepth('surface')
           }
           <DottedSeparator />
-          <Paragraph style={styles.depth}>Medium</Paragraph>
+          <Paragraph style={styles.depth}>Middle</Paragraph>
           { 
-            !!speciesByDepth['medium'] && !!speciesByDepth['medium'].length &&
-              speciesDepth('medium')
+            !!speciesByDepth['middle'] && !!speciesByDepth['middle'].length &&
+              speciesDepth('middle')
           }
           <DottedSeparator />
           <Paragraph style={styles.depth}>Bottom</Paragraph>

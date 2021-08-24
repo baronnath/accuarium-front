@@ -11,12 +11,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import TankDeleteModal from './TankDeleteModal';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
-import MenuButton from '../../../components/MenuButton';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Paragraph from '../../../components/Paragraph';
+import Warning from '../../../components/Warning';
 import GraphicTank from './GraphicTank';
 import Modal from '../../../components/Modal';
-import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -32,7 +31,7 @@ export default function Tank({ route, navigation }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
-  const tank = useSelector(state => state.tanks.data);
+  const tank = useSelector(state => state.tanks.data[0]);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
 
@@ -50,7 +49,8 @@ export default function Tank({ route, navigation }) {
   );
 
   useEffect(() => {
-    dispatch(tankActions.getTank(tankId))
+    dispatch(tankActions.getTank(tankId));
+    dispatch(tankActions.getCompatibility(tankId));
   }, [tankId]);
 
   useEffect(() => {
@@ -113,6 +113,13 @@ export default function Tank({ route, navigation }) {
                     }
                   </View>
                 </View>
+                {
+                  !!tank.species.length && !mainSpecies &&
+                    <Warning title="Warning" subtitle="Please select the main species"
+                      left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
+                      onPress={() => navigation.navigate('EditTank', { tankId : tank._id }) }
+                    />
+                }     
                 <View style={styles.box}>
                   <MaterialCommunityIcons style={styles.infoIcon}
                     name="information-outline"
@@ -172,8 +179,9 @@ export default function Tank({ route, navigation }) {
                 }
 
               </ScrollView>
-        }
 
+        }
+       
       </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />

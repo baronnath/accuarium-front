@@ -33,12 +33,12 @@ export function findMainSpecies(species) {
 export function splitSpeciesByDepth(species) {
   let splitted = {
     surface: [],
-    medium: [],
-    bottom: []
+    middle: [],
+    bottom: [],
   };
 
   species.forEach(sp => {
-    splitted[sp.species.depth.name.en].push(sp);
+    sp.species.depth ? splitted[sp.species.depth.name.en].push(sp) : splitted['middle'].push(sp);
   });
 
   return splitted;

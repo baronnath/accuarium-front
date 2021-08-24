@@ -7,15 +7,15 @@ import { theme } from '../theme';
 
 type Props = React.ComponentProps<typeof PaperSnackbar>;
 
-const Snackbar = ({ type, visible, style, children, ...props }: Props) => (
+const Snackbar = ({ type, visible, style, wrapperStyle, children, ...props }: Props) => (
   <PaperSnackbar
     visible={visible}
     style={[
       styles.snackbar,
-      styles.[type],
+      styles[type],
       style,
     ]}
-    wrapperStyle={styles.wrapper}
+    wrapperStyle={[styles.wrapper, wrapperStyle]}
     theme={theme}
     {...props}
   >
@@ -32,7 +32,16 @@ const styles = StyleSheet.create({
   error: {
     backgroundColor: theme.colors.error,
   },
+  warning: {
+    backgroundColor: theme.colors.secondary,
+  },
   wrapper: {
+    maxWidth: theme.container.maxWidth,
+    paddingHorizontal: theme.container.padding,
+    flex: 1,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });
 

@@ -29,8 +29,12 @@ export default function GraphicTankSpecies({ species }) {
       <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
       <MaterialCommunityIcons name="fish" size={24} style={styles.icons} color={theme.colors.primary}/>
       <View style={styles.namesContainer}>
-        <Paragraph style={styles.name}>{species.species.name[locale]}</Paragraph>
-        <Paragraph style={styles.scientificName} fontStyle="italic">{species.species.name[locale]}</Paragraph>
+        <Paragraph style={styles.name}>{
+          species.species.name[locale] ? species.species.name[locale] : ''
+        }</Paragraph>
+        <Paragraph style={styles.scientificName} fontStyle="italic">{
+          species.species.name[locale] ? species.species.name[locale] : ''
+        }</Paragraph>
       </View>
     </TouchableOpacity>
   );
