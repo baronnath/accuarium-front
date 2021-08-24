@@ -50,12 +50,14 @@ export default function Tank({ route, navigation }) {
 
   useEffect(() => {
     dispatch(tankActions.getTank(tankId));
-    dispatch(tankActions.getCompatibility(tankId));
   }, [tankId]);
 
   useEffect(() => {
     if(tank.species){
       setMainSpecies(findMainSpecies(tank.species));
+      if(mainSpecies){
+        dispatch(tankActions.getCompatibility(tankId));
+      }
     }
   }, [tank]);
 
@@ -114,6 +116,7 @@ export default function Tank({ route, navigation }) {
                   </View>
                 </View>
                 {
+                  // No main species selected warning
                   !!tank.species.length && !mainSpecies &&
                     <Warning title="Warning" subtitle="Please select the main species"
                       left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
@@ -163,13 +166,19 @@ export default function Tank({ route, navigation }) {
                   </View>
                   <View style={styles.rowContainer}>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      25º
+                      { !!mainSpecies &&
+                          (mainSpecies.species.parameters.temperature.min + mainSpecies.species.parameters.temperature.max) / 2
+                      }
                     </Paragraph>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      6.5
+                      { !!mainSpecies &&
+                          (mainSpecies.species.parameters.ph.min + mainSpecies.species.parameters.ph.max) / 2
+                      }
                     </Paragraph>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      10
+                      { !!mainSpecies &&
+                          mainSpecies.species.parameters.dh.min // TO BE FIXED
+                      }
                     </Paragraph>
                   </View>
                 </View>
@@ -185,7 +194,7 @@ export default function Tank({ route, navigation }) {
       </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
-        <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the main tank species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>
+        <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>
       </Modal>
       <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} />
     </KeyboardAwareScrollView>
