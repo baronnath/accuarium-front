@@ -184,7 +184,7 @@ export default function Tank({ route, navigation }) {
                 </View>
 
                 { tank.species &&
-                  <GraphicTank species={tank.species} />
+                  <GraphicTank />
                 }
 
               </ScrollView>

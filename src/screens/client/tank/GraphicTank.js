@@ -15,23 +15,28 @@ import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies, splitSpeciesByDepth } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 
-export default function GraphicTank({ species }) {
+export default function GraphicTank() {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const tank = useSelector(state => state.tanks.data[0]);
   const dispatch = useDispatch();
 
   const [mainSpecies, setMainSpecies] = useState(null);
   const [speciesByDepth, setSpeciesByDepth] = useState({});
 
   useEffect(() => {
-    setMainSpecies(findMainSpecies(species));
-    setSpeciesByDepth(splitSpeciesByDepth(species));
-  }, [species]);
+    setMainSpecies(findMainSpecies(tank.species));
+    setSpeciesByDepth(splitSpeciesByDepth(tank.species));
+  }, [tank]);
 
   function speciesDepth(depth) {
     return speciesByDepth[depth].map(species => {
-      return <GraphicTankSpecies species={species} />
+      return <GraphicTankSpecies
+          species={species}
+          parametersCompat={tank.compatibility.parameters[species.species._id]}
+          speciesCompat={tank.compatibility.species[species.species._id]}
+        />
     });
   }
 
@@ -73,6 +78,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderBottomWidth: 3,
     borderBottomLeftRadius: 5,
+    marginBottom: 25,
   },
   container: {
     paddingLeft: 5,
