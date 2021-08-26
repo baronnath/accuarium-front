@@ -4,10 +4,10 @@ import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { theme } from '../theme';
 
-function Separator() {
+function Separator({ style }) {
 
   return (
-    <View style={styles.separator}>
+    <View style={[styles.separator,style]}>
     </View>
   );
 }
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingVertical: 8,
     width: '100%',
+    alignSelf: 'center',
   },
 });
 

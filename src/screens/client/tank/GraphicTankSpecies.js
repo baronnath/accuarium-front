@@ -8,9 +8,9 @@ import { ToggleButton, Avatar } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import Paragraph from '../../../components/Paragraph';
-import DottedSeparator from '../../../components/DottedSeparator';
+import Separator from '../../../components/Separator';
 import { handleAlert } from '../../../helpers/global';
 import { isCompatible } from '../../../helpers/tank';
 import { theme } from '../../../theme';
@@ -31,7 +31,7 @@ export default function GraphicTankSpecies({ species, parametersCompat, speciesC
   function compatibilityButton() {
     if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false){
       return <View style={styles.compatibilityButtons}>
-        <MaterialCommunityIcons name="alert-circle-outline" size={30} style={styles.icons} color={theme.colors.secondary}/>
+        <Ionicons name="warning-outline" size={30} style={styles.icons} color={theme.colors.secondary}/>
         <MaterialCommunityIcons name="chevron-down" size={24} style={styles.icons} color={theme.colors.placeholder}/>
       </View>
     }
@@ -120,6 +120,11 @@ export default function GraphicTankSpecies({ species, parametersCompat, speciesC
     </View>
   }
 
+  function seprator() {
+    if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false)
+      return <Separator style={styles.separator}/>
+  }
+
   return (
     <>
       <TouchableOpacity style={styles.rowContainer}>
@@ -130,16 +135,20 @@ export default function GraphicTankSpecies({ species, parametersCompat, speciesC
           compatibilityButton()
         }
       </TouchableOpacity>
-      <View style={styles.compatibilityContainer}>
-        { isComp && isComp.isParameterCompatible[species.species._id] === false &&
-          parameterCompatibility()
+        <View style={styles.compatibilityContainer}>
+          { isComp && isComp.isParameterCompatible[species.species._id] === false &&
+            parameterCompatibility()
+          }
+        </View>
+        <View style={styles.compatibilityContainer}>
+          { isComp && isComp.isSpeciesCompatible[species.species._id] === false &&
+            speciesCompatibility()
+          }
+        </View>
+        {
+          isComp &&
+            seprator()
         }
-      </View>
-      <View style={styles.compatibilityContainer}>
-        { isComp && isComp.isSpeciesCompatible[species.species._id] === false &&
-          speciesCompatibility()
-        }
-      </View>
     </>
   );
 }
@@ -151,6 +160,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginVertical: 5,
     marginLeft: 10,
+  },
+  separator:{
+    width: '30%',
+    borderTopWidth: 0.5,
+    alignSelf: 'flex-start',
+    marginLeft: 25,
+    marginBottom: 10,
   },
   number: {
     textAlign: 'left',
@@ -183,7 +199,7 @@ const styles = StyleSheet.create({
   },
   compatibilityContainer:{
     marginLeft: 25,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   caption: {
     alignSelf: 'flex-start',
