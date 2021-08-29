@@ -120,7 +120,7 @@ function DrawerContent(props) {
                     <DrawerItem 
                         icon={({color, size}) => (
                             <MaterialCommunityIcons 
-                            name="settings-outline" 
+                            name="cog-outline" 
                             color={color}
                             size={size}
                             />

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Image, ScrollView} from 'react-native';
+import { StyleSheet, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import TankDeleteModal from './TankDeleteModal';
@@ -38,9 +38,19 @@ export default function Tank({ route, navigation }) {
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const [isMenuModalVisible, setMenuModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalIndex, setModalIndex] = useState(null);
+  const [freeSpace, setFreeSpace] = useState(0);
+  const [cleanupCrew, setCleaningCrew] = useState(0);
+
+  const modalContent = {
+    parameters: <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>,
+    freeSpace: <Paragraph style={styles.modalParagraph}>Each fish requires some liters for itself. An overcrowded aquarium can cause many issues.</Paragraph>,
+    cleanupCrew: <Paragraph style={styles.modalParagraph}>This percent is a vague guide based in the tank volume. The cleanup crew should be at least the 15% of the livestock in your tank.</Paragraph>,
+
+     
+  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -59,10 +69,30 @@ export default function Tank({ route, navigation }) {
         dispatch(tankActions.getCompatibility(tankId));
       }
     }
+
+    calculateDetails();
+
   }, [tank]);
 
   function openMenu () { setMenuVisible(true); }
   function closeMenu () { setMenuVisible(false); }
+
+  // Calculate free space and cleaning crew
+  function calculateDetails() {
+    let occupied = 0;
+    let cleaning = 0;
+     
+    tank.species.forEach(species => {
+      occupied += species.species.litersSpecimen * species.quantity;
+      if(species.species.cleaning)
+        cleaning += species.species.litersSpecimen * species.quantity;
+    });
+
+    setFreeSpace(100 - (occupied * 100 / tank.liters));
+    setCleaningCrew(cleaning * 100 / tank.liters);
+
+    return;
+  }
 
   const menuButton = <MaterialCommunityIcons size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
 
@@ -128,7 +158,10 @@ export default function Tank({ route, navigation }) {
                     name="information-outline"
                     size={20}
                     color={theme.colors.lightText}
-                    onPress={() => {setModalVisible(true)}}
+                    onPress={() => {
+                      setModalVisible(true);
+                      setModalIndex('parameters');
+                    }}
                   />
 
                   <View style={styles.rowContainer}>
@@ -187,14 +220,36 @@ export default function Tank({ route, navigation }) {
                   <GraphicTank />
                 }
 
-              </ScrollView>
+                <View style={[styles.rowContainer,styles.moreDetailsContainer]}>
+                  <TouchableOpacity
+                    style={[styles.rowContainer, styles.moreDetail]}
+                    onPress={() => {
+                      setModalVisible(true);
+                      setModalIndex('freeSpace');
+                    }}
+                  >
+                    <MaterialCommunityIcons name="water-percent" size={30} color={theme.colors.primary}/>
+                    <Paragraph>{ freeSpace }% free space</Paragraph>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.rowContainer, styles.moreDetail]}
+                    onPress={() => {
+                      setModalVisible(true);
+                      setModalIndex('cleanupCrew');
+                    }}
+                  >
+                    <MaterialCommunityIcons name="spray-bottle" size={27} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
+                    <Paragraph>{ cleanupCrew }% cleanup crew</Paragraph>
+                  </TouchableOpacity>
+                </View>
 
+              </ScrollView>
         }
        
       </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
-        <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>
+        { modalContent[modalIndex] }
       </Modal>
       <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} />
     </KeyboardAwareScrollView>
@@ -213,6 +268,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 30,
   },
   scroll: {
     alignSelf: 'stretch',
@@ -270,12 +326,20 @@ const styles = StyleSheet.create({
     flex:3,
     alignItems:'flex-start',
   },
+  moreDetailsContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  moreDetail: {
+    alignItems:'center',
+  },  
   modalTitle: {
     fontSize: 30,
     lineHeight: 30,
   },
   modalParagraph: {
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
   },
   speciesContainer: {
     flex: 1,

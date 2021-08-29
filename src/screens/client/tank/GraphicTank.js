@@ -4,9 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Image, ScrollView} from 'react-native';
-import { ToggleButton, Avatar, Title, Caption } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import GraphicTankSpecies from './GraphicTankSpecies';
 import Paragraph from '../../../components/Paragraph';
@@ -78,7 +75,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 3,
     borderBottomWidth: 3,
     borderBottomLeftRadius: 5,
-    marginBottom: 25,
+    marginTop: 15,
+    marginBottom: 40,
   },
   container: {
     paddingLeft: 5,
