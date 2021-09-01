@@ -23,7 +23,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies } from '../../../helpers/tank';
-import { ucFirst } from '../../../helpers/helpers';
+import { ucFirst, isEmpty } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
@@ -31,7 +31,7 @@ export default function Tank({ route, navigation }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
-  const tank = useSelector(state => state.tanks.data[0]);
+  const tank = useSelector(state => state.tanks.tank);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
 
@@ -48,8 +48,6 @@ export default function Tank({ route, navigation }) {
     parameters: <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>,
     freeSpace: <Paragraph style={styles.modalParagraph}>Each fish requires some liters for itself. An overcrowded aquarium can cause many issues.</Paragraph>,
     cleanupCrew: <Paragraph style={styles.modalParagraph}>This percent is a vague guide based in the tank volume. The cleanup crew should be at least the 15% of the livestock in your tank.</Paragraph>,
-
-     
   }
 
   useFocusEffect(
@@ -63,15 +61,19 @@ export default function Tank({ route, navigation }) {
   }, [tankId]);
 
   useEffect(() => {
-    if(tank.species){
-      setMainSpecies(findMainSpecies(tank.species));
-      if(mainSpecies){
-        dispatch(tankActions.getCompatibility(tankId));
+
+    if(!isEmpty(tank)){
+      calculateDetails();
+
+      if(tank.species){
+        setMainSpecies(findMainSpecies(tank.species));
+        if(mainSpecies){
+          dispatch(tankActions.getCompatibility(tankId));
+        }
       }
+
     }
-
-    calculateDetails();
-
+    
   }, [tank]);
 
   function openMenu () { setMenuVisible(true); }
@@ -106,7 +108,7 @@ export default function Tank({ route, navigation }) {
             <Spinner/>
             :
 
-            !!tank &&
+            !isEmpty(tank) &&
               <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                 <Header></Header>
                 <OptionsMenu>

@@ -1,7 +1,5 @@
 // src/helpers/tank.js
 
-import store from '../store';
-import { actions as alertActions } from '../ducks/alert';
 import { commaToPeriod } from './helpers';
 
 export function calculateVolume(dimensions) {
@@ -55,6 +53,7 @@ export function isCompatible(compatibility){
   let isCompat = true;
   let isParamCompat = {};
   let isSpeciesCompat = {};
+  console.log('HEY',compatibility);
 
   // Checking parameters compatibility
   Object.keys(compatibility.parameters).map(function(speciesId) {

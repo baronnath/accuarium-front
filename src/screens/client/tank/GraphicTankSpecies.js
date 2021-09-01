@@ -15,17 +15,23 @@ import { handleAlert } from '../../../helpers/global';
 import { isCompatible } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 
-export default function GraphicTankSpecies({ species, parametersCompat, speciesCompat }) {
+export default function GraphicTankSpecies({ species }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
-  const tank = useSelector(state => state.tanks.data[0]);
+  const tank = useSelector(state => state.tanks.tank);
   const navigation = useNavigation();
 
   const [isComp, setIsComp] = useState(null);
+  const [parametersCompat, setParametersCompat] = useState(null);
+  const [speciesCompat, setSpeciesCompat] = useState(null);
 
   useEffect(() => {
-    setIsComp(isCompatible(tank.compatibility));
+    if(tank.compatibility){
+      setIsComp(isCompatible(tank.compatibility));
+      setParametersCompat(tank.compatibility.parameters[species.species._id]);
+      setSpeciesCompat(tank.compatibility.species[species.species._id])
+    }
   }, [tank]);
 
   function compatibilityButton() {

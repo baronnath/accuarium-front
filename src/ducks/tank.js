@@ -12,6 +12,7 @@ import { actions as alertActions } from './alert';
 export const types = {
 	GETTANK_REQUEST: 'GETTANK_REQUEST',
 	GETTANK_SUCCESS: 'GETTANK_SUCCESS',
+	GETTANKS_SUCCESS: 'GETTANKS_SUCCESS',
 	GETTANK_ERROR: 'GETTANK_ERROR',
   UPDATETANK_REQUEST: 'UPDDATETANK_REQUEST',
   UPDATETANK_SUCCESS: 'UPDATETANK_SUCCESS',
@@ -35,6 +36,7 @@ export default (state = defaultState, action) => {
 	switch(action.type){
     // Request
     case types.GETTANK_REQUEST:
+    case types.GETTANKS_REQUEST:
 		case types.UPDATETANK_REQUEST:
 		case types.ADDSPECIES_REQUEST:
 		case types.DELETE_REQUEST:
@@ -55,33 +57,38 @@ export default (state = defaultState, action) => {
       };
     case types.GETTANK_SUCCESS:
     case types.UPDATETANK_SUCCESS:
-      
       return {
           ...state,
-          data: action.payload.tanks.length ? action.payload.tanks : [action.payload.tanks], // array type needed
+          tank: action.payload.tanks,
+          isLoading: false,
+      };
+    case types.GETTANKS_SUCCESS:
+      return {
+          ...state,
+          tanks: action.payload.tanks, // array type required
           isLoading: false,
       };
     // Find modified tank in state and update only the affected tank
     case types.ADDSPECIES_SUCCESS:
-    	index = state.data.findIndex(tank => action.payload.tank._id === tank._id);
-    	data = [...state.data];
-    	data[index] = action.payload.tank;
+    	index = state.tanks.findIndex(tank => action.payload.tank._id === tank._id);
+    	prevTanks = [...state.tanks];
+    	prevTanks[index] = action.payload.tank;
     	return {
     		...state,
-    		data: data,
+    		tanks: prevTanks,
         isLoading: false,
     	};
     case types.DELETE_SUCCESS:
-     filtered = state.data.filter(tank => action.payload.tanks._id !== tank._id);
+     filtered = state.tanks.filter(tank => action.payload.tanks._id !== tank._id);
     	return {
     		...state,
-        data: filtered,
+        tanks: filtered,
         isLoading: false,
     	};
     case types.GETCOMPATIBILITY_SUCCESS:
       index = state.data.findIndex(tank => action.payload.tankId === tank._id);
-    	data = [...state.data];
-    	data[index]['compatibility'] = action.payload.data.compatibility;
+    	prevTanks = [...state.tanks];
+    	prevTanks[index]['compatibility'] = action.payload.data.compatibility;
     	return {
     		...state,
     		data: data,
@@ -94,7 +101,8 @@ export default (state = defaultState, action) => {
 
 const defaultState = {
 	isLoading: true,
-	data: [],
+	tanks: [],
+  tank: {}
 };
 
 // Actions
@@ -109,11 +117,11 @@ export const actions = {
 };	
 
 function getTank(id) {
-		return _getTank({tankId: id});
+  return _getTank({tankId: id});
 }
 
 function getTankByUser(id) {
-		return _getTank({userId: id});
+  return _getTank({userId: id});
 }
 
 function _getTank(params){
@@ -123,7 +131,12 @@ function _getTank(params){
       axios.get(backend.url + '/tank', {params: params})
         .then(
             res => { 
-                dispatch(success(res.data));
+              if(params.tankId){
+                dispatch(successGetTank(res.data));
+              }
+              else{
+                dispatch(succesGetTanksByUser(res.data));
+              }
             }
         ).catch(
             err => {
@@ -134,7 +147,8 @@ function _getTank(params){
     };
 
     function request() { return { type: types.GETTANK_REQUEST } }
-    function success(data) { return { type: types.GETTANK_SUCCESS, payload: data } }
+    function successGetTank(data) { return { type: types.GETTANK_SUCCESS, payload: data } }
+    function succesGetTanksByUser(data) { return { type: types.GETTANKS_SUCCESS, payload: data } }
     function error() { return { type: types.GETTANK_ERROR } }
 }
 

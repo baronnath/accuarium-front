@@ -40,7 +40,7 @@ exports.clone = (input) => {
 
 // Check empty object
 exports.isEmpty = (object) => {
-  return _.isEmpty(object);
+	return _.isEmpty(object);
 }
 
 // Replace comma to period

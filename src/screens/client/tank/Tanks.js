@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
-import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text, ScrollView } from 'react-native';
@@ -29,7 +28,7 @@ export default function Tanks({ navigation }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
-  const tanks = useSelector(state => state.tanks.data);
+  const tanks = useSelector(state => state.tanks.tanks);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
 
