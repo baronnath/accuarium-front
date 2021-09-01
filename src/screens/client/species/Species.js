@@ -20,6 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
+import { Api }from '../../../helpers/axios';
 import { theme } from '../../../theme';
 
 export default function Species({ route, navigation }) {
@@ -40,7 +41,7 @@ export default function Species({ route, navigation }) {
   useEffect(() => {
 
     // Get species data
-    axios.get(backend.url + '/species', {params: {speciesId: speciesId}})
+    Api.getSpeciesById(speciesId)
       .then(res => {
           setSpecies(res.data.species);
       })

@@ -40,8 +40,13 @@ export class Api {
 		return axios.get(backend.url + '/tank', {params: params});
 	}
 
-	static getSpecies(speciesId) {
-		return axios.get(backend.url + '/species', {params: {speciesId: speciesId}});
+	static getSpeciesById(speciesId) {
+		let params = {speciesId: speciesId};
+		return this.#getSpecies(params);
+	}
+
+	static #getSpecies(params) {
+		return axios.get(backend.url + '/species', {params: params});
 	}
 
 }
