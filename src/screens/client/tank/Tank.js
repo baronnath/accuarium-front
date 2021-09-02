@@ -23,7 +23,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies } from '../../../helpers/tank';
-import { ucFirst, isEmpty } from '../../../helpers/helpers';
+import { ucFirst, isEmpty, round } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
 
 export default function Tank({ route, navigation }) {
@@ -41,7 +41,7 @@ export default function Tank({ route, navigation }) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalIndex, setModalIndex] = useState(null);
-  const [freeSpace, setFreeSpace] = useState(0);
+  const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
 
   const modalContent = {
@@ -63,13 +63,16 @@ export default function Tank({ route, navigation }) {
   useEffect(() => {
 
     if(!isEmpty(tank)){
-      calculateDetails();
 
       if(tank.species){
         setMainSpecies(findMainSpecies(tank.species));
         if(mainSpecies){
           dispatch(tankActions.getCompatibility(tankId));
         }
+      }
+
+      if(tank.liters){
+        calculateDetails();
       }
 
     }
@@ -90,8 +93,11 @@ export default function Tank({ route, navigation }) {
         cleaning += species.species.litersSpecimen * species.quantity;
     });
 
-    setFreeSpace(100 - (occupied * 100 / tank.liters));
-    setCleaningCrew(cleaning * 100 / tank.liters);
+    let freeSpace = 100 - (occupied * 100 / tank.liters);
+    setFreeSpace(round.round(freeSpace, 2));
+
+    let cleaningCrew = cleaning * 100 / tank.liters;
+    setCleaningCrew(round.round(cleaningCrew, 2));
 
     return;
   }

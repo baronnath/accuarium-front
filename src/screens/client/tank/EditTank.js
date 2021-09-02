@@ -16,14 +16,11 @@ import EditSpeciesCard from '../species/EditSpeciesCard';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
-import MenuButton from '../../../components/MenuButton';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Paragraph from '../../../components/Paragraph';
-import InputSuggestion from '../../../components/InputSuggestion';
-import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
-import Slider from '../../../components/Slider';
+import Warning from '../../../components/Warning';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { Api }from '../../../helpers/axios';
@@ -43,7 +40,6 @@ export default function EditTank({ route, navigation }) {
   const [editedTank, setEditedTank] = useState({});
   const [errors, setErrors] = useState({});
   const isLoading = useSelector(state => state.tanks.isLoading);
-  const isInitialMount = useRef(true);
 
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
@@ -67,6 +63,7 @@ export default function EditTank({ route, navigation }) {
             handleAlert(err);
           }
       );
+    
   }, [tankId]);
 
   useEffect(() => {
@@ -75,9 +72,18 @@ export default function EditTank({ route, navigation }) {
     //   isInitialMount.current = false;
     // }
     // else {
-      setEditedTank(helpers.clone(tank));
+      if(!helpers.isEmpty(tank)){
+        setEditedTank(helpers.clone(tank));
+        setMainSpecies(findMainSpecies(tank.species));
+      }
     // }
   }, [tank]);
+
+  useEffect(() => {
+    if(!helpers.isEmpty(editedTank)){
+      setMainSpecies(findMainSpecies(editedTank.species));
+    }
+  }, [editedTank]);
 
   async function handleChange(field, value) {
     setEditedTank(prevTank => ({
@@ -313,6 +319,14 @@ export default function EditTank({ route, navigation }) {
                     <MaterialCommunityIcons style={styles.subheaderIcon} name="fish" size={30} color={theme.colors.text} />
                     <Subheader>Species</Subheader>
                   </View>
+                  {
+                    // No main species selected warning
+                    !!editedTank.species.length && !mainSpecies &&
+                      <Warning title="Select a main species" subtitle="Click on the species image"
+                        left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
+                        onPress={() => navigation.navigate('EditTank', { tankId : tank._id }) }
+                      />
+                  } 
                   <FlatList
                     style={styles.flatList}
                     contentContainerStyle={styles.flatListContainer}
@@ -364,6 +378,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flexDirection: 'column',
     width: '100%',
+    marginVertical: theme.container.padding,
   },
   toggleContainer:{
     flexDirection: 'row',
