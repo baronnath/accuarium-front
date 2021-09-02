@@ -196,7 +196,6 @@ export default function AddTank({ navigation }) {
 
   function onSubmit(){
     const validation = validator(tank);
-    console.log('VAL',validation);
 
     if (validation !== false) {
 

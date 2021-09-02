@@ -86,12 +86,21 @@ export default (state = defaultState, action) => {
         isLoading: false,
     	};
     case types.GETCOMPATIBILITY_SUCCESS:
-      index = state.data.findIndex(tank => action.payload.tankId === tank._id);
+
+      // update tank list
+      index = state.tanks.findIndex(tank => action.payload.tankId === tank._id);
     	prevTanks = [...state.tanks];
-    	prevTanks[index]['compatibility'] = action.payload.data.compatibility;
+    	if(prevTanks[index])
+        prevTanks[index]['compatibility'] = action.payload.data.compatibility;
+      
+        // update single
+      tank = state.tank;
+      tank['compatibility'] = action.payload.data.compatibility;
+
     	return {
     		...state,
-    		data: data,
+    		tanks: prevTanks,
+        tank: tank,
         isLoading: false,
     	};
     default:

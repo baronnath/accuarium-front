@@ -53,7 +53,6 @@ export function isCompatible(compatibility){
   let isCompat = true;
   let isParamCompat = {};
   let isSpeciesCompat = {};
-  console.log('HEY',compatibility);
 
   // Checking parameters compatibility
   Object.keys(compatibility.parameters).map(function(speciesId) {
