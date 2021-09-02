@@ -61,8 +61,9 @@ const Login = ({ navigation }) => {
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
+      contentContainerStyle={styles.contentContainerStyle}
     >
-        <Background style={styles.container}>
+        <Background style={styles.container} justify="top">
 
           <BackButton goBack={() => navigation.navigate('Home')} />
 
@@ -122,6 +123,9 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  contentContainerStyle: {
+    flex: 1,
+  },  
   forgotPassword: {
     width: '100%',
     alignItems: 'flex-end',
@@ -140,7 +144,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    width: '100%',
+    alignSelf: 'stretch',
     flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',

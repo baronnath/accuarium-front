@@ -34,15 +34,13 @@ const Background = ({ justify, style, children }: Props) => (
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
   },
   container: {
     flex: 1,
-    width: '100%',
+    alignSelf: 'stretch',
+    alignItems: 'center',
     padding: theme.container.padding,
     maxWidth: theme.container.maxWidth,
-    alignSelf: 'center',
-    alignItems: 'center',
   },
   containerTop: {
     justifyContent: 'flex-start',
