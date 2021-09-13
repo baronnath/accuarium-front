@@ -55,7 +55,7 @@ export default function AddCompatibility({ navigation }) {
     let data = new FormData();
     data.append('file',
       {
-         uri: uploadFile.uri,
+         uri: 'file://' + uploadFile.uri,
          name: uploadFile.name,
          type:'application/vnd.ms-excel'
       });

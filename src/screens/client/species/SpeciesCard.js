@@ -19,7 +19,7 @@ import { actions as alertActions } from '../../../ducks/alert';
 
 const SpeciesCard = ({ species, grid, ...props }) => {
   const user = useSelector(state => state.user.data);
-  const tanks = useSelector(state => state.tanks.data);
+  const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;  
   const navigation = useNavigation();
   const dispatch = useDispatch();

@@ -18,10 +18,11 @@ const Modal = ({ isVisible, setVisible, children, ...props }) => {
 
 const styles = StyleSheet.create({
 	container:{
-    alignItems: 'center',
+   		alignItems: 'center',
 		backgroundColor: theme.colors.background,
 		marginHorizontal: theme.container.padding * 2,
 		padding: theme.container.padding,
+		borderRadius: 5,
 	},
 });
 

@@ -243,15 +243,13 @@ export default function AddSpecies({ navigation }) {
       return;
     }
 
-    console.log(uploadFile)
-
     let data = new FormData();
     data.append('file',
-      {
-         uri: uploadFile.uri,
-         name: uploadFile.name,
-         type:'application/vnd.ms-excel'
-      });
+    {
+        uri: 'file://' + uploadFile.uri,
+        name: uploadFile.name,
+        type:'application/vnd.ms-excel'
+    });
     
     axios.post(backend.url + '/species/uploadFile', data)
       .then(res => {
