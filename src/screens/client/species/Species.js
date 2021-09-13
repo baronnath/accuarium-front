@@ -6,9 +6,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Platform, Image, Picker, Text } from 'react-native';
-import { ToggleButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StyleSheet, View, Platform, Image, Picker, LayoutAnimation, UIManager, TouchableOpacity } from 'react-native';
+import { Card } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Svg, { Path } from 'react-native-svg';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -30,6 +31,11 @@ export default function Species({ route, navigation }) {
   const [isLoading, setLoading] = useState(false);
   const [id, setId] = useState(false);
   const [species, setSpecies] = useState(false);
+  const [othernamesExpanded, setOthernamesExpanded] = useState({ expanded: false });
+
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  } 
 
   useFocusEffect(
     React.useCallback(() => {
@@ -50,6 +56,11 @@ export default function Species({ route, navigation }) {
 
   }, [speciesId]);
 
+  function changeLayout() { 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setOthernamesExpanded({ expanded: !othernamesExpanded.expanded });
+  } 
+
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
@@ -64,82 +75,115 @@ export default function Species({ route, navigation }) {
                 size={26}
               />
             </View>
+
             <Header style={styles.header}>
               {ucFirst(species.name[locale])}
+              <TouchableOpacity activeOpacity={0.8} onPress={changeLayout} >
+                <MaterialCommunityIcons
+                  name="chevron-down"
+                  size={20}
+                  color={theme.colors.lightText}
+                />
+              </TouchableOpacity>
             </Header>
+
+            <View style={{ height: othernamesExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
+              <Paragraph style={styles.otherNamesTitle}>
+                Other names: 
+              </Paragraph>
+              <View style={styles.otherNamesContainer}>
+                { species.otherNames &&
+                    species.otherNames[locale].map((name, i, {length}) => {
+
+                      return (
+                        <Paragraph style={styles.otherName}>{name}{i + 1 === length ? '' : ', '}</Paragraph>
+                      )
+                    })
+                }
+              </View>
+            </View>
+
             <Paragraph style={styles.subheader} fontStyle="italic">
               {species.scientificName}
             </Paragraph>
 
+            {/* TO BE FIXED: remove this SVG (default no pic found)
+            <Svg height="150" width="100%" viewBox="0 7.5 100 20">
+              <Path x="15" y="15" stroke={theme.colors.disabled} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeDasharray="3, 3" d="M66.5,22.2c0,0-29.7-39.6-66.5-10.6l0,0C36.8,40.6,66.5,0,66.5,0"/>
+            </Svg>
+            */}
+
+            <Image
+              source={{ uri: `${backend.imagesUrl}species/${species._id}.png` }}
+              style={styles.image}
+              defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
+            />
+
             <Paragraph>
-             {ucFirst(species.family.name[locale])} | {ucFirst(species.group.name[locale])} 
+             {ucFirst(species.family.name[locale])}         |         {ucFirst(species.group.name[locale])} 
             </Paragraph>
 
-            <Image source={{ uri: `${backend.imagesUrl}species/${species._id}.jpg` }} style={styles.image} />
+            
 
-            <View style={styles.tagContainer}>
-              { species.otherNames &&
-                species.otherNames[locale].map(name => {
-                    return (
-                      <Tag>{name}</Tag>
-                    )
-                  })
-              }
-            </View>
+            <Card style={styles.card}>
+              <Card.Content style={styles.cardContent}>
 
-            <View style={[styles.row, {marginTop: 35, marginBottom: 0}]}>
-              <FontAwesome5 style={styles.listIcon}
-                name="temperature-high" 
-                color={theme.colors.lightText}
-                size={25}
-              />
-              <Text style={styles.parameters}>
-                {species.parameters.temperature.min}º - {species.parameters.temperature.max}º
-              </Text>
-            </View>
+                <View>
+                  <FontAwesome5 style={styles.listIcon}
+                    name="temperature-high" 
+                    color={theme.colors.lightText}
+                    size={30}
+                  />
+                  <Paragraph style={styles.parameters}>
+                    {species.parameters.temperature.min}º - {species.parameters.temperature.max}º
+                  </Paragraph>
+                </View>
 
-            <View style={styles.row}>
-              <MaterialCommunityIcons style={{marginLeft: -12, marginVertical: -10, marginTop: 1}}
-                name="alpha-p" 
-                color={theme.colors.lightText}
-                size={35}
-              />
-              <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -25, marginVertical: -15}]}
-                name="alpha-h" 
-                color={theme.colors.lightText}
-                size={40}
-              />
-              <Text style={styles.parameters}>
-                {species.parameters.ph.min}º - {species.parameters.ph.max}º
-              </Text>
-            </View>
+                <View style={styles.row}>
+                  <MaterialCommunityIcons style={{marginLeft: -12, marginVertical: -10, marginTop: 1}}
+                    name="alpha-p" 
+                    color={theme.colors.lightText}
+                    size={45}
+                  />
+                  <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -32, marginVertical: -13}]}
+                    name="alpha-h" 
+                    color={theme.colors.lightText}
+                    size={52}
+                  />
+                  <Paragraph style={styles.parameters}>
+                    {species.parameters.ph.min}º - {species.parameters.ph.max}º
+                  </Paragraph>
+                </View>
 
-            <View style={styles.row}>
-              <MaterialCommunityIcons style={{marginLeft: -12, marginVertical: -10, marginTop: -11, transform: [{rotateX: '180deg'}, {rotateY: '180deg'}]}}
-                name="alpha-p" 
-                color={theme.colors.lightText}
-                size={35}
-              />
-              <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -25, marginVertical: -10}]}
-                name="alpha-h" 
-                color={theme.colors.lightText}
-                size={40}
-              />
-              <Text style={styles.parameters}>
-                {species.parameters.dh.min}º - {species.parameters.dh.max}º
-              </Text>
-            </View>
+                <View style={styles.row}>
+                  <MaterialCommunityIcons
+                    name="water-percent"
+                    color={theme.colors.lightText}
+                    size={40}
+                  />
+                  <Paragraph style={styles.parameters}>
+                    {species.parameters.dh.min}º - {species.parameters.dh.max}º
+                  </Paragraph>
+                </View>
 
+
+
+              </Card.Content>
+            </Card>
+            
             <View style={styles.row}>
               <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
                 name="ruler-square" 
                 color={theme.colors.lightText}
                 size={30}
               />
-              <Text style={styles.parameters}>
+              <Paragraph style={styles.parameters}>
                 {species.length.min} - {species.length.max} mm
-              </Text>
+              </Paragraph>
             </View>
+            
+
+            
           </>
           :
           <Spinner/>
@@ -173,27 +217,38 @@ const styles = StyleSheet.create({
     color: theme.colors.lightText,
   },
   image: {
-    marginVertical: 10,
     width: '100%',
-    height: 200
+    resizeMode: "center",
+    aspectRatio: 1.25,
   },
-  tagContainer: {
-    flex:1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    borderTopColor: theme.colors.lightText,
-    borderTopWidth: 1,
-    paddingTop: 8,
-    width: '100%',
+  otherNamesContainer: {
     justifyContent: 'center',
-
+    marginBottom: 15,
+  },
+  otherNamesTitle: {
+    fontSize: 12,
+    color: theme.colors.lightText,
+    marginBottom: 2,
+  },
+  otherName: {
+    fontSize: 12,
+    lineHeight: 14,
+    marginBottom: 2,
+  },
+  card: {
+    marginVertical: 25,
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  cardContent: {
+    marginVertical: 10,
+    marginHorizontal: 25,
   },
   row: {
     flex: 1,
-    marginVertical: 10,
-    marginLeft: '50%',
+    marginVertical: 15,
     width: '100%',
-    alignItems: 'center',
+    // alignItems: 'center',
     flexDirection: 'row',
   },
   listIcon: {
@@ -201,6 +256,9 @@ const styles = StyleSheet.create({
   },
   parameters: {
     position: 'absolute',
-    left: 45,
+    left: 70,
+    top: 6,
+    fontSize: 25,
+    lineHeight: 25,
   },
 });
