@@ -66,9 +66,6 @@ export default function Tank({ route, navigation }) {
 
       if(tank.species){
         setMainSpecies(findMainSpecies(tank.species));
-        if(mainSpecies){
-          dispatch(tankActions.getCompatibility(tankId));
-        }
       }
 
       if(tank.liters){
@@ -78,6 +75,12 @@ export default function Tank({ route, navigation }) {
     }
     
   }, [tank]);
+
+  useEffect(() => {
+    if(mainSpecies){
+      dispatch(tankActions.getCompatibility(tankId));
+    }
+  },[mainSpecies])
 
   function openMenu () { setMenuVisible(true); }
   function closeMenu () { setMenuVisible(false); }
