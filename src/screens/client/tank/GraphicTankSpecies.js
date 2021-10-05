@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, LayoutAnimation, UIManager, TouchableOpacity} from 'react-native';
 import { ToggleButton, Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -24,8 +24,10 @@ export default function GraphicTankSpecies({ species }) {
   const [isComp, setIsComp] = useState(null);
   const [parametersCompat, setParametersCompat] = useState(null);
   const [speciesCompat, setSpeciesCompat] = useState(null);
+  const [compExpanded, setCompExpanded] = useState({ expanded: false });
 
   useEffect(() => {
+    console.log(tank.compatibility);
     if(tank.compatibility){
       setIsComp(isCompatible(tank.compatibility));
       setParametersCompat(tank.compatibility.parameters[species.species._id]);
@@ -35,50 +37,56 @@ export default function GraphicTankSpecies({ species }) {
 
   function compatibilityButton() {
     if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false){
-      return <View style={styles.compatibilityButtons}>
-        <Ionicons name="warning-outline" size={30} style={styles.icons} color={theme.colors.secondary}/>
-        <MaterialCommunityIcons name="chevron-down" size={24} style={styles.icons} color={theme.colors.placeholder}/>
-      </View>
+      return <TouchableOpacity activeOpacity={0.8} onPress={changeLayout} style={styles.compatibilityButtons}>
+          <Ionicons name="warning-outline" size={30} style={styles.icons} color={theme.colors.secondary}/>
+          <MaterialCommunityIcons name="chevron-down" size={24} style={styles.icons} color={theme.colors.placeholder}/>
+        </TouchableOpacity>
     }
   }
 
   function parameterCompatibility() {
     return <>
-      <Paragraph style={styles.caption}>Parameters</Paragraph>
+      <Paragraph style={styles.caption}>Parameters not </Paragraph>
       { !parametersCompat.temperature && 
         <View style={styles.rowContainer}>
-          <MaterialCommunityIcons
-            name="thermometer"
-            color={theme.colors.secondary}
-            size={23}
-          />
+          <View style={styles.compatIcon}>
+            <MaterialCommunityIcons
+              name="thermometer"
+              color={theme.colors.secondary}
+              size={23}
+            />
+          </View>
           <Paragraph style={styles.compatDescription}>
-            Temperature is {species.species.parameters.temperature.min} - {species.species.parameters.temperature.max}º
+            This species temperature should be between {species.species.parameters.temperature.min} - {species.species.parameters.temperature.max}º
           </Paragraph>
         </View>
       }
       { !parametersCompat.ph && 
           <View style={styles.rowContainer}>
-            <MaterialCommunityIcons style={{marginTop: 1}}
-              name="alpha-p"
-              color={theme.colors.secondary}
-              size={25}
-            />
+            <View style={styles.compatIcon}>
+              <MaterialCommunityIcons style={{marginTop: 1}}
+                name="alpha-p"
+                color={theme.colors.secondary}
+                size={25}
+              />
+            </View>
             <MaterialCommunityIcons style={{marginLeft:-20 ,marginVertical: -8}}
               name="alpha-h"
               color={theme.colors.secondary}
               size={32}
             />
-            <Paragraph style={styles.compatDescription}>pH is {species.species.parameters.ph.min} - {species.species.parameters.ph.max}</Paragraph>
+            <Paragraph style={styles.compatDescription}>This is {species.species.parameters.ph.min} - {species.species.parameters.ph.max}</Paragraph>
           </View>
       }
       { !parametersCompat.ph && 
           <View style={styles.rowContainer}>
-            <MaterialCommunityIcons
-              name="grain"
-              color={theme.colors.secondary}
-              size={25}
-            />
+            <View style={styles.compatIcon}>
+              <MaterialCommunityIcons
+                name="grain"
+                color={theme.colors.secondary}
+                size={25}
+              />
+            </View>
             <Paragraph style={styles.compatDescription}>Hardness is {species.species.parameters.dh.min} - {species.species.parameters.dh.max}</Paragraph>
           </View>
       }
@@ -106,7 +114,7 @@ export default function GraphicTankSpecies({ species }) {
     }
 
     return <>
-      <Paragraph style={styles.caption}>Species</Paragraph>
+      <Paragraph style={styles.caption}>Incompatible species</Paragraph>
       { renderSpeciesCompat() }
     </>
   }
@@ -130,6 +138,15 @@ export default function GraphicTankSpecies({ species }) {
       return <Separator style={styles.separator}/>
   }
 
+  if (Platform.OS === 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
+  function changeLayout() { 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setCompExpanded({ expanded: !compExpanded.expanded });
+  } 
+
   return (
     <>
       <TouchableOpacity style={styles.rowContainer}>
@@ -140,6 +157,7 @@ export default function GraphicTankSpecies({ species }) {
           compatibilityButton()
         }
       </TouchableOpacity>
+      <View style={{ height: compExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
         <View style={styles.compatibilityContainer}>
           { isComp && isComp.isParameterCompatible[species.species._id] === false &&
             parameterCompatibility()
@@ -150,10 +168,11 @@ export default function GraphicTankSpecies({ species }) {
             speciesCompatibility()
           }
         </View>
-        {
-          isComp &&
-            seprator()
-        }
+      </View>
+      {
+        isComp &&
+          seprator()
+      }
     </>
   );
 }
@@ -214,8 +233,11 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginLeft: 5,
   },
+  compatIcon: {
+    flex:1
+  },
   compatDescription: {
-    position: 'absolute',
-    left: 35,
+    flex: 9,
+    textAlign: 'left',
   },
 });
