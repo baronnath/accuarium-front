@@ -45,7 +45,7 @@ export default function GraphicTankSpecies({ species }) {
 
   function parameterCompatibility() {
     return <>
-      <Paragraph style={styles.caption}>Parameters not </Paragraph>
+      <Paragraph style={styles.caption}>Parameters not compatible</Paragraph>
       { !parametersCompat.temperature && 
         <View style={styles.rowContainer}>
           <View style={styles.compatIcon}>
@@ -74,7 +74,7 @@ export default function GraphicTankSpecies({ species }) {
               color={theme.colors.secondary}
               size={32}
             />
-            <Paragraph style={styles.compatDescription}>This is {species.species.parameters.ph.min} - {species.species.parameters.ph.max}</Paragraph>
+            <Paragraph style={styles.compatDescription}>This species pH should be between {species.species.parameters.ph.min} - {species.species.parameters.ph.max}</Paragraph>
           </View>
       }
       { !parametersCompat.ph && 
@@ -86,7 +86,7 @@ export default function GraphicTankSpecies({ species }) {
                 size={25}
               />
             </View>
-            <Paragraph style={styles.compatDescription}>Hardness is {species.species.parameters.dh.min} - {species.species.parameters.dh.max}</Paragraph>
+            <Paragraph style={styles.compatDescription}>This species hardness should be {species.species.parameters.dh.min} - {species.species.parameters.dh.max}</Paragraph>
           </View>
       }
     </>
