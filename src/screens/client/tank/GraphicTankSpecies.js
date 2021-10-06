@@ -27,7 +27,6 @@ export default function GraphicTankSpecies({ species }) {
   const [compExpanded, setCompExpanded] = useState({ expanded: false });
 
   useEffect(() => {
-    console.log(tank.compatibility);
     if(tank.compatibility){
       setIsComp(isCompatible(tank.compatibility));
       setParametersCompat(tank.compatibility.parameters[species.species._id]);
