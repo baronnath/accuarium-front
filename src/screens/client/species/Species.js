@@ -13,7 +13,7 @@ import Svg, { Path } from 'react-native-svg';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
-import MenuButton from '../../../components/MenuButton';
+import Separator from '../../../components/Separator';
 import Paragraph from '../../../components/Paragraph';
 import Tag from '../../../components/Tag';
 import Spinner from '../../../components/Spinner';
@@ -60,7 +60,35 @@ export default function Species({ route, navigation }) {
   function changeLayout() { 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setOthernamesExpanded({ expanded: !othernamesExpanded.expanded });
-  } 
+  }
+
+  function paramIcon(icon, size, color, alt) {
+    return <View style={styles.paramContainer}>
+      <MaterialCommunityIcons style={styles.listIcon}
+        name={icon} 
+        color={color ? color : theme.colors.lightText}
+        size={size}
+      />
+      { alt &&
+        <Paragraph style={styles.paramDesc}>
+          {ucFirst(alt)}
+        </Paragraph>
+      }
+    </View>
+  }
+
+  function paramValues(values, alt) {
+    return <View style={styles.paramContainer}>
+        { alt &&
+          <Paragraph style={styles.paramDesc}>
+            {ucFirst(alt)}
+          </Paragraph>
+        }
+        <Paragraph style={styles.parameters}>
+          {values}
+        </Paragraph>
+      </View>
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -104,7 +132,7 @@ export default function Species({ route, navigation }) {
               </View>
             </View>
 
-            <Paragraph style={styles.subheader} fontStyle="italic">
+            <Paragraph style={styles.scientific} fontStyle="italic">
               {species.scientificName}
             </Paragraph>
 
@@ -125,65 +153,83 @@ export default function Species({ route, navigation }) {
             </Paragraph>
 
             
+            <View style={styles.container}>
+              <Subheader style={styles.subheader}>Water chemistry</Subheader>
+              <Separator/>
 
-            <Card style={styles.card}>
-              <Card.Content style={styles.cardContent}>
+              <View style={styles.paramsContainer}>
 
-                <View>
-                  <FontAwesome5 style={styles.listIcon}
-                    name="temperature-high" 
-                    color={theme.colors.lightText}
-                    size={30}
-                  />
-                  <Paragraph style={styles.parameters}>
-                    {species.parameters.temperature.min}º - {species.parameters.temperature.max}º
-                  </Paragraph>
+                <View style={styles.row}>
+                  <View style={styles.paramContainer}>
+                    <FontAwesome5 style={styles.listIcon}
+                      name="temperature-high" 
+                      color={theme.colors.lightText}
+                      size={20}
+                    />
+                  </View>
+
+                  <View style={styles.paramContainer}>
+                    <View style={[styles.row,{alignItems: 'center',justifyContent: 'center'}]}>
+                      <MaterialCommunityIcons style={[styles.listIcon,{ marginTop: 10}]}
+                        name="alpha-p" 
+                        color={theme.colors.lightText}
+                        size={30}
+                      />
+                      <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -20}]}
+                        name="alpha-h" 
+                        color={theme.colors.lightText}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+
+                  {paramIcon('grain',24)}
                 </View>
 
                 <View style={styles.row}>
-                  <MaterialCommunityIcons style={{marginLeft: -12, marginVertical: -10, marginTop: 1}}
-                    name="alpha-p" 
-                    color={theme.colors.lightText}
-                    size={45}
-                  />
-                  <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -32, marginVertical: -13}]}
-                    name="alpha-h" 
-                    color={theme.colors.lightText}
-                    size={52}
-                  />
-                  <Paragraph style={styles.parameters}>
-                    {species.parameters.ph.min}º - {species.parameters.ph.max}º
-                  </Paragraph>
+                  {paramValues(`${species.parameters.temperature.min}-${species.parameters.temperature.max}`,'Temperature')}
+                  {paramValues(`${species.parameters.ph.min}-${species.parameters.ph.max}`,'pH')}
+                  {paramValues(`${species.parameters.dh.min}-${species.parameters.dh.max}`,'Hardness')}
+                </View>
+              </View>
+              
+              <Subheader style={styles.subheader}>Dimensions</Subheader>
+              <Separator/>
+
+              <View style={styles.paramsContainer}>
+
+                <View style={styles.row}>
+                  {paramIcon('ruler',24)}
+                  {paramIcon('cube-scan',26)}
+                  {paramIcon('waves',24)}
                 </View>
 
                 <View style={styles.row}>
-                  <MaterialCommunityIcons
-                    name="water-percent"
-                    color={theme.colors.lightText}
-                    size={40}
-                  />
-                  <Paragraph style={styles.parameters}>
-                    {species.parameters.dh.min}º - {species.parameters.dh.max}º
-                  </Paragraph>
+                  {paramValues(`${species.length.min}-${species.length.max}`,'Size')}
+                  {paramValues(species.minTankLiters,'Min. tank')}
+                  {paramValues(ucFirst(species.depth.name[locale]),'Swim area')}
                 </View>
+                
+              </View>
 
+              <Subheader style={styles.subheader}>Behavior</Subheader>
+              <Separator/>
 
+              <View style={styles.paramsContainer}>
 
-              </Card.Content>
-            </Card>
+                <View style={styles.row}>
+                  { species.cleaning &&
+                    paramIcon('spray-bottle',24)
+                  }
+
+                  { species.behavior.map(behavior => {
+                      return paramIcon(behavior.icon, 24, behavior.warning ? theme.colors.secondary : null, behavior.name[locale])
+                    })
+                  }
+                </View>                
+              </View>
             
-            <View style={styles.row}>
-              <MaterialCommunityIcons style={{marginLeft: -2, marginVertical: -5, marginTop: -5}}
-                name="ruler-square" 
-                color={theme.colors.lightText}
-                size={30}
-              />
-              <Paragraph style={styles.parameters}>
-                {species.length.min} - {species.length.max} mm
-              </Paragraph>
             </View>
-            
-
             
           </>
           :
@@ -213,7 +259,7 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: 0,
   },
-  subheader: {
+  scientific: {
     paddingTop: 0,
     color: theme.colors.lightText,
   },
@@ -236,30 +282,56 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     marginBottom: 2,
   },
-  card: {
-    marginVertical: 25,
+  // card: {
+  //   marginVertical: 25,
+  //   flex: 1,
+  //   alignSelf: 'stretch',
+  // },
+  // cardContent: {
+  //   marginVertical: 10,
+  //   marginHorizontal: 25,
+  // },
+  container:{
     flex: 1,
-    alignSelf: 'stretch',
-  },
-  cardContent: {
-    marginVertical: 10,
+    width: '100%',
+    marginVertical: 40,
     marginHorizontal: 25,
   },
   row: {
     flex: 1,
-    marginVertical: 15,
-    width: '100%',
-    // alignItems: 'center',
+    display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  subheader: {
+    marginTop: 15,
+    color: theme.colors.lightText,
+    // alignSelf: 'flex-end',
+    fontSize: 12,
+    lineHeight: 10,
+  },
+  paramsContainer: {
+    paddingVertical: 10,
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  paramContainer: {
+    width: '33%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   listIcon: {
-    marginRight: 8,
+    // marginRight: 8,
   },
   parameters: {
-    position: 'absolute',
-    left: 70,
-    top: 6,
-    fontSize: 25,
-    lineHeight: 25,
+    // fontSize: 10,
+    // lineHeight: 10,
+  },
+  paramDesc: {
+    color: theme.colors.lightText,
+    fontSize: 10,
+    lineHeight: 12,
   },
 });

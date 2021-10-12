@@ -50,11 +50,11 @@ export default function Navigator() {
     headerShown: false
   };
 
-  useLayoutEffect(async() => {
-    const userData = JSON.parse(await AsyncStorage.getItem('user'));
-    // console.log(userData);
-    dispatch(userActions.autoLogin(userData));
-  }, []);
+  // useLayoutEffect(async() => {
+  //   const userData = JSON.parse(await AsyncStorage.getItem('user'));
+  //   console.log(userData);
+  //   dispatch(userActions.autoLogin(userData));
+  // }, []);
 
   function BottomNav() {
     return (
