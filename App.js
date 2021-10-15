@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { navigationRef } from './src/helpers/navigator';
+import { linkingRef } from './src/helpers/linking';
 import { AppRegistry } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
@@ -17,7 +18,7 @@ export default function Main() {
   return (
     <StoreProvider store={store}>
       <PaperProvider>
-        <NavigationContainer ref={navigationRef} theme={theme}>
+        <NavigationContainer ref={navigationRef}  linking={linkingRef} theme={theme}>
           <Navigator />
           <Alert />
         </NavigationContainer>

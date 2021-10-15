@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "accuarium",
+    "scheme": "accua",
     "slug": "front",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -27,8 +28,8 @@
     }
   },
   "backend": {
-    "url": "http://192.168.0.19:8080",
-    "imagesUrl": "http://192.168.0.19:8080/images/"
+    "url": "http://192.168.0.12:8080",
+    "imagesUrl": "http://192.168.0.12:8080/images/"
   },
   "preferences": {
     "pagination": 10
