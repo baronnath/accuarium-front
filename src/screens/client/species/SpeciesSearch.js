@@ -39,7 +39,7 @@ export default function SpeciesSearch({ navigation }) {
   const [depths, setDepths] = useState(null);
   const [behaviors, setBehaviors] = useState(null);
   const [feeds, setFeeds] = useState(null);
-  const [query, setQuery] = useState([]);
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ export default function SpeciesSearch({ navigation }) {
           const newResutls = res.data.species;
           console.log(!!newResutls.length)
           if(!!newResutls.length)
-            setResults(prevResults => [...prevResults, ...newResutls]);
+            setResults(newResutls);
           else
             setFinalPage(true);
           setTotalResults(res.data.total);
