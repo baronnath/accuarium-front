@@ -28,25 +28,37 @@ export const setHeaders = async (token) => {
 
 export class Api {
 
+	// Tank
+
 	static getTank(id) {
-		return this.#getTank({tankId: id});
+		return this._getTank({tankId: id});
 	}
 
 	static getTankByUser(id) {
-		return this.#getTank({userId: id});
+		return this._getTank({userId: id});
 	}
 
-	static #getTank(params){
+	static _getTank(params){
 		return axios.get(backend.url + '/tank', {params: params});
 	}
 
+
+	// Species
+
 	static getSpeciesById(speciesId) {
 		let params = {speciesId: speciesId};
-		return this.#getSpecies(params);
+		return this._getSpecies(params);
 	}
 
-	static #getSpecies(params) {
+	static _getSpecies(params) {
 		return axios.get(backend.url + '/species', {params: params});
+	}
+
+
+	// Locale
+
+	static getLocales(params) {
+		return axios.get(backend.url + '/locales');
 	}
 
 }

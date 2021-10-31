@@ -6,11 +6,18 @@ import * as navigator from '../helpers/navigator.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { axios, setHeaders }from '../helpers/axios';
 import { backend } from '../../app.json';
+import { handleAlert } from '../helpers/global';
 import { actions as alertActions } from './alert';
 
 
 // Types
 export const types = {
+    GETUSER_REQUEST: 'GETUSER_REQUEST',
+    GETUSER_SUCCESS: 'GETUSER_SUCCESS',
+    GETUSER_ERROR: 'GETUSER_ERROR',
+    UPDATEUSER_REQUEST: 'UPDATEUSER_REQUEST',
+    UPDATEUSER_SUCCESS: 'UPDATEUSER_SUCCESS',
+    UPDATEUSER_ERROR: 'UPDATEUSER_ERROR',
 	REGISTER_REQUEST: 'REGISTER_REQUEST',
 	REGISTER_SUCCESS: 'REGISTER_SUCCESS',
 	REGISTER_ERROR: 'REGISTER_ERROR',
@@ -32,6 +39,8 @@ export const types = {
 export default (state = defaultState, action) => {
 	switch(action.type){
         // Request
+        case types.GETUSER_REQUEST:
+		case types.UPDATEUSER_REQUEST:
 		case types.REGISTER_REQUEST:
         case types.VERIFY_REQUEST:
         case types.LOGIN_REQUEST:
@@ -42,6 +51,8 @@ export default (state = defaultState, action) => {
                 isLoading: true,
             };
         // Error
+        case types.GETUSER_ERROR:
+		case types.UPDATEUSER_ERROR:
         case types.REGISTER_ERROR:
         case types.VERIFY_ERROR:
         case types.LOGIN_ERROR:
@@ -51,21 +62,11 @@ export default (state = defaultState, action) => {
                 ...state,
                 isLoading: false,
             };
-        // Registration
+        // Success 
+        case types.GETUSER_SUCCESS:
+        case types.UPDATEUSER_SUCCESS:
         case types.REGISTER_SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                data: action.payload.user,
-            };
-        // Verification
         case types.VERIFY_SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                data: action.payload.user,
-            };
-        // Login
         case types.LOGIN_SUCCESS:
         case types.AUTOLOGIN_SUCCESS:
             return {
@@ -101,7 +102,10 @@ export const actions = {
     verify,
     logout,
     register,
-    getAll,
+    getUsers,
+    getUser,
+    getUserByEmail,
+    updateUser,
     delete: _delete
 };
 
@@ -244,21 +248,86 @@ function verify(user) {
     function error(error) { return { type: types.VERIFY_ERROR, error } }
 }
 
-function getAll() {
+function getUsers() {
     return dispatch => {
         dispatch(request());
 
-        userService.getAll()
+        userService.getUsers()
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))
             );
     };
 
-    function request() { return { type: types.GETALL_REQUEST } }
-    function success(users) { return { type: types.GETALL_SUCCESS, users } }
-    function failure(error) { return { type: types.GETALL_FAILURE, error } }
+    function request() { return { type: types.GETUSERS_REQUEST } }
+    function success(users) { return { type: types.GETUSERS_SUCCESS, users } }
+    function failure(error) { return { type: types.GETUSERS_FAILURE, error } }
 }
+
+function getUser(id) {
+    return _getUser({userId: id});
+}
+
+function getUserByEmail(email) {
+    return _getUser({email: email});
+}
+
+function _getUser(params){
+    return dispatch => {
+        dispatch(request());
+
+        axios.get(backend.url + '/user', {params: params})
+            .then(
+                res => { 
+                if(params.userId){
+                    dispatch(successGetUser(res.data));
+                }
+                else{
+                    dispatch(succesGetUserByEmail(res.data));
+                }
+                }
+            ).catch(
+                err => {
+                    dispatch(error());
+                        handleAlert(err);
+                }
+            );
+    };
+
+    function request() { return { type: types.GETUSER_REQUEST } }
+    function successGetUser(data) { return { type: types.GETUSER_SUCCESS, payload: data } }
+    function succesGetUserByEmail(data) { return { type: types.GETTUSER_SUCCESS, payload: data } }
+    function error() { return { type: types.GETUSER_ERROR } }
+}
+
+function updateUser(user){
+    return dispatch => {
+          dispatch(request());
+  
+          const params = {
+            userId: user._id,
+            name: user.name,
+            locale: user.locale,
+          }
+  
+          axios.put(backend.url + '/user', params)
+              .then(
+                  res => {
+                      dispatch(success(res.data));
+                      dispatch(alertActions.success(res.data.message));
+                  }
+              ).catch(
+                  err => {
+                      dispatch(error());
+                      handleAlert(err);
+                  }
+              );
+      };
+  
+      function request() { return { type: types.UPDATEUSER_REQUEST } }
+      function success(data) { return { type: types.UPDATEUSER_SUCCESS, payload: data } }
+      function error() { return { type: types.UPDATEUSER_ERROR } }
+  }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {

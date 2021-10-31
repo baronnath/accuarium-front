@@ -88,7 +88,6 @@ export default function SpeciesSearch({ navigation }) {
     axios.get(backend.url + '/species/search', {params: params})
       .then(res => {
           const newResutls = res.data.species;
-          console.log(!!newResutls.length)
           if(!!newResutls.length)
             setResults(newResutls);
           else

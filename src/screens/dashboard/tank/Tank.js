@@ -38,7 +38,6 @@ export default function Tank({ route, navigation }) {
     // Get tank data
     axios.get(backend.url + '/tank', {params: {tankId: tankId}})
       .then(res => {
-          console.log(res.data.tanks);
           setTank(res.data.tanks);
       })
       .catch(err => {

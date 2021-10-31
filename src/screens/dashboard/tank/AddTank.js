@@ -309,8 +309,6 @@ export default function AddTank({ navigation }) {
     }, tankData.species);
     delete tankData.species;
 
-    console.log(tankData);
-
     axios.post(backend.url + '/tank', tankData)
     .then(res => {
       dispatch(alertActions.success(res.data.message));

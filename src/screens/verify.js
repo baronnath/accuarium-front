@@ -62,7 +62,6 @@ const Verify = ({ navigation }: Props) => {
   }
 
   function resendCode() {
-  	console.log(email);
   	axios.get(backend.url + '/user/verify/resend', { params: { email: email }})
 	    .then(res => {
 	        dispatch(alertActions.success(res.data.message));

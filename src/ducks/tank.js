@@ -55,6 +55,7 @@ export default (state = defaultState, action) => {
           ...state,
           isLoading: false,
       };
+    // Success
     case types.GETTANK_SUCCESS:
     case types.UPDATETANK_SUCCESS:
       return {
