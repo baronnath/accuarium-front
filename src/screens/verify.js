@@ -17,7 +17,7 @@ import validator from '../validators/verify';
 import { actions as userActions } from '../ducks/user';
 import { actions as alertActions } from '../ducks/alert';
 
-const Verify = ({ navigation }: Props) => {
+const Verify = ({ navigation }) => {
   const [user, setUser] = useState({
         values: {
           code: '',

@@ -3,6 +3,7 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import * as Localization from 'expo-localization';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -11,15 +12,19 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../theme';
+import translator from '../translator/translator';
 import validator from '../validators/login';
 import { actions as userActions } from '../ducks/user';
 
 const Login = ({ navigation }) => {
+  const locale = Localization.locale
+  const i18n = translator(locale);
   const [user, setUser] = useState({
         values: {
           name: '',
           email: '',
           password: '',
+          locale: locale,
         },
         errors: {
           name: '',
@@ -69,7 +74,7 @@ const Login = ({ navigation }) => {
 
           <Logo />
 
-          <Header>Welcome back.</Header>
+          <Header>{i18n.t(login.title)}</Header>
 
           <TextInput
             label="Email"

@@ -19,16 +19,19 @@ import { actions as userActions } from '../../../ducks/user';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 import validator from '../../../validators/user';
 
 export default function Profile({ route, navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.data);
-  const [editedUSer, setEditedUser] = useState({});
+  const [editedUser, seteditedUser] = useState({});
 
   const [locales, setLocales] = useState(null);
   const [localeDialog, setLocaleDialog] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const i18n = translator(user.locale);
 
   useEffect(() => {
 
@@ -45,12 +48,12 @@ export default function Profile({ route, navigation }) {
 
   useEffect(()=>{
     if(!helpers.isEmpty(user)){
-      setEditedUser(helpers.clone(user));
+      seteditedUser(helpers.clone(user)); 
     }
   },[user]);
 
   async function handleChange(field, value) {
-    setEditedUser(prevUser => ({
+    seteditedUser(prevUser => ({
       ...prevUser,
       [field]: value
     }));
@@ -62,7 +65,7 @@ export default function Profile({ route, navigation }) {
   };
 
   function onSubmit(){
-    let userData = helpers.clone(editedUSer); 
+    let userData = helpers.clone(editedUser); 
 
     const validation = validator(userData);
 
@@ -91,17 +94,17 @@ export default function Profile({ route, navigation }) {
       contentContainerStyle={styles.contentContainerStyle}
     >
       <Background justify="top" style={styles.background}>
-        { !helpers.isEmpty(editedUSer) && 
+        { !helpers.isEmpty(editedUser) && 
           <>
-            <Avatar.Image style={styles.image} size={100} source={{uri: editedUSer.image}} />
+            <Avatar.Image style={styles.image} size={100} source={{uri: editedUser.image}} />
             <Header>
-              {helpers.ucFirst(editedUSer.name)}
+              {helpers.ucFirst(editedUser.name)}
             </Header>
 
             <View style={styles.container}>
               <View style={styles.row}>
                 <Paragraph style={styles.leftSide}>Language</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUSer.locale}</Paragraph>
+                <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUser.locale}</Paragraph>
                 <TouchableOpacity style={styles.rightSide}>
                   <MaterialCommunityIcons
                     name="chevron-right"
@@ -137,13 +140,13 @@ export default function Profile({ route, navigation }) {
                   handleChange('locale',value);
                   setLocaleDialog(false);
                 }}
-                value={editedUSer.locale}
+                value={editedUser.locale}
               >
                 {
                   locales.map(locale => {  
                     return (
                       <RadioButton.Item
-                        label={helpers.ucFirst(locale.name[editedUSer.locale])}
+                        label={helpers.ucFirst(locale.name[editedUser.locale])}
                         value={locale.lang}
                         mode="ios"
                         key={locale._id}
