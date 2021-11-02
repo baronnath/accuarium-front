@@ -17,8 +17,11 @@ import validator from '../validators/login';
 import { actions as userActions } from '../ducks/user';
 
 const Login = ({ navigation }) => {
+  const dispatch = useDispatch();
+  
   const locale = Localization.locale
   const i18n = translator(locale);
+
   const [user, setUser] = useState({
         values: {
           name: '',
@@ -32,7 +35,6 @@ const Login = ({ navigation }) => {
           password: '',
         }
     });
-  const dispatch = useDispatch();
 
   function handleSubmit() {
     const validation = validator(user);
@@ -41,9 +43,9 @@ const Login = ({ navigation }) => {
       setUser(prevUser => ({
         ...prevUser,
         errors: {
-          name: validation.name,
-          email: validation.email,
-          password: validation.password
+          name: validation.name && i18n.t(validation.name),
+          email: validation.email && i18n.t(validation.email),
+          password: validation.password && i18n.t(validation.password)
         }
       }));
 
@@ -70,14 +72,12 @@ const Login = ({ navigation }) => {
     >
         <Background style={styles.container} justify="top">
 
-          <BackButton goBack={() => navigation.navigate('Home')} />
-
           <Logo />
 
-          <Header>{i18n.t(login.title)}</Header>
+          <Header>{i18n.t('general.login')}</Header>
 
           <TextInput
-            label="Email"
+            label={i18n.t('general.email')}
             name="email"
             returnKeyType="next"
             value={user.values.email}
@@ -91,7 +91,7 @@ const Login = ({ navigation }) => {
           />
 
           <TextInput
-            label="Password"
+            label={i18n.t('general.password')}
             name="password"
             returnKeyType="done"
             value={user.values.password}
@@ -105,7 +105,7 @@ const Login = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('ForgotPasswordScreen')}
             >
-              <Text style={styles.label}>Forgot your password?</Text>
+              <Text style={styles.label}>{i18n.t('login.forgotPassword')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -113,13 +113,13 @@ const Login = ({ navigation }) => {
             mode="contained"
             onPress={handleSubmit}
             style={styles.button}>
-              Login
+              {i18n.t('general.login')}
           </Button>
 
           <View style={styles.row}>
-            <Text style={styles.label}>Don’t have an account? </Text>
+            <Text style={styles.label}>{i18n.t('login.noAccount')} </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={styles.link}>Sign up</Text>
+              <Text style={styles.link}>{i18n.t('general.signUp')}</Text>
             </TouchableOpacity>
           </View>
         </Background>

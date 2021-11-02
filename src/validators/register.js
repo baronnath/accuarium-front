@@ -21,11 +21,11 @@ function emailValidator (email: string) {
 
   if (!email || email.length <= 0) {
   	errors = true;
-  	return 'Email cannot be empty.';
+  	return 'validation.email.empty';
   }
   if (!re.test(email)) {
   	errors = true;
-  	return 'Ooops! We need a valid email address.';
+  	return 'validation.email.notValid';
   }
 
   return false;
@@ -34,7 +34,7 @@ function emailValidator (email: string) {
 function passwordValidator (password: string) {
   if (!password || password.length <= 0) {
   	errors = true;
-  	return 'Password cannot be empty.';
+  	return 'validation.password.empty';
   }
 
   return false;
@@ -43,7 +43,7 @@ function passwordValidator (password: string) {
 function nameValidator (name: string) {
   if (!name || name.length <= 0) {
   	errors = true;
-  	return 'Name cannot be empty.';
+  	return 'validation.name.empty';
   }
 
   return false;

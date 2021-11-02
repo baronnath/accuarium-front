@@ -10,9 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { theme } from './theme';
 
-import Register from './screens/register';
-import Verify from './screens/verify';
-import Login from './screens/login';
+import Register from './screens/Register';
+import Verify from './screens/Verify';
+import Login from './screens/Login';
 
 import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
