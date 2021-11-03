@@ -23,10 +23,12 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { Api }from '../../../helpers/axios';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 
 export default function Species({ route, navigation }) {
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
 
   const { speciesId } = route.params;
   const [isLoading, setLoading] = useState(false);
@@ -118,7 +120,7 @@ export default function Species({ route, navigation }) {
 
             <View style={{ height: othernamesExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
               <Paragraph style={styles.otherNamesTitle}>
-                Other names: 
+                {i18n.t('species.otherNames')}:
               </Paragraph>
               <View style={styles.otherNamesContainer}>
                 { species.otherNames &&
@@ -154,7 +156,7 @@ export default function Species({ route, navigation }) {
 
             
             <View style={styles.container}>
-              <Subheader style={styles.subheader}>Water chemistry</Subheader>
+              <Subheader style={styles.subheader}>{i18n.t('general.waterChemistry')}</Subheader>
               <Separator/>
 
               <View style={styles.paramsContainer}>
@@ -187,13 +189,13 @@ export default function Species({ route, navigation }) {
                 </View>
 
                 <View style={styles.row}>
-                  {paramValues(`${species.parameters.temperature.min}-${species.parameters.temperature.max}`,'Temperature')}
-                  {paramValues(`${species.parameters.ph.min}-${species.parameters.ph.max}`,'pH')}
-                  {paramValues(`${species.parameters.dh.min}-${species.parameters.dh.max}`,'Hardness')}
+                  {paramValues(`${species.parameters.temperature.min}-${species.parameters.temperature.max}`,i18n.t('general.temperature'))}
+                  {paramValues(`${species.parameters.ph.min}-${species.parameters.ph.max}`,i18n.t('general.ph'))}
+                  {paramValues(`${species.parameters.dh.min}-${species.parameters.dh.max}`,i18n.t('general.hardness'))}
                 </View>
               </View>
               
-              <Subheader style={styles.subheader}>Dimensions</Subheader>
+              <Subheader style={styles.subheader}>{i18n.t('general.dimensions')}</Subheader>
               <Separator/>
 
               <View style={styles.paramsContainer}>
@@ -205,14 +207,14 @@ export default function Species({ route, navigation }) {
                 </View>
 
                 <View style={styles.row}>
-                  {paramValues(`${species.length.min}-${species.length.max}`,'Size')}
-                  {paramValues(species.minTankLiters,'Min. tank')}
-                  {paramValues(ucFirst(species.depth.name[locale]),'Swim area')}
+                  {paramValues(`${species.length.min}-${species.length.max}`,i18n.t('general.size'))}
+                  {paramValues(species.minTankLiters,i18n.t('general.minTank'))}
+                  {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swinArea'))}
                 </View>
                 
               </View>
 
-              <Subheader style={styles.subheader}>Behavior</Subheader>
+              <Subheader style={styles.subheader}>{i18n.t('general.behaviour')}</Subheader>
               <Separator/>
 
               <View style={styles.paramsContainer}>

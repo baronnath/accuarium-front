@@ -1,5 +1,6 @@
 // src/components/Searchbar.js
 
+import { placeholder } from 'i18n-js';
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 import { Searchbar as PaperSearchbar } from 'react-native-paper';
@@ -10,7 +11,7 @@ type Props = React.ComponentProps<typeof PaperSearchbar>;
 
 const Searchbar = ({ ...props }: Props) => (
   <PaperSearchbar
-      placeholder="Search"
+      placeholder={placeholder}
       theme={theme}
       inputStyle={styles.input}
       style={styles.searchbar}

@@ -3,6 +3,7 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import * as Localization from 'expo-localization';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { axios }from '../helpers/axios';
 import { backend } from '../../app.json';
@@ -13,11 +14,17 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../theme';
+import translator from '../translator/translator';
 import validator from '../validators/verify';
 import { actions as userActions } from '../ducks/user';
 import { actions as alertActions } from '../ducks/alert';
 
 const Verify = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  const locale = Localization.locale
+  const i18n = translator(locale);
+
   const [user, setUser] = useState({
         values: {
           code: '',
@@ -26,7 +33,6 @@ const Verify = ({ navigation }) => {
           code: '',
         }
     });
-  const dispatch = useDispatch();
   const email = useSelector(state => state.user.data.email);
 
   function handleSubmit() {
@@ -36,7 +42,7 @@ const Verify = ({ navigation }) => {
       setUser(prevUser => ({
         ...prevUser,
         errors: {
-          code: validation.code,
+          code: validation.code && i18n.t(validation.code),
         }
       }));
 
@@ -78,18 +84,18 @@ const Verify = ({ navigation }) => {
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
+      contentContainerStyle={styles.contentContainerStyle}
     >
-      <View style={styles.container}>
-        <Background>
+        <Background style={styles.container} justify="top">
           <BackButton goBack={() => navigation.navigate('Register')} />
 
           <Logo />
 
-          <Header>Verify your email</Header>
-          <Text>Check yout email inbox for the email verification code</Text>
+          <Header>{i18n.t('verify.title')}</Header>
+          <Text>{i18n.t('verify.description')}</Text>
 
           <TextInput
-            label="Code"
+            label={i18n.t('general.code')}
             name="code"
             returnKeyType="next"
             value={user.values.code}
@@ -103,7 +109,7 @@ const Verify = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {resendCode()}}
             >
-              <Text style={styles.label}>Resend verification email</Text>
+              <Text style={styles.label}>{i18n.t('verify.resend')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -111,16 +117,18 @@ const Verify = ({ navigation }) => {
             mode="contained"
             onPress={handleSubmit}
             style={styles.button}>
-              Verify
+              {i18n.t('general.verify')}
           </Button>
 
         </Background>
-      </View>
     </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  contentContainerStyle: {
+    flex: 1,
+  }, 
   forgotPassword: {
     width: '100%',
     alignItems: 'flex-end',
@@ -138,7 +146,11 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   container: {
-    width: '100%',
+    flex: 1,
+    alignSelf: 'stretch',
+    flexDirection:'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

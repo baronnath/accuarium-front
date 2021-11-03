@@ -20,7 +20,7 @@ function localeValidator (locale) {
 
   if (!locale || locale.length <= 0) {
   	errors = true;
-  	return 'Language cannot be empty.';
+  	return 'validation.locale.empty';
   }
 
   return false;

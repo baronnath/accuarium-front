@@ -14,10 +14,10 @@ export default (user) => {
 	return false;
 }
 
-function codeValidator (code: string) {
+function codeValidator (code) {
   if (!code || code.length <= 0) {
   	errors = true;
-  	return 'Verification code cannot be empty.';
+  	return 'validation.code.empty';
   }
 
   return false;

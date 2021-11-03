@@ -4,10 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
-import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { Text, StyleSheet, View, FlatList } from 'react-native';
-import { DataTable } from 'react-native-paper';
+import { StyleSheet, FlatList } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
@@ -16,15 +14,15 @@ import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
 import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
-import { actions as tankActions } from '../../../ducks/tank';
-import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
-import { preferences } from '../../../../app.json';
+import translator from '../../../translator/translator';
+
 
 export default function SpeciesSearch({ navigation }) {
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
 
   const [isLoading, setLoading] = useState(true);
   const [grid, setGrid] = useState(true);
@@ -117,7 +115,7 @@ export default function SpeciesSearch({ navigation }) {
     <>
       <Background justify="top">
         <Header>
-          Species
+          {i18n.t('speciesSearch.title')}
         </Header>
         <OptionsMenu>
           <MaterialCommunityIcons size={26} color={theme.colors.lightText} name="filter-outline" onPress={() => {filter()}} />
@@ -125,7 +123,7 @@ export default function SpeciesSearch({ navigation }) {
         </OptionsMenu>
         
         <Searchbar
-          placeholder="Search"
+          placeholder={i18n.t('general.search')}
           onChangeText={searchKey => onChangeSearch(searchKey)}
           value={query}
         />
@@ -146,7 +144,7 @@ export default function SpeciesSearch({ navigation }) {
             isLoading
               ? <Spinner />
               : isFinalPage &&
-                <Paragraph style={{paddingVertical: 20}}>No more species</Paragraph> 
+                <Paragraph style={{paddingVertical: 20}}>{i18n.t('speciesSearch.noMore')}</Paragraph> 
           }
         />  
       </Background>

@@ -66,8 +66,8 @@ function Register ({ navigation }) {
 
   return (
     <KeyboardAwareScrollView
-    resetScrollToCoords={{x:0, y:0}}
-    contentContainerStyle={styles.contentContainerStyle}
+      resetScrollToCoords={{x:0, y:0}}
+      contentContainerStyle={styles.contentContainerStyle}
     >
         <Background style={styles.container} justify="top">
           <BackButton goBack={() => navigation.navigate('Login')} />

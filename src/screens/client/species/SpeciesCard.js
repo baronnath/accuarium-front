@@ -3,16 +3,15 @@
 import React, { useState, memo } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Avatar, Card, Menu, List } from 'react-native-paper';
+import { Card, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { axios } from '../../../helpers/axios';
 import Paragraph from '../../../components/Paragraph';
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
-import { backend } from '../../../../app.json';
 import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
+import translator from '../../../translator/translator';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 
@@ -21,9 +20,10 @@ const SpeciesCard = ({ species, grid, ...props }) => {
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;  
+  const i18n = translator(locale);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [visible, setVisible] = useState(false);
+
   const [tankId, setTankId] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
@@ -32,10 +32,6 @@ const SpeciesCard = ({ species, grid, ...props }) => {
   // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
   const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
   
-
-  function openMenu () { setVisible(true); }
-  function closeMenu () { setVisible(false); }
-
   function addSpeciesToTank() {
     const params = {
       tankId: tankId,
@@ -98,8 +94,8 @@ const SpeciesCard = ({ species, grid, ...props }) => {
         <>
           <Modal isVisible={isTankModalVisible} setVisible={setTankModalVisible}>
             <MaterialCommunityIcons name="fishbowl-outline" size={60} color={theme.colors.accent} />
-            <Paragraph style={styles.modalTitle}>Which tank</Paragraph>
-            <Paragraph style={styles.modalParagraph}>do you want to add this species to?</Paragraph>
+            <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal1Title')}</Paragraph>
+            <Paragraph style={styles.modalParagraph}>{i18n.t('speciesCard.modal1Paragraph')}</Paragraph>
             <View style={styles.listContainer}>
               {
                 tanks.map(tank => {
@@ -129,14 +125,14 @@ const SpeciesCard = ({ species, grid, ...props }) => {
             </View>
           </Modal>
           <Modal isVisible={isQuantityModalVisible} setVisible={setQuantityModalVisible}>
-            <Paragraph style={styles.modalTitle}>How many</Paragraph>
-            <Paragraph style={styles.modalParagraph}>do you want to add?</Paragraph>
+            <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal2Title')}</Paragraph>
+            <Paragraph style={styles.modalParagraph}>{i18n.t('speciesCard.modal2Paragraph')}</Paragraph>
             <View style={styles.quantityContainer}>
              <MaterialCommunityIcons size={50} name="minus-circle-outline" style={[styles.quantityModifier, quantity <= 1 && styles.disabled]} onPress={() => {quantity > 1 && setQuantity(quantity-1)}} />
              <Paragraph style={styles.quantity}>{quantity}</Paragraph>
              <MaterialCommunityIcons size={50} name="plus-circle-outline" style={styles.quantityModifier} onPress={() => {setQuantity(quantity+1)}} />
             </View>
-            <Button style={styles.submitButton} onPress={() => {addSpeciesToTank()}}>Add species</Button>
+            <Button style={styles.submitButton} onPress={() => {addSpeciesToTank()}}>{i18n.t('speciesCard.addSpecies')}</Button>
           </Modal>
         </>
       }

@@ -31,7 +31,7 @@ export default function Profile({ route, navigation }) {
   const [localeDialog, setLocaleDialog] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const i18n = translator(user.locale);
+  const i18n = translator(editedUser.locale);
 
   useEffect(() => {
 
@@ -71,7 +71,7 @@ export default function Profile({ route, navigation }) {
 
     if (validation !== false) {
       setErrors({
-        locale: validation.locale,
+        locale: validation.locale && i18n.t('validation.locale'),
         // minTemperature: validation.minTemperature,
         // maxTemperature: validation.maxTemperature,
         // minPh: validation.minPh,
@@ -103,7 +103,7 @@ export default function Profile({ route, navigation }) {
 
             <View style={styles.container}>
               <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>Language</Paragraph>
+                <Paragraph style={styles.leftSide}>{i18n.t('general.language')}</Paragraph>
                 <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUser.locale}</Paragraph>
                 <TouchableOpacity style={styles.rightSide}>
                   <MaterialCommunityIcons
@@ -123,15 +123,15 @@ export default function Profile({ route, navigation }) {
               mode="outlined"
               style={styles.logout}
             >
-              Logout
+              {i18n.t('general.logout')}
             </Button>
-            <Button onPress={onSubmit}>Save</Button>
+            <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
           </>
         }
       </Background>
       <Portal>
         <Dialog visible={localeDialog} onDismiss={() => setLocaleDialog(false)}>
-          <Dialog.Title>Select a language</Dialog.Title>
+          <Dialog.Title>{i18n.t('profile.selectLanguage')}</Dialog.Title>
           <Dialog.Content>
             {
               locales &&
@@ -158,7 +158,7 @@ export default function Profile({ route, navigation }) {
             }
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setLocaleDialog(false)} mode="outlined">Cancel</Button>
+            <Button onPress={() => setLocaleDialog(false)} mode="outlined">{i18n.t('general.cancel')}</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

@@ -16,7 +16,7 @@ export default (user) => {
 	return false;
 }
 
-function emailValidator (email: string) {
+function emailValidator (email) {
   const re = /\S+@\S+\.\S+/;
 
   if (!email || email.length <= 0) {
@@ -31,7 +31,7 @@ function emailValidator (email: string) {
   return false;
 };
 
-function passwordValidator (password: string) {
+function passwordValidator (password) {
   if (!password || password.length <= 0) {
   	errors = true;
   	return 'validation.password.empty';
@@ -40,7 +40,7 @@ function passwordValidator (password: string) {
   return false;
 };
 
-function nameValidator (name: string) {
+function nameValidator (name) {
   if (!name || name.length <= 0) {
   	errors = true;
   	return 'validation.name.empty';
