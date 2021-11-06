@@ -30,12 +30,14 @@ import { findMainSpecies, calculateVolume } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/tank';
+import translator from '../../../translator/translator';
 
 export default function EditTank({ route, navigation }) {
   const { tankId } = route.params;
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const [tank, setTank] = useState({});
   const [editedTank, setEditedTank] = useState({});
   const [errors, setErrors] = useState({});
@@ -126,7 +128,7 @@ export default function EditTank({ route, navigation }) {
     calculateVolume(dimensions)
       .then((liters) => {
         handleChange('liters', liters);
-        dispatch(alertActions.success(`Your tank is ${liters} liters`));
+        dispatch(alertActions.success('tank.litersSuccess', { 'liters': liters }));
       })
       .catch((err) => {
         dispatch(alertActions.error(err));
@@ -227,13 +229,13 @@ export default function EditTank({ route, navigation }) {
     >
       <Background justify="top">
         <Header>
-          Edit tank
+        {i18n.t('tank.editTank')}
         </Header>
         {
           !helpers.isEmpty(editedTank) &&
             <View style={styles.formContainer}>
               <TextInput
-                label="Tank alias"
+                label={i18n.t('tank.alias')}
                 name="name"
                 returnKeyType="next"
                 onChangeText={(name) => { handleChange('name', name) } }
@@ -245,13 +247,13 @@ export default function EditTank({ route, navigation }) {
               />
               <View style={[styles.inputRow, styles.subheader]}>
                 <MaterialCommunityIcons style={styles.subheaderIcon}name="cube-scan" size={30} color={theme.colors.text} />
-                <Subheader>Measures</Subheader>
+                <Subheader>{i18n.t('general.measures')}</Subheader>
               </View>
               <View style={styles.inputRow}>
                 <View style={styles.inputWrap}>
                   <TextInput
                     style={styles.inputLeft}
-                    label="Width"
+                    label={i18n.t('general.width')}
                     name="width"
                     returnKeyType="next"
                     value={editedTank.measures.width && editedTank.measures.width.toString()}
@@ -263,7 +265,7 @@ export default function EditTank({ route, navigation }) {
                 <View style={styles.inputWrap}>
                   <TextInput
                     style={styles.inputLeft}
-                    label="Height"
+                    label={i18n.t('general.height')}
                     name="height"
                     returnKeyType="next"
                     value={editedTank.measures.height && editedTank.measures.height.toString()}
@@ -275,7 +277,7 @@ export default function EditTank({ route, navigation }) {
                 <View style={styles.inputWrap}>
                   <TextInput
                     style={styles.inputRight}
-                    label="Length"
+                    label={i18n.t('general.length')}
                     name="length"
                     returnKeyType="next"
                     value={editedTank.measures.length && editedTank.measures.length.toString()}
@@ -299,7 +301,7 @@ export default function EditTank({ route, navigation }) {
                 </View>
                 <View style={styles.inputWrap, {flex: 8}}>
                   <TextInput
-                    label="Liters"
+                    label={i18n.t('general.liters')}
                     name="liters"
                     returnKeyType="next"
                     onChangeText={(liters) => handleChange('liters', liters)}
@@ -312,7 +314,7 @@ export default function EditTank({ route, navigation }) {
                   />
                 </View>
               </View>
-              <Paragraph>Click on the formula to calculate your tank volume</Paragraph>
+              <Paragraph>{i18n.t('tank.clickFormula')}</Paragraph>
               { !!editedTank['species'].length && 
                 <View style={styles.speciesContainer}>
                   <View style={[styles.inputRow, styles.subheader]}>
@@ -322,9 +324,8 @@ export default function EditTank({ route, navigation }) {
                   {
                     // No main species selected warning
                     !!editedTank.species.length && !mainSpecies &&
-                      <Warning title="Select a main species" subtitle="Click on the species image"
+                      <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
                         left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
-                        onPress={() => navigation.navigate('EditTank', { tankId : tank._id }) }
                       />
                   } 
                   <FlatList
@@ -346,7 +347,7 @@ export default function EditTank({ route, navigation }) {
                   />
                 </View>
               }
-              <Button onPress={onSubmit}>Save</Button>
+              <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
             </View>
         }
 

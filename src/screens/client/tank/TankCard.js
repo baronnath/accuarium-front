@@ -3,22 +3,21 @@
 import React, { useState, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Avatar, Card, Menu } from 'react-native-paper';
+import { Card, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TankDeleteModal from './TankDeleteModal';
 import Paragraph from '../../../components/Paragraph';
-import Button from '../../../components/Button';
-import Modal from '../../../components/Modal';
 import { backend } from '../../../../app.json';
 import { theme } from '../../../theme';
-import { actions as tankActions } from '../../../ducks/tank';
-import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
-
+import translator from '../../../translator/translator';
 
 const TankCard = ({ tank, ...props }) => {
   const navigation = useNavigation();
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+  const i18n = translator(locale);
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -41,7 +40,7 @@ const TankCard = ({ tank, ...props }) => {
           setVisible(false),
           navigation.navigate('EditTank', { tankId : tank._id })
         }}
-        title="Edit"
+        title={i18n.t('general.edit')}
       />
       <Menu.Item
         icon="delete-forever-outline"
@@ -49,7 +48,7 @@ const TankCard = ({ tank, ...props }) => {
           setVisible(false),
           setDeleteModalVisible(true)
         }}
-        title="Remove"
+        title={i18n.t('general.delete')}
       />
     </Menu>
   ;

@@ -13,11 +13,13 @@ import Separator from '../../../components/Separator';
 import { handleAlert } from '../../../helpers/global';
 import { isCompatible } from '../../../helpers/tank';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 
 export default function GraphicTankSpecies({ species }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const tank = useSelector(state => state.tanks.tank);
   const navigation = useNavigation();
 
@@ -45,7 +47,7 @@ export default function GraphicTankSpecies({ species }) {
 
   function parameterCompatibility() {
     return <>
-      <Paragraph style={styles.caption}>Parameters not compatible</Paragraph>
+      <Paragraph style={styles.caption}>{i18n.t('tank.notCompatible')}</Paragraph>
       { !parametersCompat.temperature && 
         <View style={styles.rowContainer}>
           <View style={styles.compatIcon}>
@@ -56,7 +58,7 @@ export default function GraphicTankSpecies({ species }) {
             />
           </View>
           <Paragraph style={styles.compatDescription}>
-            This species temperature should be between {species.species.parameters.temperature.min} - {species.species.parameters.temperature.max}º
+            {i18n.t('tank.temperatureBetween', {'min': species.species.parameters.temperature.min, 'max': species.species.parameters.temperature.max})}º
           </Paragraph>
         </View>
       }
@@ -74,7 +76,7 @@ export default function GraphicTankSpecies({ species }) {
               color={theme.colors.secondary}
               size={32}
             />
-            <Paragraph style={styles.compatDescription}>This species pH should be between {species.species.parameters.ph.min} - {species.species.parameters.ph.max}</Paragraph>
+            <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}º</Paragraph>
           </View>
       }
       { !parametersCompat.ph && 
@@ -86,7 +88,7 @@ export default function GraphicTankSpecies({ species }) {
                 size={25}
               />
             </View>
-            <Paragraph style={styles.compatDescription}>This species hardness should be {species.species.parameters.dh.min} - {species.species.parameters.dh.max}</Paragraph>
+            <Paragraph style={styles.compatDescription}>{i18n.t('tank.hardnessBetween', {'min': species.species.parameters.dh.min, 'max': species.species.parameters.dh.max})}º</Paragraph>
           </View>
       }
     </>
@@ -113,7 +115,7 @@ export default function GraphicTankSpecies({ species }) {
     }
 
     return <>
-      <Paragraph style={styles.caption}>Incompatible species</Paragraph>
+      <Paragraph style={styles.caption}>{i18n.t('tank.notCompatibleSpecies')}</Paragraph>
       { renderSpeciesCompat() }
     </>
   }

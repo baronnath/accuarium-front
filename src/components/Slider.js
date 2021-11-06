@@ -8,7 +8,7 @@ import Button from './Button';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { theme } from '../theme';
 
-function Slider({items, ...props}){
+function Slider({items, buttonLabel, ...props}){
 
 
   const [index, setIndex] = useState(0);
@@ -21,7 +21,7 @@ function Slider({items, ...props}){
         <View style={styles.item}>
           {item}
           {items.length != (index+1) &&
-            <Button mode="outlined" style={styles.button} onPress={() => { carouselRef.current.snapToNext() }}>Next</Button>
+            <Button mode="outlined" style={styles.button} onPress={() => { carouselRef.current.snapToNext() }}>{buttonLabel}</Button>
           }
         </View>
       )

@@ -2,10 +2,9 @@
 
 import * as navigator from '../helpers/navigator.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { axios, setHeaders }from '../helpers/axios';
+import { axios }from '../helpers/axios';
 import { backend } from '../../app.json';
 import { handleAlert } from '../helpers/global';
-import { calculateVolume } from '../helpers/tank';
 import { actions as alertActions } from './alert';
 
 // Types

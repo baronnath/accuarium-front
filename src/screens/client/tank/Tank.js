@@ -25,12 +25,14 @@ import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies } from '../../../helpers/tank';
 import { ucFirst, isEmpty, round } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 
 export default function Tank({ route, navigation }) {
   const { tankId } = route.params;
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const tank = useSelector(state => state.tanks.tank);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
@@ -45,9 +47,9 @@ export default function Tank({ route, navigation }) {
   const [cleanupCrew, setCleaningCrew] = useState(0);
 
   const modalContent = {
-    parameters: <Paragraph style={styles.modalParagraph}>The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.</Paragraph>,
-    freeSpace: <Paragraph style={styles.modalParagraph}>Each fish requires some liters for itself. An overcrowded aquarium can cause many issues.</Paragraph>,
-    cleanupCrew: <Paragraph style={styles.modalParagraph}>This percent is a vague guide based in the tank volume. The cleanup crew should be at least the 15% of the livestock in your tank.</Paragraph>,
+    parameters: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalParameters')}</Paragraph>,
+    freeSpace: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalFreeSpace')}</Paragraph>,
+    cleanupCrew: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalCleanupCrew')}</Paragraph>,
   }
 
   useFocusEffect(
@@ -130,7 +132,7 @@ export default function Tank({ route, navigation }) {
                       onPress={ () => {
                         navigation.navigate('EditTank', { tankId : tank._id })
                       }}
-                      title="Edit"
+                      title={i18n.t('general.edit')}
                     />
                     <Menu.Item
                       icon="delete-forever-outline"
@@ -138,7 +140,7 @@ export default function Tank({ route, navigation }) {
                         setMenuVisible(false),
                         setDeleteModalVisible(true)
                       }}
-                      title="Remove"
+                      title={i18n.t('general.delete')}
                     />
                   </Menu>
                 </OptionsMenu>
@@ -159,7 +161,7 @@ export default function Tank({ route, navigation }) {
                 {
                   // No main species selected warning
                   !!tank.species.length && !mainSpecies &&
-                    <Warning title="Warning" subtitle="Please select the main species"
+                    <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
                       left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
                       onPress={() => navigation.navigate('EditTank', { tankId : tank._id }) }
                     />
@@ -240,7 +242,7 @@ export default function Tank({ route, navigation }) {
                     }}
                   >
                     <MaterialCommunityIcons name="water-percent" size={30} color={theme.colors.primary}/>
-                    <Paragraph>{ freeSpace }% free space</Paragraph>
+                    <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.rowContainer, styles.moreDetail]}
@@ -250,7 +252,7 @@ export default function Tank({ route, navigation }) {
                     }}
                   >
                     <MaterialCommunityIcons name="spray-bottle" size={27} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
-                    <Paragraph>{ cleanupCrew }% cleanup crew</Paragraph>
+                    <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
                   </TouchableOpacity>
                 </View>
 

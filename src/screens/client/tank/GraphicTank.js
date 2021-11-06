@@ -12,11 +12,13 @@ import { handleAlert } from '../../../helpers/global';
 import { isEmpty } from '../../../helpers/helpers';
 import { findMainSpecies, splitSpeciesByDepth } from '../../../helpers/tank';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 
 export default function GraphicTank() {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const tank = useSelector(state => state.tanks.tank);
   const dispatch = useDispatch();
 
@@ -43,19 +45,19 @@ export default function GraphicTank() {
           <Path x="3" y="0" width="100%" height="100" stroke={theme.colors.primary} strokeWidth="2" d="M 1 1.898 c 7.047 0 7.047 10.205 14.095 10.205 c 7.048 0 7.048 -10.205 14.095 -10.205 c 7.046 0 7.046 10.205 14.093 10.205 c 7.047 0 7.047 -10.205 14.095 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.047 0 7.047 -10.205 14.093 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.047 0 7.047 -10.205 14.095 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.047 0 7.047 10.205 14.095 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.048 0 7.048 10.205 14.096 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.048 0 7.048 -10.205 14.096 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.099 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.098 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.046 0 7.046 -10.205 14.093 -10.205 c 7.048 0 7.048 10.205 14.097 10.205 c 7.049 0 7.049 -10.205 14.099 -10.205 c 7.048 0 7.048 10.205 14.097 10.205 c 7.048 0 7.048 -10.205 14.097 -10.205 c 7.049 0 7.049 10.205 14.099 10.205 c 7.05 0 7.05 -10.205 14.101 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.05 0 7.05 -10.205 14.1 -10.205 c 7.05 0 7.05 10.205 14.1 10.205 c 7.051 0 7.051 -10.205 14.102 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.051 0 7.051 -10.205 14.103 -10.205 c 7.049 0 7.049 10.205 14.098 10.205 c 7.054 0 7.054 -10.205 14.108 -10.205 c 7.054 0 7.054 10.205 14.108 10.205"/>
         </Svg>
         <View style={styles.container}>
-          <Paragraph style={styles.depth}>Surface</Paragraph>
+          <Paragraph style={styles.depth}>{i18n.t('general.surface')}</Paragraph>
           { 
             !!speciesByDepth['surface'] && !!speciesByDepth['surface'].length &&
               getSpeciesDepth('surface')
           }
           <DottedSeparator />
-          <Paragraph style={styles.depth}>Middle</Paragraph>
+          <Paragraph style={styles.depth}>{i18n.t('general.middle')}</Paragraph>
           { 
             !!speciesByDepth['middle'] && !!speciesByDepth['middle'].length &&
               getSpeciesDepth('middle')
           }
           <DottedSeparator />
-          <Paragraph style={styles.depth}>Bottom</Paragraph>
+          <Paragraph style={styles.depth}>{i18n.t('general.bottom')}</Paragraph>
           { 
             !!speciesByDepth['bottom'] && !!speciesByDepth['bottom'].length &&
               getSpeciesDepth('bottom')

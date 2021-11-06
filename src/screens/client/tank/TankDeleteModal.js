@@ -11,9 +11,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ucFirst } from '../../../helpers/helpers';
 import { actions as tankActions } from '../../../ducks/tank';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 
 export default function TankDeleteModal({ tankId, isVisible, setVisible, ...props }) {
 
+  const user = useSelector(state => state.user.data);
+  const locale = user.locale;
+  const i18n = translator(locale);
   const dispatch = useDispatch();
 
 	function deleteTank() {
@@ -24,8 +28,8 @@ export default function TankDeleteModal({ tankId, isVisible, setVisible, ...prop
 	return (
 		<Modal isVisible={isVisible} setVisible={setVisible}>
       <MaterialCommunityIcons name="alert-circle-outline" size={60} color={theme.colors.accent} />
-      <Paragraph style={styles.modalTitle}>Are you sure?</Paragraph>
-      <Paragraph style={styles.modalParagraph}>You won't be able to revert this</Paragraph>
+      <Paragraph style={styles.modalTitle}>{i18n.t('tank.deleteModal.title')}</Paragraph>
+      <Paragraph style={styles.modalParagraph}>{i18n.t('tank.deleteModal.description')}</Paragraph>
       <View style={styles.buttonsContainer}>
         <Button
           onPress={() => deleteTank()}
@@ -38,7 +42,7 @@ export default function TankDeleteModal({ tankId, isVisible, setVisible, ...prop
           mode='outlined'
           style={styles.modalButton}
         >
-          Cancel
+          {i18n.t('general.cancel')}
         </Button>
       </View>
     </Modal>

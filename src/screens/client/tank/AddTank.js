@@ -1,26 +1,19 @@
 // src/screens/client/tank/AddTank.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { axios }from '../../../helpers/axios';
-import { ucFirst, isObject, clone } from '../../../helpers/helpers';
+import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
   StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
 } from 'react-native';
-import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Background from '../../../components/Background';
-import Header from '../../../components/Header';
-import MenuButton from '../../../components/MenuButton';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Paragraph from '../../../components/Paragraph';
-import InputSuggestion from '../../../components/InputSuggestion';
-import Tag from '../../../components/Tag';
-import Spinner from '../../../components/Spinner';
 import Slider from '../../../components/Slider';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
@@ -29,10 +22,12 @@ import { calculateVolume } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/tank';
+import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
@@ -51,9 +46,9 @@ export default function AddTank({ navigation }) {
   const sliderItems = [
       <>
         <MaterialCommunityIcons name="fishbowl-outline" size={150} color={theme.colors.accent} />
-        <Paragraph>Choose a name for your new project</Paragraph>
+        <Paragraph>{i18n.t('addTank.slide1.title')}</Paragraph>
         <TextInput
-          label="Tank alias"
+          label={i18n.t('addTank.slide1.label')}
           name="name"
           returnKeyType="next"
           onChangeText={(name) => handleChange('name', name)}
@@ -71,20 +66,20 @@ export default function AddTank({ navigation }) {
             :
             <>
               <MaterialCommunityIcons name="camera-plus" size={100} color={theme.colors.accent} onPress={() => pickImage()} />
-              <Paragraph >Pick an image as your tank avatar</Paragraph>
+              <Paragraph>{i18n.t('addTank.slide2.title')}</Paragraph>
             </>
 
         }
-        <Button onPress={() => pickImage()} >Pick an image</Button>
+        <Button onPress={() => pickImage()} >{i18n.t('addTank.slide2.button')}</Button>
       </>,
       <>
         <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
-        <Paragraph >Your tank measures</Paragraph>
+        <Paragraph>{i18n.t('addTank.slide3.title')}</Paragraph>
         <View style={styles.inputRow}>
           <View style={styles.inputWrap}>
             <TextInput
               style={styles.inputLeft}
-              label="Width"
+              label={i18n.t('general.width')}
               name="width"
               returnKeyType="next"
               value={tank.width}
@@ -96,7 +91,7 @@ export default function AddTank({ navigation }) {
           <View style={styles.inputWrap}>
             <TextInput
               style={styles.inputLeft}
-              label="Height"
+              label={i18n.t('general.height')}
               name="height"
               returnKeyType="next"
               value={tank.height}
@@ -108,7 +103,7 @@ export default function AddTank({ navigation }) {
           <View style={styles.inputWrap}>
             <TextInput
               style={styles.inputRight}
-              label="Length"
+              label={i18n.t('general.length')}
               name="length"
               returnKeyType="next"
               value={tank.length}
@@ -134,7 +129,7 @@ export default function AddTank({ navigation }) {
           </View>
           <View style={styles.inputWrap, {flex: 8}}>
             <TextInput
-              label="Liters"
+              label={i18n.t('general.liters')}
               name="liters"
               returnKeyType="next"
               onChangeText={(liters) => handleChange('liters', liters)}
@@ -147,12 +142,12 @@ export default function AddTank({ navigation }) {
             />
           </View>
         </View>
-        <Paragraph >Click on the formula to calculate your tank volume</Paragraph>
+        <Paragraph>{i18n.t('addTank.slide4.title')}</Paragraph>
       </>,
       <>
         <MaterialCommunityIcons name="cube-outline" size={100} color={theme.colors.accent} />
-        <Paragraph>You are all set!</Paragraph>
-        <Button onPress={onSubmit}>Save</Button>
+        <Paragraph>{i18n.t('addTank.slide5.title')}</Paragraph>
+        <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
       </>,
   ];
 
@@ -187,7 +182,7 @@ export default function AddTank({ navigation }) {
     calculateVolume(dimensions)
       .then((liters) => {
         handleChange('liters', String(liters));
-        dispatch(alertActions.success(`Your tank is ${liters} liters`));
+        dispatch(alertActions.success('tank.litersSuccess', { liters: liters }));
       })
       .catch((err) => {
         dispatch(alertActions.error(err));
@@ -210,7 +205,7 @@ export default function AddTank({ navigation }) {
       });
 
 
-      dispatch(alertActions.error('Tank data is not correct'));
+      dispatch(alertActions.error('addTank.notValid'));
 
       return;
     }
@@ -218,7 +213,7 @@ export default function AddTank({ navigation }) {
 
     axios.post(backend.url + '/tank', tank)
     .then(res => {
-      dispatch(alertActions.success('Now add some fishes to your tank'));
+      dispatch(alertActions.success('addTank.addSpecies'));
       dispatch(tankActions.getTankByUser(user._id));
       setTank(defaultTank);
       navigation.navigate('Tanks');
@@ -235,7 +230,7 @@ export default function AddTank({ navigation }) {
     >
       <Background>
 
-        <Slider items={sliderItems} />
+        <Slider items={sliderItems} buttonLabel={i18n.t('general.next')} />
 
       </Background>
     </KeyboardAwareScrollView>

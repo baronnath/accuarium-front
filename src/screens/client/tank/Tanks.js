@@ -22,12 +22,14 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
+import translator from '../../../translator/translator';
 import { preferences } from '../../../../app.json';
 
 export default function Tanks({ navigation }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
+  const i18n = translator(locale);
   const tanks = useSelector(state => state.tanks.tanks);
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
@@ -43,7 +45,7 @@ export default function Tanks({ navigation }) {
       <Background justify="top" style={styles.background}>
 
         <Header>
-          Tanks
+          {i18n.t('general.tank.other')}
         </Header>
 
           { isLoading ?
@@ -65,7 +67,7 @@ export default function Tanks({ navigation }) {
                 <FAB
                   style={styles.fab}
                   small
-                  label="New tank"
+                  label={i18n.t('tank.newTank')}
                   icon="plus"
                   uppercase={false}
                   onPress={() => navigation.navigate('AddTank')}
@@ -73,8 +75,8 @@ export default function Tanks({ navigation }) {
               </>
             :
             <View style={styles.centerContainer}>
-              <Paragraph style={styles.paragraph}>No tanks yet. What you waiting for?</Paragraph>
-              <Button style={styles.callButton} onPress={() => navigation.navigate('AddTank')}>Create tank</Button>
+              <Paragraph style={styles.paragraph}>{i18n.t('tank.noTanks')}</Paragraph>
+              <Button style={styles.callButton} onPress={() => navigation.navigate('AddTank')}>{i18n.t('tank.createTank')}</Button>
             </View>
           }
 

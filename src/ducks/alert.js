@@ -1,4 +1,7 @@
 // src/ducks/alert.js
+import store from '../store.js';
+import translator from '../translator/translator';
+
 
 // Types
 export const types = {
@@ -43,14 +46,20 @@ export const actions = {
     clear
 };
 
-function success(message) {
-    return { type: types.ALERT_SUCCESS, message };
+function success(message, translate = 'true') {
+      return { type: types.ALERT_SUCCESS, message: translate ? _translate(message, translate) : message };
 }
 
-function error(message) {
-    return { type: types.ALERT_ERROR, message };
+function error(message, translate = 'true') {
+    return { type: types.ALERT_ERROR,  message: translate ? _translate(message, translate) : message };
 }
 
 function clear() {
     return { type: types.ALERT_CLEAR };
+}
+
+function _translate(message, params) {
+    const locale = store.getState().user.data.locale;
+    const i18n = translator(locale);
+    return i18n.t(message, params);
 }
