@@ -119,23 +119,22 @@ function login(user, from) {
                 user.accessToken = res.data.accessToken;
                 dispatch(success(res.data));
                 await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
-                await setHeaders();
-                dispatch(alertActions.success(res.data.message));
+                await setHeaders(user);
+                dispatch(alertActions.success(res.data.message, false));
                 // navigator.navigate('Home');
             })
             .catch(err => {
                 let message;
                 err.response
-                    ? message = err.response.data.message
-                    : message = 'Server connection error'
-                dispatch(error(message));
-                dispatch(alertActions.error(message));
+                    ? dispatch(alertActions.error(err.response.data.message, false))
+                    : dispatch(alertActions.error('server.connectionError'));
+                dispatch(error());
             });
     };
 
     function request(data) { return { type: types.LOGIN_REQUEST, payload: data } }
     function success(data) { return { type: types.LOGIN_SUCCESS, payload: data } }
-    function error(error) { return { type: types.LOGIN_ERROR, error } }
+    function error(error) { return { type: types.LOGIN_ERROR } }
 }
 
 function autoLogin(user) {
@@ -150,20 +149,19 @@ function autoLogin(user) {
 
             if(lastUpdate >= prev30Days){
                 dispatch(success({user: user}));
-                await setHeaders();
-                dispatch(alertActions.success('Nice to see you again, ' + user.name));
+                await setHeaders(user);
+                dispatch(alertActions.success('login.greeting', {name: user.name}));
             }
             else{
-                let message = 'Your session has expired. Please log in';
-                dispatch(error(message));
-                dispatch(alertActions.error(message));
+                dispatch(alertActions.error('login.expired'));
+                dispatch(error());
             }
         }
     };
 
     function request(data) { return { type: types.AUTOLOGIN_REQUEST, payload: data } }
     function success(data) { return { type: types.AUTOLOGIN_SUCCESS, payload: data } }
-    function error(error) { return { type: types.AUTOLOGIN_ERROR, error } }
+    function error() { return { type: types.AUTOLOGIN_ERROR } }
 }
 
 function logout(user) {
@@ -174,22 +172,21 @@ function logout(user) {
             .then(async(res) => {
                 dispatch(success());
                 await AsyncStorage.removeItem('user', JSON.stringify(res.data.user));
-                dispatch(alertActions.success(res.data.message));
+                dispatch(alertActions.success(res.data.message, false));
                 navigator.navigate('Home');
             })
             .catch(err => {
                 let message;
                 err.response
-                    ? message = err.response.data.message
-                    : message = 'Server connection error'
-                dispatch(error(message));
-                dispatch(alertActions.error(message));
+                    ? dispatch(alertActions.error(err.response.data.message, false))
+                    : dispatch(alertActions.error('server.connectionError'));
+                dispatch(error());
             });
     };
     
     function request() { return { type: types.LOGOUT_REQUEST } }
     function success() { return { type: types.LOGOUT_SUCCESS } }
-    function error(error) { return { type: types.LOGOUT_ERROR, error } }
+    function error() { return { type: types.LOGOUT_ERROR } }
 }
 
 function register(user) {
@@ -200,24 +197,23 @@ function register(user) {
             .then(
                 res => { 
                     dispatch(success(res.data));
-                    dispatch(alertActions.success(res.data.message));
+                    dispatch(alertActions.success(res.data.message, false));
                     navigator.navigate('Verify');
                 }
             ).catch(
                 err => {
                     let message;
                     err.response
-                        ? message = err.response.data.message
-                        : message = 'Server connection error'
-                    dispatch(error(message));
-                    dispatch(alertActions.error(message));
+                        ? dispatch(alertActions.error(err.response.data.message, false))
+                        : dispatch(alertActions.error('server.connectionError'));
+                    dispatch(error());
                 }
             );
     };
 
     function request(data) { return { type: types.REGISTER_REQUEST, payload: data } }
     function success(data) { return { type: types.REGISTER_SUCCESS, payload: data } }
-    function error(error) { return { type: types.REGISTER_ERROR, error } }
+    function error() { return { type: types.REGISTER_ERROR } }
 }
 
 function verify(user) {
@@ -228,24 +224,23 @@ function verify(user) {
             .then(
                 res => { 
                     dispatch(success(res.data));
-                    dispatch(alertActions.success(res.data.message));
+                    dispatch(alertActions.success(res.data.message, false));
                     navigator.navigate('Login');
                 }
             ).catch(
                 err => {
                     let message;
                     err.response
-                        ? message = err.response.data.message
-                        : message = 'Server connection error'
-                    dispatch(error(message));
-                    dispatch(alertActions.error(message));
+                        ? dispatch(alertActions.error(err.response.data.message, false))
+                        : dispatch(alertActions.error('server.connectionError'));
+                    dispatch(error());
                 }
             );
     };
 
     function request(data) { return { type: types.VERIFY_REQUEST, payload: data } }
     function success(data) { return { type: types.VERIFY_SUCCESS, payload: data } }
-    function error(error) { return { type: types.VERIFY_ERROR, error } }
+    function error() { return { type: types.VERIFY_ERROR } }
 }
 
 function getUsers() {
@@ -314,7 +309,7 @@ function updateUser(user){
               .then(
                   res => {
                       dispatch(success(res.data));
-                      dispatch(alertActions.success(res.data.message));
+                      dispatch(alertActions.success(res.data.message, false));
                   }
               ).catch(
                   err => {

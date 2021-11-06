@@ -18,12 +18,14 @@ export const axios = ax.create({
 	maxContentLenght: 50 * 1000 * 1000
 })
 
-export const setHeaders = async (token) => {
-	if(!token){
-		const user = await AsyncStorage.getItem('user');
-		token = user.accessToken;
+export const setHeaders = async (user) => {
+	if(!user) {
+		user = await AsyncStorage.getItem('user');
 	}
+
+	const token = user.accessToken;
 	axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+	axios.defaults.headers.common['Accept-Language'] = user.locale;
 }
 
 export class Api {

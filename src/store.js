@@ -27,7 +27,7 @@ store.subscribe(() => {
     // Inject token to all axios request
     const user = store.getState().user;
     if(user.data)
-    	setHeaders(store.getState().user.data.accessToken);
+    	setHeaders(user.data);
 });
 
 export default store;
