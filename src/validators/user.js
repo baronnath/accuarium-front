@@ -9,6 +9,9 @@ export default (user) => {
 
 	const validation =  {
 		locale: localeValidator(user.locale),
+		hardnessUnits: unitsValidator(user.hardnessUnits),
+		temperatureUnits: unitsValidator(user.temperatureUnits),
+		lengthUnits: unitsValidator(user.lengthUnits),
 	}
 
 	if(errors === true) return validation;
@@ -24,4 +27,18 @@ function localeValidator (locale) {
   }
 
   return false;
+};
+
+function unitsValidator (units) {
+
+	if (!units || units.length <= 0) {
+		errors = true;
+		return 'validation.units.empty';
+	}
+
+	if (!helpers.isString(units)){
+		return 'validation.units.notString';
+	}
+  
+	return false;
 };

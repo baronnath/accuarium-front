@@ -7,12 +7,12 @@ import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, TouchableOpacity} from 'react-native';
-import { Portal, Avatar, RadioButton , Dialog } from 'react-native-paper';
+import { Avatar, RadioButton } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
-import TextInput from '../../../components/TextInput';
+import Dialog from '../../../components/Dialog';
 import Paragraph from '../../../components/Paragraph';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { actions as userActions } from '../../../ducks/user';
@@ -72,12 +72,9 @@ export default function Profile({ route, navigation }) {
     if (validation !== false) {
       setErrors({
         locale: validation.locale && i18n.t('validation.locale'),
-        // minTemperature: validation.minTemperature,
-        // maxTemperature: validation.maxTemperature,
-        // minPh: validation.minPh,
-        // maxPh: validation.maxPh,
-        // minDh: validvalueation.minDh,
-        // maxDh: validation.maxDh,
+        hardness: validation.hardness && i18n.t('validation.hardness'),
+        temperature: validation.temperature && i18n.t('validation.temperature'),
+        length: validation.length && i18n.t('validation.length'),
       });
 
       dispatch(alertActions.error('user.data.invalid'));
@@ -129,39 +126,35 @@ export default function Profile({ route, navigation }) {
           </>
         }
       </Background>
-      <Portal>
-        <Dialog visible={localeDialog} onDismiss={() => setLocaleDialog(false)}>
-          <Dialog.Title>{i18n.t('profile.selectLanguage')}</Dialog.Title>
-          <Dialog.Content>
+      <Dialog
+        isVisible={localeDialog}
+        setVisible={() => setLocaleDialog()}
+        title={i18n.t('profile.selectLanguage')}
+        cancelButton={i18n.t('general.cancel')}
+      >
+        { locales &&
+          <RadioButton.Group
+            onValueChange={(value) => {
+              handleChange('locale',value);
+              setLocaleDialog(false);
+            }}
+            value={editedUser.locale}
+          >
             {
-              locales &&
-              <RadioButton.Group
-                onValueChange={(value) => {
-                  handleChange('locale',value);
-                  setLocaleDialog(false);
-                }}
-                value={editedUser.locale}
-              >
-                {
-                  locales.map(locale => {  
-                    return (
-                      <RadioButton.Item
-                        label={helpers.ucFirst(locale.name[editedUser.locale])}
-                        value={locale.lang}
-                        mode="ios"
-                        key={locale._id}
-                      />
-                    )
-                  })
-                }
-              </RadioButton.Group>
+              locales.map(locale => {  
+                return (
+                  <RadioButton.Item
+                    label={helpers.ucFirst(locale.name[editedUser.locale])}
+                    value={locale.lang}
+                    mode="ios"
+                    key={locale._id}
+                  />
+                )
+              })
             }
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setLocaleDialog(false)} mode="outlined">{i18n.t('general.cancel')}</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+          </RadioButton.Group>
+        }
+      </Dialog>
     </KeyboardAwareScrollView>
   );
 }
