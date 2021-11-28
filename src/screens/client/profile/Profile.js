@@ -11,6 +11,7 @@ import { Avatar, RadioButton } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
+import Subheader from '../../../components/Subheader';
 import Button from '../../../components/Button';
 import Dialog from '../../../components/Dialog';
 import Paragraph from '../../../components/Paragraph';
@@ -28,10 +29,19 @@ export default function Profile({ route, navigation }) {
   const [editedUser, seteditedUser] = useState({});
 
   const [locales, setLocales] = useState(null);
-  const [localeDialog, setLocaleDialog] = useState(false);
+  const [isLocaleDialogVisible, setLocaleDialogVisible] = useState(false);
+  const [isUnitsDialogVisible, setUnitsDialogVisible] = useState(false);
+  const [unit, setUnit] = useState(null);
   const [errors, setErrors] = useState({});
 
   const i18n = translator(editedUser.locale);
+
+  const units = {
+    hardness: ['ppm', 'mg', 'µS',  'gH'],
+    volume: ['liter', 'm3', 'gallon', 'ounce'],
+    length: ['cm', 'm', 'mm', 'in', 'ft'],
+    temperature: ['celsius', 'fahrenheit', 'kelvin'],
+  }
 
   useEffect(() => {
 
@@ -59,6 +69,16 @@ export default function Profile({ route, navigation }) {
     }));
   }
 
+  async function handleUnitChange(field, value) {
+    seteditedUser(prevUser => ({
+      ...prevUser,
+      units: {
+        ...prevUser.units,
+        [field]: value
+      }
+    }));
+  }
+
 
   function signOut() {
     dispatch(userActions.logout(user));
@@ -72,9 +92,10 @@ export default function Profile({ route, navigation }) {
     if (validation !== false) {
       setErrors({
         locale: validation.locale && i18n.t('validation.locale'),
-        hardness: validation.hardness && i18n.t('validation.hardness'),
-        temperature: validation.temperature && i18n.t('validation.temperature'),
-        length: validation.length && i18n.t('validation.length'),
+        hardness: validation.hardnessUnits && i18n.t('validation.hardnessUnits'),
+        temperature: validation.temperatureUnits && i18n.t('validation.temperatureUnits'),
+        length: validation.lengthUnits && i18n.t('validation.lengthUnits'),
+        volume: validation.volumeUnits && i18n.t('validation.volumeUnits'),
       });
 
       dispatch(alertActions.error('user.data.invalid'));
@@ -107,13 +128,79 @@ export default function Profile({ route, navigation }) {
                     name="chevron-right"
                     size={30}
                     color={theme.colors.lightText}
-                    onPress={() => setLocaleDialog(true)}
+                    onPress={() => setLocaleDialogVisible(true)}
                   />
                 </TouchableOpacity>
               </View>
+
+              <Subheader style={styles.subheader}>{i18n.t('general.measureUnits')}</Subheader>
+
+              <View style={styles.row}>
+                <Paragraph style={styles.leftSide}>{i18n.t('general.hardness')}</Paragraph>
+                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.hardness+'Abbr')}</Paragraph>
+                <TouchableOpacity style={styles.rightSide}>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={30}
+                    color={theme.colors.lightText}
+                    onPress={() => {
+                      setUnitsDialogVisible(true);
+                      setUnit('hardness')
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.row}>
+                <Paragraph style={styles.leftSide}>{i18n.t('general.volume')}</Paragraph>
+                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.volume+'Abbr')}</Paragraph>
+                <TouchableOpacity style={styles.rightSide}>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={30}
+                    color={theme.colors.lightText}
+                    onPress={() => {
+                      setUnitsDialogVisible(true);
+                      setUnit('volume');
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.row}>
+                <Paragraph style={styles.leftSide}>{i18n.t('general.length')}</Paragraph>
+                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.length+'Abbr')}</Paragraph>
+                <TouchableOpacity style={styles.rightSide}>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={30}
+                    color={theme.colors.lightText}
+                    onPress={() => {
+                      setUnitsDialogVisible(true);
+                      setUnit('length');
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.row}>
+                <Paragraph style={styles.leftSide}>{i18n.t('general.temperature')}</Paragraph>
+                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.temperature+'Abbr')}</Paragraph>
+                <TouchableOpacity style={styles.rightSide}>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={30}
+                    color={theme.colors.lightText}
+                    onPress={() => {
+                      setUnitsDialogVisible(true);
+                      setUnit('temperature')
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+              
             </View>
 
-            
             <Button
               icon="logout-variant"
               onPress={signOut}
@@ -126,9 +213,11 @@ export default function Profile({ route, navigation }) {
           </>
         }
       </Background>
+
+
       <Dialog
-        isVisible={localeDialog}
-        setVisible={() => setLocaleDialog()}
+        isVisible={isLocaleDialogVisible}
+        setVisible={() => setLocaleDialogVisible()}
         title={i18n.t('profile.selectLanguage')}
         cancelButton={i18n.t('general.cancel')}
       >
@@ -136,7 +225,7 @@ export default function Profile({ route, navigation }) {
           <RadioButton.Group
             onValueChange={(value) => {
               handleChange('locale',value);
-              setLocaleDialog(false);
+              setLocaleDialogVisible(false);
             }}
             value={editedUser.locale}
           >
@@ -155,6 +244,36 @@ export default function Profile({ route, navigation }) {
           </RadioButton.Group>
         }
       </Dialog>
+
+      <Dialog
+        isVisible={isUnitsDialogVisible}
+        setVisible={() => setUnitsDialogVisible()}
+        title={i18n.t('profile.selectMeasureUnit')}
+        cancelButton={i18n.t('general.cancel')}
+      >
+        { !helpers.isEmpty(editedUser) && unit &&
+          <RadioButton.Group
+            onValueChange={(value) => {
+              handleUnitChange(unit,value);
+              setUnitsDialogVisible(false);
+            }}
+            value={editedUser.units[unit]}
+          >
+            {
+              units[unit].map(u => {  
+                return (
+                  <RadioButton.Item
+                    label={helpers.ucFirst(i18n.t('measures.'+u)) + ' (' + i18n.t('measures.'+u+'Abbr') + ")"}
+                    value={u}
+                    mode="ios"
+                    key={u}
+                  />
+                )
+              })
+            }
+          </RadioButton.Group>
+        }
+      </Dialog>
     </KeyboardAwareScrollView>
   );
 }
@@ -166,8 +285,6 @@ const styles = StyleSheet.create({
   },
   background: {
     paddingTop: 100,
-    flex: 1,
-    alignSelf: 'stretch',
     flexDirection:'column',
   },
   container: {
@@ -175,7 +292,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   row: {
-    flex: 1,
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 0,
@@ -192,6 +308,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     textAlign: 'right',
+  },
+  subheader: {
+    alignSelf: 'flex-start',
+    marginTop: 15,
   },
   logout: {
     // alignSelf: 'flex-end',

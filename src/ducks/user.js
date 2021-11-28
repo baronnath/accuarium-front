@@ -303,6 +303,7 @@ function updateUser(user){
             userId: user._id,
             name: user.name,
             locale: user.locale,
+            units: user.units,
           }
   
           axios.put(backend.url + '/user', params)

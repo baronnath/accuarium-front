@@ -9,9 +9,10 @@ export default (user) => {
 
 	const validation =  {
 		locale: localeValidator(user.locale),
-		hardnessUnits: unitsValidator(user.hardnessUnits),
-		temperatureUnits: unitsValidator(user.temperatureUnits),
-		lengthUnits: unitsValidator(user.lengthUnits),
+		hardnessUnits: unitsValidator(user.units.hardness),
+		temperatureUnits: unitsValidator(user.units.temperature),
+		lengthUnits: unitsValidator(user.units.length),
+		volumeUnits: unitsValidator(user.units.volume),
 	}
 
 	if(errors === true) return validation;
