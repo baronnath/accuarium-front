@@ -1,5 +1,4 @@
 // src/ducks/alert.js
-import store from '../store.js';
 import translator from '../translator/translator';
 
 
@@ -59,7 +58,6 @@ function clear() {
 }
 
 function _translate(message, params) {
-    const locale = store.getState().user.data.locale;
-    const i18n = translator(locale);
+    const i18n = translator();
     return i18n.t(message, params);
 }

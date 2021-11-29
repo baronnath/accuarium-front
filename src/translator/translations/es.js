@@ -75,6 +75,8 @@ const es = {
         fahrenheitAbbr: 'ºF',
         kelvin: 'Grados kelvin',
         kelvinAbbr: 'ºK',
+        measureNotFound: 'La medida no ha sido encontrada',
+        unitNotFound: 'La unidad no ha sido encontrada',
     },
     validation: {
         email: {
@@ -128,7 +130,7 @@ const es = {
     },
     tank: {
         litersSuccess: 'El tanque es de %{liters} litros',
-        alias: 'Alias del tanque',
+        alias: 'Nombre del tanque',
         clickFormula: 'Haz clic en la fórmula para calcular el volumen del tanque',
         warning: {
             title: 'Selecciona una especie principal',
@@ -170,8 +172,9 @@ const es = {
         slide4: {
             title: 'Haz clic en la fórmula para calcular el volumen del tanque',
         },
-        slide5: {
-            title: '¡Ya está todo listo!',
+        warning: {
+            title: 'La unidad de medida configurada es %{unit} (%{unitAbbr})',
+            subtitle: 'Pulsa aquí para cambiar las unidades',
         },
         notValid: 'Los datos del tanque no son correctos',
         addSpecies: 'Ahora añade algún pez al tanque',

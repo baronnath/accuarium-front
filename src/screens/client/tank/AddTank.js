@@ -6,7 +6,7 @@ import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
-  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
+  StyleSheet, View, Image, TouchableOpacity
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -18,6 +18,7 @@ import Slider from '../../../components/Slider';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
+import unitConverter from '../../../helpers/unitConverter';
 import { calculateVolume } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
@@ -26,8 +27,7 @@ import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
-  const locale = user.locale;
-  const i18n = translator(locale);
+  const i18n = translator();
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
@@ -113,8 +113,14 @@ export default function AddTank({ navigation }) {
             />
           </View>
         </View>
-      </>,
-      <>
+        <TouchableOpacity style={{flex:0.3}}>
+          <Paragraph style={styles.link} fontWeight="bold">
+            {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
+          </Paragraph>
+          <Paragraph style={styles.link} fontWeight="light">
+            {i18n.t('addTank.warning.subtitle')}
+          </Paragraph>
+        </TouchableOpacity>
         <View style={styles.inputRow}>
           <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
             <Button
@@ -142,11 +148,7 @@ export default function AddTank({ navigation }) {
             />
           </View>
         </View>
-        <Paragraph>{i18n.t('addTank.slide4.title')}</Paragraph>
-      </>,
-      <>
-        <MaterialCommunityIcons name="cube-outline" size={100} color={theme.colors.accent} />
-        <Paragraph>{i18n.t('addTank.slide5.title')}</Paragraph>
+        <Paragraph fontWeight="light">{i18n.t('addTank.slide4.title')}</Paragraph>
         <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
       </>,
   ];
@@ -156,6 +158,12 @@ export default function AddTank({ navigation }) {
       ...prevTank,
       [field]: value
     }));
+
+    // Automatic volume calculation if measures are filled
+    if(field == 'height' || field == 'width' || field == 'length') {
+      if(tank.height && tank.width && tank.length)
+        calculateLiters();
+    }
   }
 
   const pickImage = async () => {
@@ -189,7 +197,7 @@ export default function AddTank({ navigation }) {
       });
   }
 
-  function onSubmit(){
+  async function onSubmit(){
     const validation = validator(tank);
 
     if (validation !== false) {
@@ -210,6 +218,19 @@ export default function AddTank({ navigation }) {
       return;
     }
 
+    // Convert to base lenght measure units
+    try{
+      if(tank.width)
+        tank.width = await unitConverter(tank.width, 'length', user.units.length);
+      if(tank.height)
+        tank.height = await unitConverter(tank.height, 'length', user.units.length);
+      if(tank.length)
+        tank.length = await unitConverter(tank.length, 'length', user.units.length);
+    }catch(err){
+      dispatch(alertActions.error(err.message));
+      return;
+    }
+    
 
     axios.post(backend.url + '/tank', tank)
     .then(res => {
@@ -302,5 +323,9 @@ const styles = StyleSheet.create({
   item: {
     flex:1,
     width: '100%',
+  },
+  link: {
+    flex: 1,
+    color: theme.colors.secondary,
   }
 });

@@ -75,6 +75,8 @@ const en = {
         fahrenheitAbbr: 'ºF',
         kelvin: 'Kelvin degrees',
         kelvinAbbr: 'ºK',
+        measureNotFound: 'The measure was not found',
+        unitNotFound: 'The unit was not found',
     },
     validation: {
         email: {
@@ -170,8 +172,9 @@ const en = {
         slide4: {
             title: 'Click on the formula to calculate your tank volume',
         },
-        slide5: {
-            title: 'You are all set!',
+        warning: {
+            title: 'Unit of measure is set to %{unit} (%{unitAbbr})',
+            subtitle: 'Click here to change your unit preference',
         },
         notValid: 'Tank data is not correct',
         addSpecies: 'Now add some fishes to your tank',
