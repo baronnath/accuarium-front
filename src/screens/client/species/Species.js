@@ -20,6 +20,7 @@ import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
+import unitConverter from '../../../helpers/unitConverter';
 import { handleAlert } from '../../../helpers/global';
 import { Api }from '../../../helpers/axios';
 import { theme } from '../../../theme';
@@ -64,26 +65,26 @@ export default function Species({ route, navigation }) {
     setOthernamesExpanded({ expanded: !othernamesExpanded.expanded });
   }
 
-  function paramIcon(icon, size, color, alt) {
+  function paramIcon(icon, size, color, caption) {
     return <View style={styles.paramContainer}>
       <MaterialCommunityIcons style={styles.listIcon}
         name={icon} 
         color={color ? color : theme.colors.lightText}
         size={size}
       />
-      { alt &&
+      { caption &&
         <Paragraph style={styles.paramDesc}>
-          {ucFirst(alt)}
+          {ucFirst(caption)}
         </Paragraph>
       }
     </View>
   }
 
-  function paramValues(values, alt) {
+  function paramValues(values, caption) {
     return <View style={styles.paramContainer}>
-        { alt &&
+        { caption &&
           <Paragraph style={styles.paramDesc}>
-            {ucFirst(alt)}
+            {ucFirst(caption)}
           </Paragraph>
         }
         <Paragraph style={styles.parameters}>
@@ -186,12 +187,14 @@ export default function Species({ route, navigation }) {
                   </View>
 
                   {paramIcon('grain',24)}
+                  {paramIcon('grain',24)}
                 </View>
 
                 <View style={styles.row}>
-                  {paramValues(`${species.parameters.temperature.min}-${species.parameters.temperature.max}`,i18n.t('general.temperature'))}
-                  {paramValues(`${species.parameters.ph.min}-${species.parameters.ph.max}`,i18n.t('general.ph'))}
-                  {paramValues(`${species.parameters.dh.min}-${species.parameters.dh.max}`,i18n.t('general.hardness'))}
+                  {paramValues(`${unitConverter(species.parameters.temperature.min, 'temperature', 'base', user.units.temperature)}-${unitConverter(species.parameters.temperature.max, 'temperature', 'base', user.units.temperature)} ` + i18n.t(`measures.${user.units.temperature}Abbr`), i18n.t('general.temperature'))}  
+                  {paramValues(`${species.parameters.ph.min}-${species.parameters.ph.max}`, i18n.t('general.ph'))}
+                  {paramValues(`${unitConverter(species.parameters.gh.min, 'hardness', 'base', user.units.hardness)}-${unitConverter(species.parameters.gh.max, 'hardness', 'base', user.units.hardness)} ` + i18n.t(`measures.${user.units.hardness}Abbr`), i18n.t('general.gh'))}
+                  {paramValues(`${unitConverter(species.parameters.kh.min, 'hardness', 'base', user.units.hardness)}-${unitConverter(species.parameters.kh.max, 'hardness', 'base', user.units.hardness)} ` + i18n.t(`measures.${user.units.hardness}Abbr`), i18n.t('general.kh'))}
                 </View>
               </View>
               
@@ -207,9 +210,9 @@ export default function Species({ route, navigation }) {
                 </View>
 
                 <View style={styles.row}>
-                  {paramValues(`${species.length.min}-${species.length.max}`,i18n.t('general.size'))}
+                  {paramValues(`${species.length.min}-${species.length.max} ` + i18n.t('measures.' + user.units.length + 'Abbr'),i18n.t('general.size'))}
                   {paramValues(species.minTankLiters,i18n.t('general.minTank'))}
-                  {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swinArea'))}
+                  {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swimArea'))}
                 </View>
                 
               </View>
@@ -320,7 +323,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   paramContainer: {
-    width: '33%',
+    width: '25%',
     alignItems: 'center',
     justifyContent: 'center',
   },

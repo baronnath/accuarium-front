@@ -27,7 +27,8 @@ import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
-  const i18n = translator();
+  const locale = user.locale;
+  const i18n = translator(locale);
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
@@ -221,11 +222,11 @@ export default function AddTank({ navigation }) {
     // Convert to base lenght measure units
     try{
       if(tank.width)
-        tank.width = await unitConverter(tank.width, 'length', user.units.length);
+        tank.width = unitConverter(tank.width, 'length', user.units.length);
       if(tank.height)
-        tank.height = await unitConverter(tank.height, 'length', user.units.length);
+        tank.height = unitConverter(tank.height, 'length', user.units.length);
       if(tank.length)
-        tank.length = await unitConverter(tank.length, 'length', user.units.length);
+        tank.length = unitConverter(tank.length, 'length', user.units.length);
     }catch(err){
       dispatch(alertActions.error(err.message));
       return;

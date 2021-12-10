@@ -10,8 +10,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Paragraph from '../../../components/Paragraph';
 import Separator from '../../../components/Separator';
-import { handleAlert } from '../../../helpers/global';
+import { isEmpty } from '../../../helpers/helpers';
 import { isCompatible } from '../../../helpers/tank';
+import unitConverter from '../../../helpers/unitConverter';
 import { theme } from '../../../theme';
 import translator from '../../../translator/translator';
 
@@ -29,12 +30,13 @@ export default function GraphicTankSpecies({ species }) {
   const [compExpanded, setCompExpanded] = useState({ expanded: false });
 
   useEffect(() => {
-    if(tank.compatibility){
+    if(!isEmpty(tank.compatibility)){
       setIsComp(isCompatible(tank.compatibility));
       setParametersCompat(tank.compatibility.parameters[species.species._id]);
       setSpeciesCompat(tank.compatibility.species[species.species._id])
     }
   }, [tank]);
+
 
   function compatibilityButton() {
     if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false){
@@ -47,7 +49,7 @@ export default function GraphicTankSpecies({ species }) {
 
   function parameterCompatibility() {
     return <>
-      <Paragraph style={styles.caption}>{i18n.t('tank.notCompatible')}</Paragraph>
+      <Paragraph style={styles.caption}>{i18n.t('tank.notCompatibleParameters')}</Paragraph>
       { !parametersCompat.temperature && 
         <View style={styles.rowContainer}>
           <View style={styles.compatIcon}>
@@ -58,7 +60,8 @@ export default function GraphicTankSpecies({ species }) {
             />
           </View>
           <Paragraph style={styles.compatDescription}>
-            {i18n.t('tank.temperatureBetween', {'min': species.species.parameters.temperature.min, 'max': species.species.parameters.temperature.max})}º
+            {i18n.t('tank.temperatureBetween', {'min': unitConverter(species.species.parameters.temperature.min, 'temperature', 'base', user.units.temperature), 'max': unitConverter(species.species.parameters.temperature.max, 'temperature', 'base', user.units.temperature)})}
+            {i18n.t('measures.' + user.units.temperature + 'Abbr')}
           </Paragraph>
         </View>
       }
@@ -79,7 +82,7 @@ export default function GraphicTankSpecies({ species }) {
             <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}º</Paragraph>
           </View>
       }
-      { !parametersCompat.ph && 
+      { !parametersCompat.gh && 
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
@@ -88,7 +91,25 @@ export default function GraphicTankSpecies({ species }) {
                 size={25}
               />
             </View>
-            <Paragraph style={styles.compatDescription}>{i18n.t('tank.hardnessBetween', {'min': species.species.parameters.dh.min, 'max': species.species.parameters.dh.max})}º</Paragraph>
+            <Paragraph style={styles.compatDescription}>
+              {i18n.t('tank.ghBetween', {'min': unitConverter(species.species.parameters.gh.min, 'hardness', 'base', user.units.hardness), 'max': unitConverter(species.species.parameters.gh.max, 'hardness', 'base', user.units.hardness)})}
+              {i18n.t('measures.' + user.units.hardness + 'Abbr')}
+            </Paragraph>
+          </View>
+      }
+      { !parametersCompat.kh && 
+          <View style={styles.rowContainer}>
+            <View style={styles.compatIcon}>
+              <MaterialCommunityIcons
+                name="grain"
+                color={theme.colors.secondary}
+                size={25}
+              />
+            </View>
+            <Paragraph style={styles.compatDescription}>
+              {i18n.t('tank.khBetween', {'min': unitConverter(species.species.parameters.kh.min, 'hardness', 'base', user.units.hardness), 'max': unitConverter(species.species.parameters.kh.max, 'hardness', 'base', user.units.hardness)})}
+              {i18n.t('measures.' + user.units.hardness + 'Abbr')}
+            </Paragraph>
           </View>
       }
     </>
@@ -121,9 +142,9 @@ export default function GraphicTankSpecies({ species }) {
   }
 
   function speciesRow(species) {
-    return <View
+    return <TouchableOpacity
       style={styles.namesContainer}
-      onPress={() => navigation.navigate('Species', { speciesId : species.species._id }) }
+      onPress={() => { navigation.navigate('Species', { screen: 'Species', params: { speciesId : species.species._id } }) } }
     >
       <Paragraph style={styles.name}>
         { species.species.name[locale] ? species.species.name[locale] : '' }
@@ -131,10 +152,10 @@ export default function GraphicTankSpecies({ species }) {
       <Paragraph style={styles.scientificName} fontStyle="italic">
         { species.species.name[locale] ? species.species.name[locale] : '' }
       </Paragraph>
-    </View>
+    </TouchableOpacity>
   }
 
-  function seprator() {
+  function separator() {
     if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false)
       return <Separator style={styles.separator}/>
   }
@@ -172,7 +193,7 @@ export default function GraphicTankSpecies({ species }) {
       </View>
       {
         isComp &&
-          seprator()
+          separator()
       }
     </>
   );

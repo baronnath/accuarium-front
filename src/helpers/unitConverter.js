@@ -24,15 +24,18 @@ const properties = {
 
 module.exports = (value, measure, from, to) => {
 
-    return new Promise(function (resolve, reject) {
-
         // Check that "measure" is valid
         if(!properties.hasOwnProperty(measure))
-            reject(new Error('measures.measureNotFound'));
+            throw new Error('measures.measureNotFound');
         
+        // Set the base unit if string 'base' provided as from    
+        if(from == 'base'){
+            from = properties[measure].units[0];
+        }
+
         // Check that "from" unit is valid
         if(properties[measure].units.indexOf(from) < 0)
-            reject(new Error('measures.unitNotFound'));
+            throw new Error('measures.unitNotFound');
 
         // Set default target unit if not provided
         if(!to)
@@ -59,6 +62,5 @@ module.exports = (value, measure, from, to) => {
         if(measure == 'temperature')
             value = value - properties[measure].increment[toIndex];
 
-        resolve(round.round(value, 2));
-    });
+        return round.round(value, 2);
 }

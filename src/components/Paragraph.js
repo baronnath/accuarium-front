@@ -50,8 +50,8 @@ const Paragraph = ({ style, fontStyle, fontWeight, children }) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 12,
+    lineHeight: 18,
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: 10,

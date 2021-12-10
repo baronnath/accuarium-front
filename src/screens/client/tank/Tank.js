@@ -22,6 +22,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
+import unitConverter from '../../../helpers/unitConverter';
 import { findMainSpecies } from '../../../helpers/tank';
 import { ucFirst, isEmpty, round } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
@@ -43,6 +44,7 @@ export default function Tank({ route, navigation }) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalIndex, setModalIndex] = useState(null);
+  const [tankParameters, setTankParameters] = useState({});
   const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
 
@@ -70,6 +72,21 @@ export default function Tank({ route, navigation }) {
         setMainSpecies(findMainSpecies(tank.species));
       }
 
+      // Convert to user unit measure
+      try{
+        if(tank.width)
+          tank.width = unitConverter(tank.width, 'length', 'base', user.units.length);
+        if(tank.height)
+          tank.height = unitConverter(tank.height, 'length', 'base', user.units.length);
+        if(tank.length)
+          tank.length = unitConverter(tank.length, 'length', 'base', user.units.length);
+        if(tank.liters)
+          tank.liters = unitConverter(tank.liters, 'volume', 'base', user.units.volume);
+      }catch(err){
+        dispatch(alertActions.error(err.message));
+        return;
+      }
+
       if(tank.liters){
         calculateDetails();
       }
@@ -81,6 +98,19 @@ export default function Tank({ route, navigation }) {
   useEffect(() => {
     if(mainSpecies){
       dispatch(tankActions.getCompatibility(tankId));
+
+      // Set tank parameters from main species
+      const temp = mainSpecies.species.parameters.temperature;
+      const ph = mainSpecies.species.parameters.ph;
+      const gh = mainSpecies.species.parameters.gh;
+      const kh = mainSpecies.species.parameters.kh;
+      const tankParams = {
+        temperature: !!temp.min && !!temp.max ? unitConverter((temp.min + temp.max) / 2, 'temperature', 'base', user.units.temperature) : null,
+        ph: !!ph.min && !!ph.max ? (ph.min + ph.max) / 2 : null,
+        gh: !!gh.min && !!gh.max ? unitConverter((gh.min + gh.max) / 2, 'hardness', 'base', user.units.hardness) : null,
+        kh: !!kh.min && !!kh.max ? unitConverter((kh.min + kh.max) / 2, 'hardness', 'base', user.units.hardness) : null,
+      }
+      setTankParameters(tankParams);
     }
   },[mainSpecies])
 
@@ -99,10 +129,10 @@ export default function Tank({ route, navigation }) {
     });
 
     let freeSpace = 100 - (occupied * 100 / tank.liters);
-    setFreeSpace(round.round(freeSpace, 2));
+    setFreeSpace(round.round(freeSpace));
 
     let cleaningCrew = cleaning * 100 / tank.liters;
-    setCleaningCrew(round.round(cleaningCrew, 2));
+    setCleaningCrew(round.round(cleaningCrew));
 
     return;
   }
@@ -148,7 +178,10 @@ export default function Tank({ route, navigation }) {
                   <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
                   <View style={styles.titleContainer}>
                     <Paragraph style={styles.tankName} fontWeight="light" >{ucFirst(tank.name)}</Paragraph>
-                    <Header style={styles.volume}>{tank.liters} L</Header>
+                    {
+                      tank.liters &&
+                      <Header style={styles.volume}>{tank.liters} {i18n.t('measures.' + user.units.volume + 'Abbr')} </Header>
+                    }
                     {
                       !!mainSpecies &&
                         <View style={styles.rowContainer}>
@@ -191,19 +224,31 @@ export default function Tank({ route, navigation }) {
                           color={theme.colors.lightText}
                           size={35}
                         />
-                        <MaterialCommunityIcons style={{marginLeft:-25 ,marginVertical: -8}}
+                        <MaterialCommunityIcons style={{marginLeft:-25, marginVertical: -8}}
                           name="alpha-h"
                           color={theme.colors.lightText}
                           size={40}
                         />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
-                        <MaterialCommunityIcons style={{transform: [{rotateX: '180deg'}, {rotateY: '180deg'}]}}
-                          name="alpha-p"
+                        <MaterialCommunityIcons style={{marginTop: 12}}
+                          name="numeric-9"
                           color={theme.colors.lightText}
                           size={35}
                         />
-                        <MaterialCommunityIcons style={{marginLeft: -25}}
+                        <MaterialCommunityIcons style={{marginLeft: -25, marginVertical: -8}}
+                          name="alpha-h"
+                          color={theme.colors.lightText}
+                          size={40}
+                        />
+                    </View>
+                    <View style={[styles.rowContainer, styles.parameters]}>
+                        <MaterialCommunityIcons style={{marginTop: 12}}
+                          name="numeric-9"
+                          color={theme.colors.lightText}
+                          size={35}
+                        />
+                        <MaterialCommunityIcons style={{marginLeft: -25, marginVertical: -8}}
                           name="alpha-h"
                           color={theme.colors.lightText}
                           size={40}
@@ -212,18 +257,23 @@ export default function Tank({ route, navigation }) {
                   </View>
                   <View style={styles.rowContainer}>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      { !!mainSpecies &&
-                          (mainSpecies.species.parameters.temperature.min + mainSpecies.species.parameters.temperature.max) / 2
+                      { !isEmpty(tankParameters) && !!tankParameters.temperature &&
+                          tankParameters.temperature + i18n.t('measures.' + user.units.temperature + 'Abbr')
                       }
                     </Paragraph>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      { !!mainSpecies &&
-                          (mainSpecies.species.parameters.ph.min + mainSpecies.species.parameters.ph.max) / 2
+                      { !isEmpty(tankParameters) && !!tankParameters.ph &&
+                          tankParameters.ph
                       }
                     </Paragraph>
                     <Paragraph style={styles.values} fontWeight="bold">
-                      { !!mainSpecies &&
-                          mainSpecies.species.parameters.dh.min // TO BE FIXED
+                      { !isEmpty(tankParameters) && !!tankParameters.gh &&
+                          tankParameters.gh + ' ' + i18n.t('measures.' + user.units.hardness + 'Abbr')
+                      }
+                    </Paragraph>
+                    <Paragraph style={styles.values} fontWeight="bold">
+                    { !isEmpty(tankParameters) && !!tankParameters.kh &&
+                          tankParameters.kh + ' ' + i18n.t('measures.' + user.units.hardness + 'Abbr')
                       }
                     </Paragraph>
                   </View>
@@ -241,7 +291,7 @@ export default function Tank({ route, navigation }) {
                       setModalIndex('freeSpace');
                     }}
                   >
-                    <MaterialCommunityIcons name="water-percent" size={30} color={theme.colors.primary}/>
+                    <MaterialCommunityIcons name="water-percent" size={22} color={theme.colors.primary}/>
                     <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -251,7 +301,7 @@ export default function Tank({ route, navigation }) {
                       setModalIndex('cleanupCrew');
                     }}
                   >
-                    <MaterialCommunityIcons name="spray-bottle" size={27} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
+                    <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
                     <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
                   </TouchableOpacity>
                 </View>
@@ -287,14 +337,16 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   tankName: {
+    fontSize: 14,
     color: theme.colors.lightText,
     marginBottom: 0,
     lineHeight: 30,
   },
   volume: {
-    fontSize: 50,
-    lineHeight: 38,
+    fontSize: 48,
+    lineHeight: 42,
     paddingBottom: 0,
+    marginTop: 0,
   },
   mainSpecies: {
     marginLeft: 5,
@@ -323,7 +375,8 @@ const styles = StyleSheet.create({
   },
   values: {
     flex:1,
-    fontSize: 20,
+    fontSize: 12
+    ,
   },
   infoIcon: {
     position: 'absolute',
