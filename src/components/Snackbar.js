@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     maxWidth: theme.container.maxWidth,
-    flex: 1,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',

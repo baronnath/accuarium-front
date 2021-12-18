@@ -13,7 +13,7 @@ import Subheader from '../../../components/Subheader';
 import Paragraph from '../../../components/Paragraph';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
-import Alert from '../../../components/Alert';
+import FixedAlert from '../../../components/FixedAlert';
 import Tag from '../../../components/Tag';
 import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
@@ -154,7 +154,7 @@ export default function SpeciesSearch({ route, navigation }) {
         </Header>
 
         { main && 
-         <Alert visible={true} onClose={() => setMain(null)} wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</Alert>
+         <FixedAlert visible={true} onClose={() => setMain(null)} wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
         }
 
         <OptionsMenu>

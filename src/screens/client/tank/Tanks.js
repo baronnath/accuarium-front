@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
     width: '100%',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -99,11 +98,12 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   background: {
+    flex:1,
   },
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: theme.bottomNav.height + theme.container.padding + 16,
+    bottom: 0,
   },
 });
