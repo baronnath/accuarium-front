@@ -284,6 +284,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
+    flex: 1,
     paddingTop: 100,
     flexDirection:'column',
   },

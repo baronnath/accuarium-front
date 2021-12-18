@@ -5,9 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Snackbar as PaperSnackbar } from 'react-native-paper';
 import { theme } from '../theme';
 
-type Props = React.ComponentProps<typeof PaperSnackbar>;
-
-const Snackbar = ({ type, visible, style, wrapperStyle, children, ...props }: Props) => (
+const Snackbar = ({ type, visible, style, wrapperStyle, children, ...props }) => (
   <PaperSnackbar
     visible={visible}
     style={[
@@ -37,7 +35,6 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     maxWidth: theme.container.maxWidth,
-    paddingHorizontal: theme.container.padding,
     flex: 1,
     alignSelf: 'center',
     alignItems: 'center',

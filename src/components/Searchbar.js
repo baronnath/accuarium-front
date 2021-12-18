@@ -21,7 +21,7 @@ const Searchbar = ({ ...props }: Props) => (
 
 const styles = StyleSheet.create({
   searchbar: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   input: {
 
