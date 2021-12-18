@@ -9,11 +9,7 @@ import {
 } from 'react-native';
 import { theme } from '../theme';
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const Background = ({ justify, style, children }: Props) => (
+const Background = ({ justify, style, children }) => (
   <ImageBackground
     source={require('../assets/background_dot.png')}
     resizeMode="repeat"
@@ -36,7 +32,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    flex: 1,
     alignSelf: 'stretch',
     alignItems: 'center',
     padding: theme.container.padding,
