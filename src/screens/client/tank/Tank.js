@@ -123,9 +123,9 @@ export default function Tank({ route, navigation }) {
     let cleaning = 0;
      
     tank.species.forEach(species => {
-      occupied += species.species.litersSpecimen * species.quantity;
+      occupied += species.species.volumeSpecimen * species.quantity;
       if(species.species.cleaning)
-        cleaning += species.species.litersSpecimen * species.quantity;
+        cleaning += species.species.volumeSpecimen * species.quantity;
     });
 
     let freeSpace = 100 - (occupied * 100 / tank.liters);

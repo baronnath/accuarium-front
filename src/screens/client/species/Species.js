@@ -211,7 +211,7 @@ export default function Species({ route, navigation }) {
 
                 <View style={styles.row}>
                   {paramValues(`${species.length.min}-${species.length.max} ` + i18n.t('measures.' + user.units.length + 'Abbr'),i18n.t('general.size'))}
-                  {paramValues(species.minTankLiters,i18n.t('general.minTank'))}
+                  {paramValues(species.minTankVolume,i18n.t('general.minTank'))}
                   {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swimArea'))}
                 </View>
                 
