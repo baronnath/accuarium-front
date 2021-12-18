@@ -7,9 +7,9 @@ export function calculateVolume(dimensions) {
 
     return new Promise((resolve, reject) => {
     	if(!width || !height || !length)
-    		reject('Please fill your tank dimensions');
+    		reject('emptyValues');
     	if(isNaN(width) || isNaN(height) || isNaN(length))
-    		reject('Dimensions values must be numbers');
+    		reject('noNumbers');
 
       width = commaToPeriod(width.toString());
       height = commaToPeriod(height.toString());
