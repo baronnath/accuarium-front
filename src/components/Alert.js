@@ -10,44 +10,43 @@ import { theme } from '../theme';
 import Snackbar from './Snackbar';
 import { actions as alertActions } from '../ducks/alert';
 
-function Alert(){
-  const dismissSnackbar = () => dispatch(alertActions.clear());
+function Alert({ visible, type, style, wrapperStyle, onClose, children }){
+  const dismissAlert = () => setVisible(false);
 	const dispatch = useDispatch();
 
-  const alert = useSelector(state => state.alert);
+  const [vis, setVisible] = useState(visible);
 
   return (
     	<Snackbar
-    	  visible={alert.visible}
-    	  onDismiss={dismissSnackbar}
-    	  type={ alert.type ? alert.type : 'success'}
-    	  style={styles.container}
+    	  visible={vis}
+        duration={Infinity}
+    	  onDismiss={dismissAlert}
+    	  type={ type ? type : 'success'}
+        wrapperStyle={[styles.wrapper, wrapperStyle]}
+    	  style={[styles.container, style]}
     	  action={{
           label: <Icon name="close" size={20} color={theme.colors.surface}/>,
           onPress: () => {
-            dismissSnackbar
+            dismissAlert;
+            onClose && onClose();
           },
         }}
-        wrapperStyle={ styles.container }
       >
-    		{alert.message}
+    		{children}
 			</Snackbar>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    position: 'relative',
+    top: 0,
+    right: 0,
+  },
 	container: {
     maxWidth: theme.container.maxWidth,
-    paddingHorizontal: theme.container.padding,
-    flex: 1,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 10 + getStatusBarHeight(),
-    zIndex: 900,
-  },
-  snackbar: {
+    margin: 0,
+    minHeight: 50,
   },
 });
 
