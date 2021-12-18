@@ -226,8 +226,9 @@ export default function EditTank({ route, navigation }) {
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
+      contentContainerStyle={styles.background}
     >
-      <Background justify="top">
+      <Background justify="top" style={styles.background}>
         <Header>
         {i18n.t('tank.editTank')}
         </Header>
@@ -358,6 +359,7 @@ export default function EditTank({ route, navigation }) {
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
   },
   formContainer: {
     flex: 1,
