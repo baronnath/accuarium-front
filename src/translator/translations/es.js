@@ -4,6 +4,14 @@ const es = {
             one: 'Tanque',
             other: 'Tanques', 
         },
+        species: {
+            one: 'Especie',
+            other: 'Especies', 
+        },
+        mainSpecies: {
+            one: 'Especie principal',
+            other: 'Especies principales', 
+        },
         email: 'Correo electrónico',
         password: 'Contraseña',
         name: 'Nombre',
@@ -20,6 +28,7 @@ const es = {
         next: 'Siguiente',
         edit: 'Editar',
         delete: 'Eliminar',
+        moreDetails: 'Más detalles',
         waterChemistry: 'Química del agua',
         temperature: 'Temperatura',
         ph: 'pH',
@@ -116,6 +125,7 @@ const es = {
     },
     speciesSearch: {
         title: 'Especies',
+        tankSubtitle: 'para añadirlas a %{tankName}',
         noMore: 'No hay más especies',
     },
     profile: {
@@ -161,6 +171,8 @@ const es = {
         editTank: 'Editar tanque',
         noTanks: 'No hay ningún tanque. ¿A qué esperas?',
         createTank: 'Crear tanque',
+        emptyValues: 'Completa las dimensiones del tanque',
+        noNumbers: 'Las dimensiones tienen que ser números',
     },
     addTank: {
         slide1: {

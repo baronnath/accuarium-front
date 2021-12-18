@@ -160,6 +160,7 @@ export default function Tank({ route, navigation }) {
                     <Menu.Item
                       icon="square-edit-outline"
                       onPress={ () => {
+                        setMenuVisible(false),
                         navigation.navigate('EditTank', { tankId : tank._id })
                       }}
                       title={i18n.t('general.edit')}
@@ -282,29 +283,31 @@ export default function Tank({ route, navigation }) {
                 { tank.species &&
                   <GraphicTank />
                 }
-
-                <View style={[styles.rowContainer,styles.moreDetailsContainer]}>
-                  <TouchableOpacity
-                    style={[styles.rowContainer, styles.moreDetail]}
-                    onPress={() => {
-                      setModalVisible(true);
-                      setModalIndex('freeSpace');
-                    }}
-                  >
-                    <MaterialCommunityIcons name="water-percent" size={22} color={theme.colors.primary}/>
-                    <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.rowContainer, styles.moreDetail]}
-                    onPress={() => {
-                      setModalVisible(true);
-                      setModalIndex('cleanupCrew');
-                    }}
-                  >
-                    <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
-                    <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
-                  </TouchableOpacity>
-                </View>
+                
+                { tank.liters &&
+                  <View style={[styles.rowContainer,styles.moreDetailsContainer]}>
+                    <TouchableOpacity
+                      style={[styles.rowContainer, styles.moreDetail]}
+                      onPress={() => {
+                        setModalVisible(true);
+                        setModalIndex('freeSpace');
+                      }}
+                    >
+                      <MaterialCommunityIcons name="water-percent" size={22} color={theme.colors.primary}/>
+                      <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.rowContainer, styles.moreDetail]}
+                      onPress={() => {
+                        setModalVisible(true);
+                        setModalIndex('cleanupCrew');
+                      }}
+                    >
+                      <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
+                      <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
+                    </TouchableOpacity>
+                  </View>
+                }
 
               </ScrollView>
         }

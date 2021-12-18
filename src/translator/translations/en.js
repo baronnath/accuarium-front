@@ -4,6 +4,14 @@ const en = {
             one: 'Tank',
             other: 'Tanks', 
         },
+        species: {
+            one: 'Species',
+            other: 'Species', 
+        },
+        mainSpecies: {
+            one: 'Main species',
+            other: 'Main species', 
+        },
         email: 'Email',
         password: 'Password',
         name: 'Name',
@@ -20,6 +28,7 @@ const en = {
         next: 'Next',
         edit: 'Edit',
         delete: 'Delete',
+        moreDetails: 'More details',
         waterChemistry: 'Water chemistry',
         temperature: 'Temperature',
         ph: 'pH',
@@ -116,6 +125,7 @@ const en = {
     },
     speciesSearch: {
         title: 'Species',
+        tankSubtitle: 'to be added to %{tankName}',
         noMore: 'No more species',
     },
     profile: {
@@ -161,6 +171,8 @@ const en = {
         editTank: 'Edit tank',
         noTanks: 'No tanks yet. What you waiting for?',
         createTank: 'Create tank',
+        emptyValues: 'Please fill your tank dimensions',
+        noNumbers: 'Dimensions values must be numbers',
     },
     addTank: {
         slide1: {

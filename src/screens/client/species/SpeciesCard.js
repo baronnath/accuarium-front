@@ -1,7 +1,7 @@
 // src/screens/species/SpeciesCard.js
 
-import React, { useState, memo } from 'react';
-import { StyleSheet, Image, View } from 'react-native';
+import React, { useState, useEffect, memo } from 'react';
+import { StyleSheet, Image, View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 
 
-const SpeciesCard = ({ species, grid, ...props }) => {
+const SpeciesCard = ({ species, grid, main = false, setMain, tankId, ...props }) => {
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;  
@@ -24,7 +24,6 @@ const SpeciesCard = ({ species, grid, ...props }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [tankId, setTankId] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
@@ -38,12 +37,14 @@ const SpeciesCard = ({ species, grid, ...props }) => {
       species: [{ 
         species: species._id,
         quantity: quantity,
+        main: main,
       }]
     };
     dispatch(tankActions.addSpecies(params));
     setTankModalVisible(false);
     setQuantityModalVisible(false);
     setQuantity(1);
+    if(setMain) setMain(false); // Only first species added is main species, deactivate for next species
   }
 
   return( 
@@ -59,7 +60,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
             <Card.Title
               title={species.name[locale]}
               subtitle={ species.scientificName}
-              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => {setTankModalVisible(true)}} />}
+              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { tankId ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
               rightStyle={styles.rightStyle}
             />
             <Card.Cover source={{ uri: speciesImage }} />
@@ -96,7 +97,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
             <MaterialCommunityIcons name="fishbowl-outline" size={60} color={theme.colors.accent} />
             <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal1Title')}</Paragraph>
             <Paragraph style={styles.modalParagraph}>{i18n.t('speciesCard.modal1Paragraph')}</Paragraph>
-            <View style={styles.listContainer}>
+            <ScrollView style={styles.listContainer}>
               {
                 tanks.map(tank => {
                   return (
@@ -114,7 +115,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
                             name="tray-plus"
                             onPress={() => {
                               setQuantityModalVisible(true);
-                              setTankId(tank._id);
+                              tankId = tank._id;
                             }}
                           />
                       }
@@ -122,7 +123,7 @@ const SpeciesCard = ({ species, grid, ...props }) => {
                   )
                 })
               } 
-            </View>
+            </ScrollView>
           </Modal>
           <Modal isVisible={isQuantityModalVisible} setVisible={setQuantityModalVisible}>
             <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal2Title')}</Paragraph>
@@ -166,6 +167,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     width: '100%',
+    maxHeight: '70%',
   },
   list:{
     paddingVertical: 10,

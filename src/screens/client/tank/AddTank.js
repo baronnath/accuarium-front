@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { axios }from '../../../helpers/axios';
-import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
   StyleSheet, View, Image, TouchableOpacity
@@ -237,9 +236,9 @@ export default function AddTank({ navigation }) {
     .then(res => {
       dispatch(alertActions.success('addTank.addSpecies'));
       dispatch(tankActions.getTankByUser(user._id));
-      setTank(defaultTank);
-      navigation.navigate('Tanks');
-      navigation.navigate('Species');
+      setTank(defaultTank); // Clean inputs after creation success
+      navigation.navigate('Tanks'); // Reset tank stack navigator to main screen
+      navigation.navigate('Species', { screen: 'SpeciesSearch', params: { setMainSpeciesTank: res.data.tank } });
     })
     .catch(err => {
       handleAlert(err);

@@ -15,30 +15,71 @@ import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
+import translator from '../../../translator/translator';
 
 
 const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies, ...props }) => {
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.data);
   const locale = user.locale;  
+  const i18n = translator(locale);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  const [visible, setVisible] = useState(false);
 
   // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
   const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
 
+  function openMenu () { setVisible(true); }
+  function closeMenu () { setVisible(false); }
+
+  const menuButton = <MaterialCommunityIcons {...props} style={styles.menuButton} size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
+
+  const speciesMenu =
+    <Menu
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={menuButton}>
+        <Menu.Item
+        icon="information-outline"
+        onPress={() => {
+          setVisible(false),
+          navigation.navigate('Species', { screen: 'Species', params: { speciesId : species._id } })
+        }}
+        title={i18n.t('general.moreDetails')}
+      />
+      <Menu.Item
+        icon="star-outline"
+        onPress={() => {
+          setVisible(false),
+          handleSpecies(species._id,'main')
+        }}
+        title={i18n.t('general.mainSpecies.one')}
+      />
+      <Menu.Item
+        icon="delete-forever-outline"
+        onPress={() => {
+          setVisible(false),
+          removeSpecies(species._id)
+        }}
+        title={i18n.t('general.delete')}
+      />
+    </Menu>
+  ;
+
   return( 
     <Card
-      style={styles.card}
+      style={[styles.card,main && styles.cardMain]}
       theme={theme}
       {...props}
     >
       <Card.Title
         style={styles.cardContainer}
         title={species.name[locale]}
-        subtitle={ species.scientificName}
+        subtitle={species.scientificName}
         titleStyle={styles.title}
-        subtitleStyle={styles.title}
+        subtitleStyle={[styles.title, styles.subtitle]}
         left={(props) => 
           <View style={styles.row}>
             <TouchableOpacity style={styles.verticalCenter}>
@@ -58,7 +99,7 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
                     onPress={() => { handleSpecies(species._id, 'main') }}
                     name="star"
                     size={26}
-                    color={theme.colors.primary}
+                    color={theme.colors.secondary}
                   />
                 :
                    <MaterialCommunityIcons
@@ -93,10 +134,17 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
                   color={theme.colors.lightText}
                 />
               </TouchableOpacity>
+              { speciesMenu }
             </View>
         }
         rightStyle={styles.rightStyle}
       />
+      { main &&
+        <Card.Actions style={[styles.row,styles.caption]}>
+            <MaterialCommunityIcons style={{marginTop: -12}} name="star-circle" size={15} color={theme.colors.lightText}/>
+            <Paragraph style={styles.mainSpecies}>{i18n.t('general.mainSpecies.one')}</Paragraph>
+        </Card.Actions>
+      }
     </Card>
   )
 };
@@ -106,20 +154,44 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
+  cardMain: {
+    borderColor: theme.colors.primary,
+    borderWidth: 1,
+  },
   cardContainer: {
     marginHorizontal: 15,
     marginVertical: 5,
   },
   title: {
     marginLeft: 15,
+    fontSize: 15,
+  },
+  subtitle: {
+    fontSize: 10,
+    lineHeight: 10,
+    color: theme.colors.placeholder,
   },
   rightStyle: {
     justifyContent: 'center',
     marginLeft: 15,
   },
+  menuButton: {
+    marginTop: 2,
+    paddingLeft: 10,
+  },
   leftStyle: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  caption: {
+    paddingVertical: 0,
+    marginLeft: 5,
+  },
+  mainSpecies: {
+    fontSize: 10,
+    lineHeight: 10,
+    marginLeft: 5,
+    // paddingTop: 10,
   },
   listImage: {
     backgroundColor: theme.colors.primary,
