@@ -56,6 +56,8 @@ export default function AddTank({ navigation }) {
           error={!!errors.name}
           errorText={errors.name}
           autoCapitalize="none"
+          textContentType="none"
+          keyboardType="default"
           autofill="name"
         />
       </>,
@@ -86,7 +88,9 @@ export default function AddTank({ navigation }) {
               onChangeText={(width) => handleChange('width', width)}
               error={!!errors.width}
               errorText={errors.width}
-            />
+              textContentType="none"
+              keyboardType="numeric"
+          />
           </View>
           <View style={styles.inputWrap}>
             <TextInput
@@ -98,6 +102,8 @@ export default function AddTank({ navigation }) {
               onChangeText={(height) => handleChange('height', height)}
               error={!!errors.height}
               errorText={errors.height}
+              textContentType="none"
+              keyboardType="numeric"
             />
           </View>
           <View style={styles.inputWrap}>
@@ -110,6 +116,8 @@ export default function AddTank({ navigation }) {
               onChangeText={(length) => handleChange('length', length)}
               error={!!errors.length}
               errorText={errors.length}
+              textContentType="none"
+              keyboardType="numeric"
             />
           </View>
         </View>
@@ -145,6 +153,8 @@ export default function AddTank({ navigation }) {
               autoCapitalize="none"
               autofill="liters"
               style={styles.inputLeft}
+              textContentType="none"
+              keyboardType="numeric"
             />
           </View>
         </View>
