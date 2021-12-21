@@ -65,7 +65,7 @@ export default function Species({ route, navigation }) {
     setOthernamesExpanded({ expanded: !othernamesExpanded.expanded });
   }
 
-  function paramIcon(icon, size, color, caption) {
+  function paramIcon(icon, size, caption, color) {
     return <View style={styles.paramContainer}>
       <MaterialCommunityIcons style={styles.listIcon}
         name={icon} 
@@ -186,8 +186,8 @@ export default function Species({ route, navigation }) {
                     </View>
                   </View>
 
-                  {paramIcon('grain',24)}
-                  {paramIcon('grain',24)}
+                  {paramIcon('focus-field',24)}
+                  {paramIcon('focus-field-horizontal',24)}
                 </View>
 
                 <View style={styles.row}>
@@ -224,11 +224,11 @@ export default function Species({ route, navigation }) {
 
                 <View style={styles.row}>
                   { species.cleaning &&
-                    paramIcon('spray-bottle',24)
+                    paramIcon('spray-bottle', 24, 'cleaning')
                   }
 
                   { species.behavior.map(behavior => {
-                      return paramIcon(behavior.icon, 24, behavior.warning ? theme.colors.secondary : null, behavior.name[locale])
+                      return paramIcon(behavior.icon, 24, behavior.name[locale], behavior.warning ? theme.colors.secondary : null)
                     })
                   }
                 </View>                
