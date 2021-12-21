@@ -16,7 +16,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 
 
-const SpeciesCard = ({ species, grid, main = false, setMain, tankId, ...props }) => {
+const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props }) => {
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;  
@@ -24,6 +24,7 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId, ...props })
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const [tankId, setTankId] = useState(t && null);
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
@@ -44,6 +45,7 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId, ...props })
     setTankModalVisible(false);
     setQuantityModalVisible(false);
     setQuantity(1);
+    setTankId(null);
     if(setMain) setMain(false); // Only first species added is main species, deactivate for next species
   }
 
@@ -115,7 +117,7 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId, ...props })
                             name="tray-plus"
                             onPress={() => {
                               setQuantityModalVisible(true);
-                              tankId = tank._id;
+                              setTankId(tank._id);
                             }}
                           />
                       }
