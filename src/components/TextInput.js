@@ -7,15 +7,16 @@ import { theme } from '../theme';
 
 type Props = React.ComponentProps<typeof Input> & { errorText?: string };
 
-const TextInput = ({ errorText, style, ...props }: Props) => (
+const TextInput = ({ errorText, style, mode, icon, ...props }: Props) => (
   <View style={[styles.container, style]}>
     <Input
       style={styles.input}
       selectionColor={theme.colors.primary}
       underlineColor="transparent"
-      mode="outlined"
+      mode={mode || "outlined"}
       theme={theme}
       {...props}
+      right={icon ? <Input.Icon name={icon} color={theme.colors.lightText} /> : undefined}
     />
     {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
   </View>
