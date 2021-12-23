@@ -14,6 +14,7 @@ import Paragraph from '../../../components/Paragraph';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
 import FixedAlert from '../../../components/FixedAlert';
+import SpeciesSearchFilter from './SpeciesSearchFilter';
 import Tag from '../../../components/Tag';
 import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
@@ -37,42 +38,42 @@ export default function SpeciesSearch({ route, navigation }) {
     direction: 'ascending'
   });
   const [main, setMain] = useState(null);
-  const [types, setTypes] = useState(null);
-  const [families, setFamilies] = useState(null);
-  const [depths, setDepths] = useState(null);
-  const [behaviors, setBehaviors] = useState(null);
-  const [feeds, setFeeds] = useState(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [filters, setFilters] = useState({});
+  const [areFiltersVisible, setFiltersVisible] = useState(false);
   const dispatch = useDispatch();
 
   let timeout;
+
   const onChangeSearch = searchKey => {
+    setQuery(searchKey);
+  }
+
+  // const onChangeSort = field => {
+  //   let newDirection;
+  //   if(sort.direction == 'ascending')
+  //     newDirection = 'descending';
+  //   else
+  //     newDirection = 'ascending';
+
+  //   setSort({
+  //       field: field,
+  //       direction: newDirection
+  //   });
+  // }
+
+  useEffect(()=>{
     clearTimeout(timeout);
     setResults([]);
     setPage(0);
     setFinalPage(false);
-    setQuery(searchKey);
-  }
-
-  const onChangeSort = field => {
-    let newDirection;
-    if(sort.direction == 'ascending')
-      newDirection = 'descending';
-    else
-      newDirection = 'ascending';
-
-    setSort({
-        field: field,
-        direction: newDirection
-    });
-  }
+  },[query, filters]);
   
   useEffect(()=>{
     timeout = setTimeout(() => dispatchSearch(query), 800);
-  },[query, page, sort]);
+  },[query, page, sort, filters]);
 
   useEffect(()=>{
     if(main){
@@ -95,12 +96,23 @@ export default function SpeciesSearch({ route, navigation }) {
 
   function dispatchSearch(searchKey){
     setLoading(true);
+
+    // Extract values from filters
+    let filterValues = {};
+    Object.entries(filters).map(([key, filter]) => {
+      filterValues[key] = filter.value;
+    });
+
     const params = {
-      keyword: query,
+      ...filterValues,
       sort: sort.field,
       direction: sort.direction,
-      page: page
+      page: page,
     }
+
+    if(!!query)
+      params['keyword'] = query;
+
     axios.get(backend.url + '/species/search', {params: params})
       .then(res => {
           const newResutls = res.data.species;
@@ -117,23 +129,6 @@ export default function SpeciesSearch({ route, navigation }) {
       });
   }
 
-  async function changeFilter(key, value) {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      [key]: value
-    }));
-  }
-
-  async function removeFilter(key) {
-    if(key == 'tank')
-      setTank(null);
-    setFilters(prevFilters => {
-      let filters = { ...prevFilters };
-      delete filters[key];
-      return filters;
-    });
-  }
-
   function onScrollEnd() {
     setPage(page + 1);
   }
@@ -142,8 +137,58 @@ export default function SpeciesSearch({ route, navigation }) {
     setGrid(!grid);
   }
 
-  function filter(speciesId){
-    alert('FILTERS')
+  async function changeFilter(key, value, array = false) {
+    if(array) {
+      let index = filters[key] ? filters[key].value.indexOf(value.value) : -1;
+
+      if(index >= 0) // found: remove item
+        removeFilter(key, value.value);
+      else {  // not found: add item
+        setFilters(prevFilters => {
+          let filters = { ...prevFilters };
+          if(!filters[key]){
+            filters[key] = { value: [], displayValue: [] };
+          }
+          filters[key].value.push(value.value);
+          filters[key].displayValue.push(value.displayValue);
+
+        return filters;
+        });
+      }
+    }
+    else {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [key]: value
+      }));
+    }
+  }
+
+  async function removeFilter(key, id = null) {
+    if(id){ // remove id from array of values
+      setFilters(prevFilters => {
+        let filters = { ...prevFilters };
+        let index = filters[key].value.indexOf(key);
+        filters[key].value.splice(index,1);
+        filters[key].displayValue.splice(index,1);
+        return filters;
+      });
+    }
+    else{ // no array value
+      setFilters(prevFilters => {
+        let filters = { ...prevFilters };
+        delete filters[key];
+        return filters;
+      });
+    }
+  }
+
+  async function clearFilter() {
+    setFilters({});
+  }
+
+  function getTag(key, label, id = null) {
+    return <Tag onClose={() => removeFilter(key, id)}>{label}</Tag>;
   }
 
   return (
@@ -154,11 +199,11 @@ export default function SpeciesSearch({ route, navigation }) {
         </Header>
 
         { main && 
-         <FixedAlert visible={true} onClose={() => setMain(null)} wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
+         <FixedAlert visible={true} onClose={() => setMain(null)} type="warning" wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
         }
 
         <OptionsMenu>
-          <MaterialCommunityIcons size={26} color={theme.colors.lightText} name="filter-outline" onPress={() => {filter()}} />
+          <MaterialCommunityIcons size={26} color={theme.colors.lightText} name="filter-outline" onPress={() => setFiltersVisible(true)} />
           <MaterialCommunityIcons size={26} color={theme.colors.lightText} name={ grid ? 'view-list-outline' : 'view-grid-outline' } onPress={() => {switchGrid()}} />
         </OptionsMenu>
         
@@ -170,8 +215,13 @@ export default function SpeciesSearch({ route, navigation }) {
        
         <View style={styles.tagContainer}>
           { filters &&
-              Object.entries(filters).map(([key, value]) => {
-                return <Tag onClose={() => removeFilter(key)}>{ucFirst(key)}: {value.name}</Tag>
+              Object.entries(filters).map(([key, filter]) => {
+                if(Array.isArray(filter.displayValue))
+                  return filter.displayValue.map((f) => {
+                    return getTag(key, f, filter.value)
+                  })
+                else
+                  return getTag(key, filter.displayValue)
               })
           }
         </View>
@@ -184,7 +234,7 @@ export default function SpeciesSearch({ route, navigation }) {
           data={results}
           keyExtractor={(item) => item._id}
           renderItem={({item}) => (
-              <SpeciesCard species={item} grid={grid} tankId={main ? main._id : null} main={main ? true : false} setMain={setMain}/>
+              <SpeciesCard species={item} grid={grid} main={main ? main._id : null} setMain={setMain}/>
           )}
           onEndReached={isFinalPage ? null : onScrollEnd}
           onEndReachedThreshold={0.5}
@@ -194,8 +244,11 @@ export default function SpeciesSearch({ route, navigation }) {
               : isFinalPage &&
                 <Paragraph style={{paddingVertical: 20}}>{i18n.t('speciesSearch.noMore')}</Paragraph> 
           }
+          ListFooterComponentStyle={styles.listFootStyle}
         />  
       </Background>
+      
+      <SpeciesSearchFilter visible={areFiltersVisible} setVisible={setFiltersVisible} filters={filters} changeFilter={changeFilter} removeFilter={removeFilter} clearFilter={clearFilter} />
     </>
   );
 }
@@ -209,8 +262,7 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   wrapperAlert: {
-    marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 20,
   },
   tagContainer: {
     flexWrap: 'wrap',
@@ -225,6 +277,10 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flexDirection: 'column',
     width: '100%',
+  },
+  listFootStyle: {
+    paddingBottom: 150,
+
   },
   flatContainer: {
     marginTop: 20,

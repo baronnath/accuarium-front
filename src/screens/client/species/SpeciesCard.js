@@ -16,7 +16,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 
 
-const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props }) => {
+const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;  
@@ -24,7 +24,8 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props 
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [tankId, setTankId] = useState(t && null);
+
+  const [tankId, setTankId] = useState(main);
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
@@ -34,11 +35,11 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props 
   
   function addSpeciesToTank() {
     const params = {
-      tankId: tankId,
+      tankId: main ? main : tankId,
       species: [{ 
         species: species._id,
         quantity: quantity,
-        main: main,
+        main: !!main,
       }]
     };
     dispatch(tankActions.addSpecies(params));
@@ -46,7 +47,7 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props 
     setQuantityModalVisible(false);
     setQuantity(1);
     setTankId(null);
-    if(setMain) setMain(false); // Only first species added is main species, deactivate for next species
+    if(main) setMain(null); // Only first species added is main species, deactivate for next species
   }
 
   return( 
@@ -62,7 +63,7 @@ const SpeciesCard = ({ species, grid, main = false, setMain, tankId:t, ...props 
             <Card.Title
               title={species.name[locale]}
               subtitle={ species.scientificName}
-              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { tankId ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
+              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { main ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
               rightStyle={styles.rightStyle}
             />
             <Card.Cover source={{ uri: speciesImage }} />
