@@ -97,3 +97,13 @@ exports.round = (function() {
         }
     };
 })();
+
+
+// Var name to string
+// use example:
+//    nameOf(() => myVariable)             // myVariable
+//    nameOf(() => myVariable.name)        // myVariable.name
+//    nameOf(() => myVariable.name.length) // myVariable.name.length
+//    nameOf(() => myVariable.name[10])    // myVariable.name[10]
+//    nameOf(() => MySuperClass)           // MySuperClass
+exports.varToString = (f) => (f).toString().replace(/[ |\(\)=>]/g,'');
