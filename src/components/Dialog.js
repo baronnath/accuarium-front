@@ -16,7 +16,9 @@ const Dialog = ({ isVisible, setVisible, title, actions, scrollable = false, chi
     return (
       <Portal>
         <PaperDialog visible={isVisible} onDismiss={() => setVisible(false)} theme={theme} style={styles.container}>
-          <PaperDialog.Title>{title}</PaperDialog.Title>
+          { title && 
+            <PaperDialog.Title>{title}</PaperDialog.Title>
+          }
           { scrollable ?
             <PaperDialog.ScrollArea>
               <ScrollView contentContainerStyle={styles.scroll}>
