@@ -232,28 +232,18 @@ export default function Tank({ route, navigation }) {
                         />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
-                        <MaterialCommunityIcons style={{marginTop: 12}}
-                          name="numeric-9"
-                          color={theme.colors.lightText}
-                          size={35}
-                        />
-                        <MaterialCommunityIcons style={{marginLeft: -25, marginVertical: -8}}
-                          name="alpha-h"
-                          color={theme.colors.lightText}
-                          size={40}
-                        />
+                      <MaterialCommunityIcons
+                        name="focus-field"
+                        color={theme.colors.lightText}
+                        size={26}
+                      />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
-                        <MaterialCommunityIcons style={{marginTop: 12}}
-                          name="numeric-9"
-                          color={theme.colors.lightText}
-                          size={35}
-                        />
-                        <MaterialCommunityIcons style={{marginLeft: -25, marginVertical: -8}}
-                          name="alpha-h"
-                          color={theme.colors.lightText}
-                          size={40}
-                        />
+                      <MaterialCommunityIcons
+                        name="focus-field-horizontal"
+                        color={theme.colors.lightText}
+                        size={26}
+                      />
                     </View>
                   </View>
                   <View style={styles.rowContainer}>

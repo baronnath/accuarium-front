@@ -217,7 +217,7 @@ export default function Species({ route, navigation }) {
                 
               </View>
 
-              <Subheader style={styles.subheader}>{i18n.t('general.behaviour')}</Subheader>
+              <Subheader style={styles.subheader}>{i18n.t('general.behavior')}</Subheader>
               <Separator/>
 
               <View style={styles.paramsContainer}>

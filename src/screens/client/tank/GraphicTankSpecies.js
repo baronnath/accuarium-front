@@ -79,14 +79,14 @@ export default function GraphicTankSpecies({ species }) {
               color={theme.colors.secondary}
               size={32}
             />
-            <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}º</Paragraph>
+            <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}</Paragraph>
           </View>
       }
       { !parametersCompat.gh && 
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
-                name="grain"
+                name="focus-field"
                 color={theme.colors.secondary}
                 size={25}
               />
@@ -101,7 +101,7 @@ export default function GraphicTankSpecies({ species }) {
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
-                name="grain"
+                name="focus-field-horizontal"
                 color={theme.colors.secondary}
                 size={25}
               />

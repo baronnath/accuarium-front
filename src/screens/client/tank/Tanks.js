@@ -75,7 +75,7 @@ export default function Tanks({ navigation }) {
               </>
             :
             <View style={styles.centerContainer}>
-              <Paragraph style={styles.paragraph}>{i18n.t('tank.noTanks')}</Paragraph>
+              <Paragraph style={styles.paragraph}>{i18n.t('tank.noTank')}</Paragraph>
               <Button style={styles.callButton} onPress={() => navigation.navigate('AddTank')}>{i18n.t('tank.createTank')}</Button>
             </View>
           }
