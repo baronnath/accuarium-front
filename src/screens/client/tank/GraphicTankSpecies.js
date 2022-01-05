@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Paragraph from '../../../components/Paragraph';
 import Separator from '../../../components/Separator';
+import GroupIcon from '../../../components/GroupIcon';
 import { isEmpty } from '../../../helpers/helpers';
 import { isCompatible } from '../../../helpers/tank';
 import unitConverter from '../../../helpers/unitConverter';
@@ -123,10 +124,10 @@ export default function GraphicTankSpecies({ species }) {
 
         if(speciesCompat[speciesId].compatibility != 2){
           return <View style={styles.rowContainer}>
-            <MaterialCommunityIcons
-              name="fish"
+            <GroupIcon
+              name={species.species.group.icon}
               size={24}
-              style={styles.icons}
+              style={[styles.icons, styles.iconsComp]}
               color={theme.colors[speciesCompat[speciesId].compatibility ? 'secondary' : 'error']}
             />
             { speciesRow(species) }
@@ -173,7 +174,7 @@ export default function GraphicTankSpecies({ species }) {
     <>
       <TouchableOpacity style={styles.rowContainer}>
         <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
-        <MaterialCommunityIcons name="fish" size={24} style={styles.icons} color={theme.colors.primary}/>
+        <GroupIcon name={species.species.group.icon} size={30} style={styles.icons} color={theme.colors.primary}/>
         { speciesRow(species) }
         { isComp &&
           compatibilityButton()
@@ -241,6 +242,8 @@ const styles = StyleSheet.create({
   },
   icons: {
     width: 40,
+  },
+  iconsComp: {
     marginTop: 2,
   },
   compatibilityContainer:{
