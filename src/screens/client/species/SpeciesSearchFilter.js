@@ -293,6 +293,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                       theme={theme}
                       color={filters.type && filters.type.value == type._id ? theme.colors.primary : theme.colors.lightText}
                       size={28}
+                      key={type._id}
                     />
                   )
                 })

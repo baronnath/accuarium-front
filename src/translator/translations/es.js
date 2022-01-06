@@ -72,7 +72,6 @@ const es = {
         },
         dimensions: 'Dimensiones',
         measures: 'Medidas',
-        behavior: 'Comportamiento',
         behavior: {
           one: 'Comportamiento',
           other: 'Comportamientos',
@@ -148,6 +147,16 @@ const es = {
         kelvinAbbr: 'ºK',
         measureNotFound: 'La medida no ha sido encontrada',
         unitNotFound: 'La unidad no ha sido encontrada',
+    },
+    coexistence: {
+      one: 'Coexistencia',
+      other: 'Coexistencias',
+      indiv: 'Individual',
+      couple: 'Pareja',
+      onlyMasc: 'Solo machos',
+      onlyFem: 'Solo hembras',
+      harem: 'Harén',
+      inverseHarem: 'Harén invertido',
     },
     validation: {
         email: {

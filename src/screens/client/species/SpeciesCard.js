@@ -58,6 +58,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             style={styles.card}
             theme={theme}
             onPress={() => navigation.navigate('Species', { speciesId : species._id }) }
+            key={species._id}
             {...props}
           >
             <Card.Title
@@ -73,6 +74,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             style={styles.card}
             theme={theme}
             onPress={() => navigation.navigate('Species', { speciesId : species._id }) }
+            key={species._id}
             {...props}
           >
             <Card.Title

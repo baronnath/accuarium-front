@@ -22,6 +22,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
 import unitConverter from '../../../helpers/unitConverter';
 import { handleAlert } from '../../../helpers/global';
+import helpers from '../../../helpers/helpers';
 import { Api }from '../../../helpers/axios';
 import { theme } from '../../../theme';
 import translator from '../../../translator/translator';
@@ -66,12 +67,29 @@ export default function Species({ route, navigation }) {
   }
 
   function paramIcon(icon, size, caption, color) {
+    let icons = [];
+    if(!helpers.isArray(icon)){
+      icons.push(icon)
+    }
+    else{
+      icons = icon;
+    }
     return <View style={styles.paramContainer}>
-      <MaterialCommunityIcons style={styles.listIcon}
-        name={icon} 
-        color={color ? color : theme.colors.lightText}
-        size={size}
-      />
+      <View style={{ flexDirection: 'row' }}>
+        {
+          icons.map(ic => {
+            console.log
+            return (
+              <MaterialCommunityIcons style={styles.listIcon}
+                name={ic} 
+                color={color ? color : theme.colors.lightText}
+                size={size}
+              />
+            )
+          })
+        }
+      </View>
+      
       { caption &&
         <Paragraph style={styles.paramDesc}>
           {ucFirst(caption)}
@@ -126,7 +144,6 @@ export default function Species({ route, navigation }) {
               <View style={styles.otherNamesContainer}>
                 { species.otherNames &&
                     species.otherNames[locale].map((name, i, {length}) => {
-
                       return (
                         <Paragraph style={styles.otherName}>{name}{i + 1 === length ? '' : ', '}</Paragraph>
                       )
@@ -217,7 +234,23 @@ export default function Species({ route, navigation }) {
                 
               </View>
 
-              <Subheader style={styles.subheader}>{i18n.t('general.behavior')}</Subheader>
+              <Subheader style={styles.subheader}>{i18n.t('coexistence.one')}</Subheader>
+              <Separator/>
+
+              <View style={styles.paramsContainer}>
+
+                <View style={styles.row}>
+                  { paramIcon('fish', 24, i18n.t('coexistence.indiv'), species.coexistence.indiv ? null : theme.colors.secondary) }
+                  { paramIcon(['gender-male','gender-female'], 24, i18n.t('coexistence.couple'), species.coexistence.couple ? null : theme.colors.secondary) }
+                  { paramIcon('gender-male', 24, i18n.t('coexistence.onlyMasc'), species.coexistence.onlyMasc ? null : theme.colors.secondary) }
+                  { paramIcon('gender-female', 24, i18n.t('coexistence.onlyFem'), species.coexistence.onlyFem ? null : theme.colors.secondary) }
+                  { paramIcon(['gender-male','gender-female','gender-female'], 24, i18n.t('coexistence.harem'), species.coexistence.harem ? null : theme.colors.secondary) }
+                  { paramIcon(['gender-female','gender-male','gender-male'], 24, i18n.t('coexistence.inverseHarem'), species.coexistence.inverseHarem ? null : theme.colors.secondary) }
+                </View>
+                
+              </View>
+
+              <Subheader style={styles.subheader}>{i18n.t('general.behavior.one')}</Subheader>
               <Separator/>
 
               <View style={styles.paramsContainer}>
