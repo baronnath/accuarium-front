@@ -15,6 +15,11 @@ exports.isString = (string) => {
 	  return false;
 }
 
+// Check if array
+exports.isArray = (input) => {
+  return !!input && input.constructor === Array;
+}
+
 // Capitalize first string letter
 exports.ucFirst = (string) =>  {
 	if(exports.isString(string))
