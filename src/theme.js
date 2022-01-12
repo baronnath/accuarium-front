@@ -14,7 +14,7 @@ export const theme = {
     quaternary: '#04aad4',
     error: '#fd063c',
     notification: '#ff9300',
-    text: '#111111',
+    text: '#333333',
     lightText: '#969696',
     background: '#f6f6f6',
     placeholder: color('#000000').alpha(0.54).rgb().string(),

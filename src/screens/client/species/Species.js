@@ -15,7 +15,7 @@ import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
 import Separator from '../../../components/Separator';
 import Paragraph from '../../../components/Paragraph';
-import Tag from '../../../components/Tag';
+import GroupIcon from '../../../components/GroupIcon';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -78,11 +78,10 @@ export default function Species({ route, navigation }) {
       <View style={{ flexDirection: 'row' }}>
         {
           icons.map(ic => {
-            console.log
             return (
               <MaterialCommunityIcons style={styles.listIcon}
                 name={ic} 
-                color={color ? color : theme.colors.lightText}
+                color={color ? color : theme.colors.text}
                 size={size}
               />
             )
@@ -118,13 +117,15 @@ export default function Species({ route, navigation }) {
       <Background justify="top">
         { species ?
           <>
-            <View style={styles.topLeft}>
-              <MaterialCommunityIcons
-                name={species.type.icon} 
-                color={theme.colors.lightText}
-                size={26}
-              />
-            </View>
+            { species.group &&
+                <View style={styles.topLeft}>
+                  <GroupIcon
+                    name={species.group.icon} 
+                    color={theme.colors.lightText}
+                    size={26}
+                  />
+                </View>
+            }
 
             <Header style={styles.header}>
               {ucFirst(species.name[locale])}
@@ -132,7 +133,7 @@ export default function Species({ route, navigation }) {
                 <MaterialCommunityIcons
                   name="chevron-down"
                   size={20}
-                  color={theme.colors.lightText}
+                  color={theme.colors.text}
                 />
               </TouchableOpacity>
             </Header>
@@ -183,7 +184,7 @@ export default function Species({ route, navigation }) {
                   <View style={styles.paramContainer}>
                     <FontAwesome5 style={styles.listIcon}
                       name="temperature-high" 
-                      color={theme.colors.lightText}
+                      color={theme.colors.text}
                       size={20}
                     />
                   </View>
@@ -192,12 +193,12 @@ export default function Species({ route, navigation }) {
                     <View style={[styles.row,{alignItems: 'center',justifyContent: 'center'}]}>
                       <MaterialCommunityIcons style={[styles.listIcon,{ marginTop: 10}]}
                         name="alpha-p" 
-                        color={theme.colors.lightText}
+                        color={theme.colors.text}
                         size={30}
                       />
                       <MaterialCommunityIcons style={[styles.listIcon,{marginLeft: -20}]}
                         name="alpha-h" 
-                        color={theme.colors.lightText}
+                        color={theme.colors.text}
                         size={30}
                       />
                     </View>
@@ -240,12 +241,12 @@ export default function Species({ route, navigation }) {
               <View style={styles.paramsContainer}>
 
                 <View style={styles.row}>
-                  { paramIcon('fish', 24, i18n.t('coexistence.indiv'), species.coexistence.indiv ? null : theme.colors.secondary) }
-                  { paramIcon(['gender-male','gender-female'], 24, i18n.t('coexistence.couple'), species.coexistence.couple ? null : theme.colors.secondary) }
-                  { paramIcon('gender-male', 24, i18n.t('coexistence.onlyMasc'), species.coexistence.onlyMasc ? null : theme.colors.secondary) }
-                  { paramIcon('gender-female', 24, i18n.t('coexistence.onlyFem'), species.coexistence.onlyFem ? null : theme.colors.secondary) }
-                  { paramIcon(['gender-male','gender-female','gender-female'], 24, i18n.t('coexistence.harem'), species.coexistence.harem ? null : theme.colors.secondary) }
-                  { paramIcon(['gender-female','gender-male','gender-male'], 24, i18n.t('coexistence.inverseHarem'), species.coexistence.inverseHarem ? null : theme.colors.secondary) }
+                  { paramIcon('fish', 24, i18n.t('coexistence.indiv'), species.coexistence.indiv ? null : theme.colors.disabled) }
+                  { paramIcon(['gender-male','gender-female'], 24, i18n.t('coexistence.couple'), species.coexistence.couple ? null : theme.colors.disabled) }
+                  { paramIcon('gender-male', 24, i18n.t('coexistence.onlyMasc'), species.coexistence.onlyMasc ? null : theme.colors.disabled) }
+                  { paramIcon('gender-female', 24, i18n.t('coexistence.onlyFem'), species.coexistence.onlyFem ? null : theme.colors.disabled) }
+                  { paramIcon(['gender-male','gender-female','gender-female'], 24, i18n.t('coexistence.harem'), species.coexistence.harem ? null : theme.colors.disabled) }
+                  { paramIcon(['gender-female','gender-male','gender-male'], 24, i18n.t('coexistence.inverseHarem'), species.coexistence.inverseHarem ? null : theme.colors.disabled) }
                 </View>
                 
               </View>
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
   },
   subheader: {
     marginTop: 15,
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
     // alignSelf: 'flex-end',
     fontSize: 12,
     lineHeight: 10,
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
     // lineHeight: 10,
   },
   paramDesc: {
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
     fontSize: 10,
     lineHeight: 12,
   },
