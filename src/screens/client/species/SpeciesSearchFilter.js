@@ -139,10 +139,16 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         array = tanks;
         break;
       case 'family':
-        array = families;
+        if(filters.type){
+          array = families.filter((family) => String(family.type) == String(filters.type.value))
+        }else
+          array = families;
         break;
       case 'group':
-        array = groups;
+        if(filters.type){
+          array = groups.filter((group) => String(group.type) == String(filters.type.value))
+        }else
+          array = groups;
         break;
       case 'depth':
         array = depths;
@@ -287,7 +293,11 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                     <ToggleButton
                       icon={type.icon}
                       value={type._id}
-                      onPress={() => changeFilter('type', { displayValue: helpers.ucFirst(type.name[user.locale]), value: type._id })}
+                      onPress={() => {
+                        removeFilter('family');
+                        removeFilter('group');
+                        changeFilter('type', { displayValue: helpers.ucFirst(type.name[user.locale]), value: type._id });
+                      }}
                       status={filters.type && filters.type.value == type._id ? 'checked' : 'unchecked'}
                       style={styles.toggleButton}
                       theme={theme}
