@@ -45,13 +45,21 @@ export default function SpeciesSearch({ route, navigation }) {
   const [areFiltersVisible, setFiltersVisible] = useState(false);
   const dispatch = useDispatch();
 
-  let timeout;
+  const tagFilters = [
+    'tank',
+    'cleaning',
+    'wild',
+    'salt',
+    'type',
+    'family',
+    'depth',
+    'group',
+    'feed',
+    'behavior',
+    'color',
+  ];
 
-  const onChangeSearch = searchKey => {
-    setQuery(searchKey);
-  }
-
-  // const onChangeSort = field => {
+    // const onChangeSort = field => {
   //   let newDirection;
   //   if(sort.direction == 'ascending')
   //     newDirection = 'descending';
@@ -64,16 +72,19 @@ export default function SpeciesSearch({ route, navigation }) {
   //   });
   // }
 
-  useEffect(()=>{
-    clearTimeout(timeout);
-    setResults([]);
+  useEffect(() => {
+    // Initial filters
+    clearFilter();
+  },[]);
+
+  useEffect(() => {
     setPage(0);
     setFinalPage(false);
+    setResults([]);
+    const timer = setTimeout(() => dispatchSearch(query), 1200);
+    return () => clearTimeout(timer);
   },[query, filters]);
-  
-  useEffect(()=>{
-    timeout = setTimeout(() => dispatchSearch(query), 800);
-  },[query, page, sort, filters]);
+
 
   useEffect(()=>{
     if(main){
@@ -87,16 +98,9 @@ export default function SpeciesSearch({ route, navigation }) {
     }
   },[route])
   
-  useFocusEffect(
-    React.useCallback(() => {
-      // dispatchSearch();
-      // dispatch(tankActions.getTankByUser(user._id));
-    }, [])
-  );
-
   function dispatchSearch(searchKey){
     setLoading(true);
-
+    
     // Extract values from filters
     let filterValues = {};
     Object.entries(filters).map(([key, filter]) => {
@@ -115,13 +119,15 @@ export default function SpeciesSearch({ route, navigation }) {
 
     axios.get(backend.url + '/species/search', {params: params})
       .then(res => {
-          const newResutls = res.data.species;
-          if(!!newResutls.length)
-            setResults(newResutls);
-          else
+          const newResults = res.data.species;
+          if(!!newResults.length)
+            setResults(oldResults => [...oldResults, ...newResults]);
+          else {
             setFinalPage(true);
+          }
           setTotalResults(res.data.total);
           setLoading(false);
+          setPage(page + 1); // for next call
       })
       .catch(err => {
           handleAlert(err);  
@@ -130,7 +136,11 @@ export default function SpeciesSearch({ route, navigation }) {
   }
 
   function onScrollEnd() {
-    setPage(page + 1);
+    if (isFinalPage) {
+      return;
+    }
+    if(!isLoading)
+      dispatchSearch(query);
   }
 
   function switchGrid(speciesId){
@@ -152,7 +162,7 @@ export default function SpeciesSearch({ route, navigation }) {
           filters[key].value.push(value.value);
           filters[key].displayValue.push(value.displayValue);
 
-        return filters;
+          return filters;
         });
       }
     }
@@ -185,6 +195,8 @@ export default function SpeciesSearch({ route, navigation }) {
 
   async function clearFilter() {
     setFilters({});
+    // changeFilter('cleaning', { displayValue: i18n.t('general.cleanupCrew'), value: true });
+    // changeFilter('wild', { displayValue: i18n.t('general.wild'), value: true });
   }
 
   function getTag(key, label, id = null) {
@@ -209,19 +221,21 @@ export default function SpeciesSearch({ route, navigation }) {
         
         <Searchbar
           placeholder={i18n.t('general.search')}
-          onChangeText={searchKey => onChangeSearch(searchKey)}
+          onChangeText={searchKey => setQuery(searchKey)}
           value={query}
         />
        
         <View style={styles.tagContainer}>
           { filters &&
               Object.entries(filters).map(([key, filter]) => {
-                if(Array.isArray(filter.displayValue))
-                  return filter.displayValue.map((f) => {
-                    return getTag(key, f, filter.value)
-                  })
-                else
-                  return getTag(key, filter.displayValue)
+                if(tagFilters.includes(key) && filter.value !== false){
+                  if(Array.isArray(filter.displayValue))
+                    return filter.displayValue.map((f) => {
+                      return getTag(key, f, filter.value)
+                    })
+                  else
+                    return getTag(key, filter.displayValue)
+                }
               })
           }
         </View>
@@ -236,8 +250,8 @@ export default function SpeciesSearch({ route, navigation }) {
           renderItem={({item}) => (
               <SpeciesCard species={item} grid={grid} main={main ? main._id : null} setMain={setMain}/>
           )}
-          onEndReached={isFinalPage ? null : onScrollEnd}
-          onEndReachedThreshold={0.5}
+          onEndReached={onScrollEnd}
+          onEndReachedThreshold={0.9}
           ListFooterComponent={
             isLoading
               ? <Spinner />

@@ -70,14 +70,13 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
     return <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
       <Paragraph style={[styles.subheader, styles.leftSide]}>{i18n.t(`general.${key}.one`)}</Paragraph>
       <Paragraph fontWeight='bold' style={styles.centerSide}>{filters[key] && filters[key].displayValue}</Paragraph>
-      <TouchableOpacity style={styles.rightSide}>
+      <View style={styles.rightSide}>
         <MaterialCommunityIcons
           name="chevron-right"
           size={30}
           color={theme.colors.lightText}
-          
         />
-      </TouchableOpacity>
+      </View>
     </TouchableOpacity>;
   }
 
@@ -92,7 +91,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         style={[styles.inlineInput, styles.leftInput]}
         name={`min${keyAbbr}`}
         returnKeyType="next"
-        value={filters[`min${keyAbbr}`] && filters[`min${keyAbbr}`].value}
+        value={filters[`min${keyAbbr}`] ? filters[`min${keyAbbr}`].value : ''}
         onChangeText={(value) => changeFilter(`min${keyAbbr}`, { displayValue: getDisplay(`min${keyAbbr}`, value), value: value}) }
         // error={!!user.errors.email}
         // errorText={user.errors.email}
@@ -107,7 +106,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         style={[styles.inlineInput, styles.rightInput]}
         name={`max${keyAbbr}`}
         returnKeyType="next"
-        value={filters[`max${keyAbbr}`] && filters[`max${keyAbbr}`].value}
+        value={filters[`max${keyAbbr}`] ? filters[`max${keyAbbr}`].value : ''}
         onChangeText={(value) => changeFilter(`max${keyAbbr}`, { displayValue: getDisplay(`max${keyAbbr}`, value), value: value}) }
         // error={!!user.errors.email}
         // errorText={user.errors.email}
@@ -265,7 +264,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
             { getParamInput('Gh', ['crop-free','focus-field'], 'hardness') }
 
             <Subheader style={styles.subheader}>{i18n.t('general.kh')}</Subheader>
-            { getParamInput('Kh', ['crop-free','focus-field-horizontal'], 'hardness') }<View style={styles.row}></View>
+            { getParamInput('Kh', ['crop-free','focus-field-horizontal'], 'hardness') }
               
           </>
         :
@@ -331,12 +330,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
           <Subheader style={styles.subheader}>{i18n.t('general.size')}</Subheader>
           { getParamInput('Length', ['ruler','ruler'], 'length') }
           
-          <Subheader style={styles.subheader}>{i18n.t('general.minTank')}</Subheader>
-          { getParamInput('MinTank', ['cube-outline','cube'], 'length') }
-        </>
-
-        <Subheader style={styles.header}>{i18n.t('general.property.one')}</Subheader>
-        <>
           <View style={styles.row}>
             <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="spray-bottle"/>
             <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.cleanupCrew')}</Subheader>
@@ -357,7 +350,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
               })}
             />
           </View>
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="shaker"/>
             <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.salt')}</Subheader>
             <Switch style={styles.rightSwitch}
@@ -366,7 +359,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                 changeFilter('salt', { displayValue: i18n.t('general.salt'), value: filters.salt ? !filters.salt.value : true })
               })}
             />
-          </View>
+          </View> */}
         </>
 
       </Dialog>
