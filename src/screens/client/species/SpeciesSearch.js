@@ -242,6 +242,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
         <FlatList
           style={styles.flatList}
+          theme={theme}
           contentContainerStyle={styles.flatListContainer}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

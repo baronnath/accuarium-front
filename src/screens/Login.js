@@ -9,6 +9,7 @@ import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
+import Paragraph from '../components/Paragraph';
 import TextInput from '../components/TextInput';
 import { theme } from '../theme';
 import translator from '../translator/translator';
@@ -104,7 +105,7 @@ const Login = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('ForgotPasswordScreen')}
             >
-              <Text style={styles.label}>{i18n.t('login.forgotPassword')}</Text>
+              <Paragraph style={styles.label}>{i18n.t('login.forgotPassword')}</Paragraph>
             </TouchableOpacity>
           </View>
 
@@ -116,9 +117,9 @@ const Login = ({ navigation }) => {
           </Button>
 
           <View style={styles.row}>
-            <Text style={styles.label}>{i18n.t('login.noAccount')} </Text>
+            <Paragraph style={styles.label}>{i18n.t('login.noAccount')} </Paragraph>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={styles.link}>{i18n.t('general.signUp')}</Text>
+              <Paragraph style={styles.link}>{i18n.t('general.signUp')}</Paragraph>
             </TouchableOpacity>
           </View>
         </Background>

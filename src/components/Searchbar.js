@@ -1,23 +1,24 @@
 // src/components/Searchbar.js
 
-import { placeholder } from 'i18n-js';
-import React, { memo } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Searchbar as PaperSearchbar } from 'react-native-paper';
+import { Searchbar as PaperSearchbar, withTheme } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { placeholder } from 'i18n-js';
 import { theme } from '../theme';
 
-type Props = React.ComponentProps<typeof PaperSearchbar>;
 
-const Searchbar = ({ ...props }: Props) => (
-  <PaperSearchbar
+function Searchbar(props) {
+
+  return (
+    <PaperSearchbar
       placeholder={placeholder}
-      theme={theme}
       inputStyle={styles.input}
       style={styles.searchbar}
       {...props}
     />
-);
+  );
+}
 
 const styles = StyleSheet.create({
   searchbar: {
@@ -28,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(Searchbar);
+export default Searchbar;
