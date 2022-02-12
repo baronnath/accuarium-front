@@ -33,6 +33,7 @@ export function splitSpeciesByDepth(species) {
     surface: [],
     middle: [],
     bottom: [],
+    // everywhere: [], // default goes to middle
   };
 
   species.forEach(sp => {
