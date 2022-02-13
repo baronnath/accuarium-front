@@ -261,7 +261,7 @@ export default function AddTank({ navigation }) {
     >
       <Background>
 
-        <Slider items={sliderItems} buttonLabel={i18n.t('general.next')} />
+        <Slider items={sliderItems} button={i18n.t('general.next')} />
 
       </Background>
     </KeyboardAwareScrollView>

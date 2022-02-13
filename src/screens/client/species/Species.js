@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Platform, Image, Picker, LayoutAnimation, UIManager, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Platform, Image, Dimensions, LayoutAnimation, UIManager, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Svg, { Path } from 'react-native-svg';
@@ -16,6 +16,7 @@ import Subheader from '../../../components/Subheader';
 import Separator from '../../../components/Separator';
 import Paragraph from '../../../components/Paragraph';
 import GroupIcon from '../../../components/GroupIcon';
+import Slider from '../../../components/Slider';
 import Spinner from '../../../components/Spinner';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -54,6 +55,7 @@ export default function Species({ route, navigation }) {
     Api.getSpeciesById(speciesId)
       .then(res => {
           setSpecies(res.data.species);
+          console.log('AUH',res.data.species)
       })
       .catch(err => {
           handleAlert(err);          
@@ -110,6 +112,19 @@ export default function Species({ route, navigation }) {
       </View>
   }
 
+  function getSliderImages() {
+    species.images.map(img => {
+          console.log('HEY',`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`)
+    })
+    return species.images.map(img => {
+      return <Image
+        source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '')}/${img}` }}
+        style={styles.image}
+        defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
+      />
+    })
+  }
+
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{x:0, y:0}}
@@ -163,12 +178,10 @@ export default function Species({ route, navigation }) {
             </Svg>
             */}
 
-            <Image
-              source={{ uri: `${backend.imagesUrl}species/${species._id}.png` }}
-              style={styles.image}
-              defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
-            />
-
+            { species.images &&
+              <Slider items={getSliderImages()} height={Dimensions.get('window').width} />
+            }
+            
             <Paragraph>
              {ucFirst(species.family.name[locale])}         |         {ucFirst(species.group.name[locale])} 
             </Paragraph>

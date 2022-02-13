@@ -18,15 +18,15 @@ export const types = {
     UPDATEUSER_REQUEST: 'UPDATEUSER_REQUEST',
     UPDATEUSER_SUCCESS: 'UPDATEUSER_SUCCESS',
     UPDATEUSER_ERROR: 'UPDATEUSER_ERROR',
-	REGISTER_REQUEST: 'REGISTER_REQUEST',
-	REGISTER_SUCCESS: 'REGISTER_SUCCESS',
-	REGISTER_ERROR: 'REGISTER_ERROR',
+    REGISTER_REQUEST: 'REGISTER_REQUEST',
+    REGISTER_SUCCESS: 'REGISTER_SUCCESS',
+    REGISTER_ERROR: 'REGISTER_ERROR',
     VERIFY_REQUEST: 'VERIFY_REQUEST',
     VERIFY_SUCCESS: 'VERIFY_SUCCESS',
     VERIFY_ERROR: 'VERIFY_ERROR',
-	LOGIN_REQUEST: 'LOGIN_REQUEST',
-	LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-	LOGIN_ERROR: 'LOGIN_ERROR',
+    LOGIN_REQUEST: 'LOGIN_REQUEST',
+    LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+    LOGIN_ERROR: 'LOGIN_ERROR',
     AUTOLOGIN_REQUEST: 'AUTOLOGIN_REQUEST',
     AUTOLOGIN_SUCCESS: 'AUTOLOGIN_SUCCESS',
     AUTOLOGIN_ERROR: 'AUTOLOGIN_ERROR',
@@ -124,7 +124,6 @@ function login(user, from) {
                 // navigator.navigate('Home');
             })
             .catch(err => {
-                let message;
                 err.response
                     ? dispatch(alertActions.error(err.response.data.message, false))
                     : dispatch(alertActions.error('server.connectionError'));

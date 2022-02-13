@@ -8,20 +8,48 @@ import Button from './Button';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { theme } from '../theme';
 
-function Slider({items, buttonLabel, ...props}){
-
+function Slider({items, button = null, height = null, ...props}){
 
   const [index, setIndex] = useState(0);
   const carouselRef = useRef();
 
   const sliderWidth = Dimensions.get('window').width - (2*theme.container.padding);
 
+  const styles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      flex: 1,
+    },
+    sliderContainer: {
+      backgroundColor: theme.colors.transparent,
+    },
+    dot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      marginHorizontal: 8,
+      backgroundColor: theme.colors.lightText,
+    },
+    inactiveDot: {
+      backgroundColor: theme.colors.disabled,
+    },
+    item: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: height ? height : Dimensions.get('window').height - getStatusBarHeight() - theme.bottomNav.height - 65, // 65 is the pagination height
+      flex: 1,
+    },
+    button: {
+      marginTop: 50,
+    }
+  });
+
   function _renderItem({item,index}){
       return (
         <View style={styles.item}>
           {item}
-          {items.length != (index+1) &&
-            <Button mode="outlined" style={styles.button} onPress={() => { carouselRef.current.snapToNext() }}>{buttonLabel}</Button>
+          {button && items.length != (index+1) &&
+            <Button mode="outlined" style={styles.button} onPress={() => { carouselRef.current.snapToNext() }}>{button}</Button>
           }
         </View>
       )
@@ -50,34 +78,5 @@ function Slider({items, buttonLabel, ...props}){
       </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-  },
-	sliderContainer: {
-    backgroundColor: theme.colors.transparent,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 8,
-    backgroundColor: theme.colors.lightText,
-  },
-  inactiveDot: {
-    backgroundColor: theme.colors.disabled,
-  },
-  item: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: Dimensions.get('window').height - getStatusBarHeight() - theme.bottomNav.height - 65, // 65 is the pagination height
-    flex: 1,
-  },
-  button: {
-    marginTop: 50,
-  }
-});
 
 export default memo(Slider);
