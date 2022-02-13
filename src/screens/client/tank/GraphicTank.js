@@ -52,6 +52,7 @@ export default function GraphicTank() {
           }
           <DottedSeparator />
           <Paragraph style={styles.depth}>{i18n.t('general.middle')}</Paragraph>
+          {/* everywhere and middle */}
           { 
             !!speciesByDepth['middle'] && !!speciesByDepth['middle'].length &&
               getSpeciesDepth('middle')
