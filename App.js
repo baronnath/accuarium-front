@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
+import { DarkTheme as PaperDarkTheme, Provider as PaperProvider } from 'react-native-paper';
 import { navigationRef } from './src/helpers/navigator';
 import { linkingRef } from './src/helpers/linking';
 import { AppRegistry } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import { name as appName } from './app.json';
@@ -12,10 +12,18 @@ import store from './src/store';
 import Navigator from './src/navigator';
 import Alert from './src/components/Alert';
 import { loadAsync } from 'expo-font';
-import theme from './src/theme';
+import { theme } from './src/theme';
+
+
+const CombinedDarkTheme = {
+  ...PaperDarkTheme,
+  ...NavigationDarkTheme,
+  colors: theme.colors,
+};
 
 export default function Main() {
   const [isLoaded, setIsLoaded] = useState(false);
+  
 
   const loadFonts = async () => {
     await loadAsync({
@@ -33,8 +41,8 @@ export default function Main() {
       />
     :
       <StoreProvider store={store}>
-        <PaperProvider>
-          <NavigationContainer ref={navigationRef}  linking={linkingRef} theme={theme}>
+        <PaperProvider theme={CombinedDarkTheme}>
+          <NavigationContainer ref={navigationRef}  linking={linkingRef} theme={CombinedDarkTheme}>
             <Navigator />
             <Alert />
           </NavigationContainer>
