@@ -250,10 +250,11 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         actions={getActions(setVisible, true)}
         scrollable={true}
       >
-        <Subheader style={styles.header}>{i18n.t('general.parameter.other')}</Subheader>
         
         { paramFilterSwitch ?
           <>
+            <Subheader style={styles.header}>{i18n.t('general.parameter.other')}</Subheader>
+
             <Subheader style={styles.subheader}>{i18n.t('general.temperature')}</Subheader>
             { getParamInput('Temp', ['thermometer-low','thermometer-high'], 'temperature') }
 
@@ -269,6 +270,8 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
           </>
         :
           <>
+            <Subheader style={styles.header}>{i18n.t('general.tank.one')}</Subheader>
+
             { getRegularInput('tank') }
           </>
         }
@@ -390,7 +393,7 @@ const styles = StyleSheet.create({
   },
   subheader: {
     marginTop: 15,
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
     fontSize: 12,
     lineHeight: 10,
   },
@@ -426,7 +429,7 @@ const styles = StyleSheet.create({
   },
   leftSwitch: {
     flex: 1,
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
     textAlign: 'left',
     alignSelf: 'center',
   },
@@ -445,7 +448,7 @@ const styles = StyleSheet.create({
   },
   leftCheckbox: {
     flex: 2,
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
     textAlign: 'left',
     alignSelf: 'center',
   },

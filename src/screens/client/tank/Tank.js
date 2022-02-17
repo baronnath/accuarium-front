@@ -137,7 +137,7 @@ export default function Tank({ route, navigation }) {
     return;
   }
 
-  const menuButton = <MaterialCommunityIcons size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
 
   return (
     <KeyboardAwareScrollView
@@ -186,7 +186,7 @@ export default function Tank({ route, navigation }) {
                     {
                       !!mainSpecies &&
                         <View style={styles.rowContainer}>
-                          <MaterialCommunityIcons style={{marginTop: 0}} name="star-circle" size={20} color={theme.colors.lightText}/>
+                          <MaterialCommunityIcons style={{marginTop: 0}} name="star-circle" size={20} />
                           <Paragraph style={styles.mainSpecies}>{mainSpecies.species.name[locale]}</Paragraph>
                         </View>
                     }
@@ -215,33 +215,28 @@ export default function Tank({ route, navigation }) {
                     <View style={styles.parameters}>
                       <FontAwesome5
                         name="temperature-high"
-                        color={theme.colors.lightText}
                         size={25}
                       />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
                         <MaterialCommunityIcons style={{marginVertical: -10, marginTop: 1}}
                           name="alpha-p"
-                          color={theme.colors.lightText}
                           size={35}
                         />
                         <MaterialCommunityIcons style={{marginLeft:-25, marginVertical: -8}}
                           name="alpha-h"
-                          color={theme.colors.lightText}
                           size={40}
                         />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
                       <MaterialCommunityIcons
                         name="focus-field"
-                        color={theme.colors.lightText}
                         size={26}
                       />
                     </View>
                     <View style={[styles.rowContainer, styles.parameters]}>
                       <MaterialCommunityIcons
                         name="focus-field-horizontal"
-                        color={theme.colors.lightText}
                         size={26}
                       />
                     </View>
@@ -331,7 +326,7 @@ const styles = StyleSheet.create({
   },
   tankName: {
     fontSize: 14,
-    color: theme.colors.lightText,
+    // color: theme.colors.text,
     marginBottom: 0,
     lineHeight: 30,
   },
@@ -398,14 +393,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   modalParagraph: {
-    // color: theme.colors.lightText,
-  },
-  speciesContainer: {
-    flex: 1,
-    width: '100%',
-    borderColor: theme.colors.lightText,
-    borderLeftWidth: 3,
-    borderBottomWidth: 3,
-    borderBottomLeftRadius: 5,
+    // color: theme.colors.text,
   },
 });

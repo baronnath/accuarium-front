@@ -6,20 +6,20 @@ import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../theme';
 
 const Button = ({ mode, style, icon, children, ...props }) => {
-  let lightBackground = false;
+  let surface = false;
   if(mode === 'outlined' || mode === 'text')
-    lightBackground = true;
+    surface = true;
 
   return(
     <PaperButton
       style={[
         styles.button,
-        lightBackground && { backgroundColor: theme.colors.surface },
+        surface && { backgroundColor: theme.colors.paper },
         style,
       ]}
       labelStyle={[
         styles.label,
-        lightBackground && { color: theme.colors.primary },
+        surface && { color: theme.colors.primary },
       ]}
       mode={mode}
       icon={icon} 
