@@ -156,11 +156,6 @@ export default function GraphicTankSpecies({ species }) {
     </TouchableOpacity>
   }
 
-  function separator() {
-    if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false)
-      return <Separator style={styles.separator}/>
-  }
-
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
@@ -191,11 +186,8 @@ export default function GraphicTankSpecies({ species }) {
             speciesCompatibility()
           }
         </View>
+        <Separator style={styles.separator}/>
       </View>
-      {
-        isComp &&
-          separator()
-      }
     </>
   );
 }

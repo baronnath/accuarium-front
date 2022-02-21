@@ -25,13 +25,25 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const dispatch = useDispatch();
 
 
-  const [tankId, setTankId] = useState(main);
+  const [tankId, setTankId] = useState(defaultTank());
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
 
   // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
   const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
+
+  function defaultTank() {
+    let tankId = null;
+    if(main)
+      tankId = main;
+    else (tanks.length == 1)
+      tankId = tanks[0]._id;
+
+    console.log('HEY', tankId);
+    return tankId; 
+
+  }
   
   function addSpeciesToTank() {
     const params = {
@@ -64,7 +76,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             <Card.Title
               title={species.name[locale]}
               subtitle={ species.scientificName}
-              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { main ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
+              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
               rightStyle={styles.rightStyle}
             />
             <Card.Cover source={{ uri: speciesImage }} />

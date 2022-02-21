@@ -359,7 +359,6 @@ export default function EditTank({ route, navigation }) {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
   },
   formContainer: {
     flex: 1,
