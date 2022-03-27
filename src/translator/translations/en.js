@@ -201,6 +201,7 @@ const en = {
     },
     species: {
         otherNames: 'Other names',
+        scientificNameSynonyms: 'Scientific name synonyms',
     },
     speciesCard: {
         modal1Title: 'Which tank',

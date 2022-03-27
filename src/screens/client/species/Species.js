@@ -38,6 +38,7 @@ export default function Species({ route, navigation }) {
   const [id, setId] = useState(false);
   const [species, setSpecies] = useState(false);
   const [othernamesExpanded, setOthernamesExpanded] = useState({ expanded: false });
+  const [scientificNameSynonymsExpanded, setScientificNameSynonymsExpanded] = useState({ expanded: false });
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -55,7 +56,6 @@ export default function Species({ route, navigation }) {
     Api.getSpeciesById(speciesId)
       .then(res => {
           setSpecies(res.data.species);
-          console.log('AUH',res.data.species)
       })
       .catch(err => {
           handleAlert(err);          
@@ -63,9 +63,9 @@ export default function Species({ route, navigation }) {
 
   }, [speciesId]);
 
-  function changeLayout() { 
+  function changeLayout(value, setter) { 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setOthernamesExpanded({ expanded: !othernamesExpanded.expanded });
+    setter({ expanded: !value.expanded });
   }
 
   function paramIcon(icon, size, caption, color) {
@@ -118,7 +118,7 @@ export default function Species({ route, navigation }) {
     })
     return species.images.map(img => {
       return <Image
-        source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '')}/${img}` }}
+        source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}` }}
         style={styles.image}
         defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
       />
@@ -142,16 +142,16 @@ export default function Species({ route, navigation }) {
                 </View>
             }
 
-            <Header style={styles.header}>
-              {ucFirst(species.name[locale])}
-              <TouchableOpacity activeOpacity={0.8} onPress={changeLayout} >
+            <TouchableOpacity activeOpacity={0.8} onPress={() => changeLayout(othernamesExpanded,setOthernamesExpanded)} >
+              <Header style={styles.header}>
+                {ucFirst(species.name[locale])}
                 <MaterialCommunityIcons
                   name="chevron-down"
                   size={20}
                   color={theme.colors.text}
                 />
-              </TouchableOpacity>
-            </Header>
+              </Header>
+            </TouchableOpacity>
 
             <View style={{ height: othernamesExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
               <Paragraph style={styles.otherNamesTitle}>
@@ -159,18 +159,44 @@ export default function Species({ route, navigation }) {
               </Paragraph>
               <View style={styles.otherNamesContainer}>
                 { species.otherNames &&
-                    species.otherNames[locale].map((name, i, {length}) => {
-                      return (
-                        <Paragraph style={styles.otherName}>{name}{i + 1 === length ? '' : ', '}</Paragraph>
-                      )
-                    })
+                    <Paragraph style={styles.otherName}>
+                      { species.otherNames[locale].map((name, i, {length}) => {
+                          let comma = i + 1 === length ? '' : ', ';
+                          return ucFirst(name) + comma;
+                        })
+                      }
+                    </Paragraph>
                 }
               </View>
             </View>
 
-            <Paragraph style={styles.scientific} fontStyle="italic">
-              {species.scientificName}
-            </Paragraph>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => changeLayout(scientificNameSynonymsExpanded,setScientificNameSynonymsExpanded)} >
+              <Paragraph style={styles.scientific} fontStyle="italic">
+                {species.scientificName}
+                <MaterialCommunityIcons
+                  name="chevron-down"
+                  size={18}
+                  color={theme.colors.lightText}
+                />
+              </Paragraph>
+            </TouchableOpacity>
+
+            <View style={{ height: scientificNameSynonymsExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
+              <Paragraph style={styles.otherNamesTitle}>
+                {i18n.t('species.scientificNameSynonyms')}:
+              </Paragraph>
+              <View style={styles.otherNamesContainer}>
+                { species.scientificNameSynonyms &&
+                    <Paragraph style={styles.scientific}>
+                      { species.scientificNameSynonyms.map((name, i, {length}) => {
+                          let comma = i + 1 === length ? '' : ', ';
+                          return ucFirst(name) + comma;
+                        })
+                      }
+                    </Paragraph>
+                }
+              </View>
+            </View>
 
             {/* TO BE FIXED: remove this SVG (default no pic found)
             <Svg height="150" width="100%" viewBox="0 7.5 100 20">
@@ -313,7 +339,7 @@ const styles = StyleSheet.create({
   },
   scientific: {
     paddingTop: 0,
-    color: theme.colors.lightText,
+    // color: theme.colors.lightText,
   },
   image: {
     width: '100%',

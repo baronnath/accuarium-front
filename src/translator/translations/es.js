@@ -201,6 +201,7 @@ const es = {
     },
     species: {
         otherNames: 'Otros nombres',
+        scientificNameSynonyms: 'Nombres científicos sinónimos',
     },
     speciesCard: {
         modal1Title: '¿A qué tanque',
