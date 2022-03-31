@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
   },
   title: {
-    color: theme.colors.background,
+    color: theme.colors.text,
   },
 });
 

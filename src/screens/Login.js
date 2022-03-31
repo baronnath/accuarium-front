@@ -141,11 +141,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   label: {
-    color: theme.colors.secondary,
+    // color: theme.colors.secondary,
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: theme.colors.accent,
   },
   container: {
     flex: 1,

@@ -42,7 +42,7 @@ export default function GraphicTankSpecies({ species }) {
   function compatibilityButton() {
     if(isComp.isParameterCompatible[species.species._id] === false || isComp.isSpeciesCompatible[species.species._id] === false){
       return <TouchableOpacity activeOpacity={0.8} onPress={changeLayout} style={styles.compatibilityButtons}>
-          <Ionicons name="warning-outline" size={30} style={styles.icons} color={theme.colors.secondary}/>
+          <Ionicons name="warning-outline" size={30} style={styles.icons} color={theme.colors.warning}/>
           <MaterialCommunityIcons name="chevron-down" size={24} style={styles.icons} color={theme.colors.placeholder}/>
         </TouchableOpacity>
     }

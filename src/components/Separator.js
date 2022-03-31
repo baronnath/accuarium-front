@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex:1,
     borderTopColor: theme.colors.lightText,
     borderTopWidth: 1,
-    paddingVertical: 8,
+    marginBottom: theme.container.padding,
     width: '100%',
     alignSelf: 'center',
   },
