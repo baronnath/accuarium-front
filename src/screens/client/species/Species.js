@@ -69,13 +69,7 @@ export default function Species({ route, navigation }) {
   }
 
   function paramIcon(icon, size, caption, color) {
-    let icons = [];
-    if(!helpers.isArray(icon)){
-      icons.push(icon)
-    }
-    else{
-      icons = icon;
-    }
+    let icons = iconToArray(icon);
     return <>
       <View style={{ flexDirection: 'row' }}>
         {
@@ -97,6 +91,48 @@ export default function Species({ route, navigation }) {
         </Paragraph>
       }
     </>
+  }
+
+  function getBehaviour(icon, caption, color) {
+    let icons = iconToArray(icon);
+    return <TouchableOpacity activeOpacity={0.8} onPress={() => alert('Missing description!')} >
+      <Surface elevation={6} style={[styles.surface, styles.widthSurface, styles.row]}>
+        {
+          icons.map(ic => {
+            return (
+              <MaterialCommunityIcons style={styles.listIcon}
+                name={ic} 
+                color={color ? color : theme.colors.text}
+                size={28}
+              />
+            )
+          })
+        }
+        { caption &&
+          <Paragraph style={styles.widthSurfaceDesc}>
+            {ucFirst(caption)}
+          </Paragraph>
+        }
+        <View style={styles.rightSide}>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={30}
+            color={theme.colors.lightText}
+          />
+        </View>
+      </Surface>
+    </TouchableOpacity>
+  }
+
+  function iconToArray(icon) {
+    let icons = [];
+    if(!helpers.isArray(icon)){
+      icons.push(icon)
+    }
+    else{
+      icons = icon;
+    }
+    return icons;
   }
 
   function paramValues(values, caption) {
@@ -148,7 +184,7 @@ export default function Species({ route, navigation }) {
                   <GroupIcon
                     name={species.group.icon} 
                     color={theme.colors.lightText}
-                    size={26}
+                    size={36}
                   />
                 </View>
             }
@@ -345,6 +381,22 @@ export default function Species({ route, navigation }) {
               }
             </ScrollView>
 
+            <View style={styles.container}>
+              <Subheader style={styles.subheader}>{i18n.t('general.behavior.one')}</Subheader>
+              <Separator style={{marginBottom: 0}}/>
+                { species.wild &&
+                    getBehaviour('paw', 'wild', theme.colors.error)
+                }
+                { species.cleaning &&
+                    getBehaviour('spray-bottle', 'cleaning', theme.colors.accent)
+                }
+
+                { species.behavior.map(behavior => {
+                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : null)
+                  })
+                }
+            </View>
+
 
             
             <View style={styles.container}>
@@ -366,22 +418,9 @@ export default function Species({ route, navigation }) {
                 
               </View>
 
-              <Subheader style={styles.subheader}>{i18n.t('general.behavior.one')}</Subheader>
-              <Separator/>
+              
 
-              <View style={styles.paramsContainer}>
-
-                <View style={styles.row}>
-                  { species.cleaning &&
-                    paramIcon('spray-bottle', 24, 'cleaning')
-                  }
-
-                  { species.behavior.map(behavior => {
-                      return paramIcon(behavior.icon, 24, behavior.name[locale], behavior.warning ? theme.colors.secondary : null)
-                    })
-                  }
-                </View>                
-              </View>
+              
             
             </View>
             
@@ -448,8 +487,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     width: '100%',
-    marginVertical: 40,
-    marginHorizontal: 25,
+    marginVertical: theme.container.padding,
   },
   row: {
     flex: 1,
@@ -472,6 +510,23 @@ const styles = StyleSheet.create({
     marginRight: 0,
     padding: theme.container.padding * 1.3,
   },
+  widthSurface: {
+    flex: 1,
+    marginTop: theme.container.padding / 2,
+    marginRight: 0,
+    paddingTop: theme.container.padding / 2,
+    paddingBottom: theme.container.padding / 2,
+    alignItems:'center',
+    justifyContent: 'flex-start',
+  },
+  widthSurfaceDesc: {
+    marginLeft: theme.container.padding,
+  },
+  rightSide: {
+    flex: 1,
+    alignItems: 'flex-end',
+    alignSelf: 'center',
+  },
   waterParam: {
     textAlign: 'left',
     fontSize: 50,
@@ -482,9 +537,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   subheader: {
-    marginTop: 15,
-    // color: theme.colors.lightText,
-    // alignSelf: 'flex-end',
+    // marginTop: 15,
+    color: theme.colors.lightText,
+    alignSelf: 'flex-end',
     fontSize: 12,
     lineHeight: 10,
   },
@@ -493,7 +548,7 @@ const styles = StyleSheet.create({
   },
   paramsContainer: {
     flex:1,
-    alignItems:'center'
+    alignItems:'center',
   },
   paramContainer: {
     alignItems: 'center',
