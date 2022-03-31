@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Paragraph from '../../../components/Paragraph';
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
+import { ucFirst } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
 import translator from '../../../translator/translator';
@@ -40,7 +41,6 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     else (tanks.length == 1)
       tankId = tanks[0]._id;
 
-    console.log('HEY', tankId);
     return tankId; 
 
   }
@@ -74,9 +74,19 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             {...props}
           >
             <Card.Title
-              title={species.name[locale]}
+              title={ucFirst(species.name[locale])}
               subtitle={ species.scientificName}
-              right={(props) => !!tanks.length && <MaterialCommunityIcons {...props} name="tray-plus" onPress={() => { tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true) }} /> }
+              right={
+                (props) => !!tanks.length &&
+                  <MaterialCommunityIcons
+                    {...props}
+                    name="tray-plus"
+                    onPress={() => {
+                      tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
+                    }}
+                    color={theme.colors.accent}
+                  />
+              }
               rightStyle={styles.rightStyle}
             />
             <Card.Cover source={{ uri: speciesImage }} />
@@ -90,7 +100,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             {...props}
           >
             <Card.Title
-              title={species.name[locale]}
+              title={ucFirst(species.name[locale])}
               subtitle={ species.scientificName}
               left={(props) => <Image style={styles.listImage} source={{ uri: speciesImage }} />}
               right={
@@ -99,8 +109,9 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                     {...props}
                     name="tray-plus"
                     onPress={() => {
-                      setTankModalVisible(true);
+                      tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
                     }}
+                    color={theme.colors.accent}
                   />
               }
               rightStyle={styles.rightStyle}

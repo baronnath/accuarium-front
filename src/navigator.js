@@ -60,7 +60,7 @@ export default function Navigator() {
     return (
       <Tab.Navigator
         labeled={false}
-        activeColor={theme.colors.background}
+        activeColor={theme.colors.surface}
         inactiveColor={theme.colors.disabled}
         barStyle={styles.bottomNav}
         initialRouteName="Tanks"
