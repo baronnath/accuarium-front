@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	container:{
     maxHeight: '80%',
    	alignItems: 'center',
-		backgroundColor: theme.colors.background,
+		backgroundColor: theme.colors.surface,
 		marginHorizontal: theme.container.padding * 2,
 		padding: theme.container.padding,
 		borderRadius: 5,
