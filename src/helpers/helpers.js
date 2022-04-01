@@ -22,10 +22,15 @@ exports.isArray = (input) => {
 
 // Capitalize first string letter
 exports.ucFirst = (string) =>  {
-	if(exports.isString(string))
+  if(exports.isString(string))
     return string.charAt(0).toUpperCase() + string.slice(1);
   else
   	return string;
+}
+
+// String to camel case
+exports.toCamelCase = (string) => {
+    return _.camelCase(string);
 }
 
 // Check integer
