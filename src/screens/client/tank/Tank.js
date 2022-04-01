@@ -43,16 +43,10 @@ export default function Tank({ route, navigation }) {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalIndex, setModalIndex] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
   const [tankParameters, setTankParameters] = useState({});
   const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
-
-  const modalContent = {
-    parameters: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalParameters')}</Paragraph>,
-    freeSpace: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalFreeSpace')}</Paragraph>,
-    cleanupCrew: <Paragraph style={styles.modalParagraph}>{i18n.t('tank.modalCleanupCrew')}</Paragraph>,
-  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -207,7 +201,7 @@ export default function Tank({ route, navigation }) {
                     color={theme.colors.lightText}
                     onPress={() => {
                       setModalVisible(true);
-                      setModalIndex('parameters');
+                      setModalContent('tank.modalParameters');
                     }}
                   />
 
@@ -275,20 +269,20 @@ export default function Tank({ route, navigation }) {
                       style={[styles.rowContainer, styles.moreDetail]}
                       onPress={() => {
                         setModalVisible(true);
-                        setModalIndex('freeSpace');
+                        setModalContent('tank.modalFreeSpace');
                       }}
                     >
-                      <MaterialCommunityIcons name="water-percent" size={22} color={theme.colors.primary}/>
+                      <MaterialCommunityIcons name="water-percent" size={22} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.error }/>
                       <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.rowContainer, styles.moreDetail]}
                       onPress={() => {
                         setModalVisible(true);
-                        setModalIndex('cleanupCrew');
+                        setModalContent('tank.modalCleanupCrew');
                       }}
                     >
-                      <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.secondary }/>
+                      <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }/>
                       <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
                     </TouchableOpacity>
                   </View>
@@ -300,7 +294,7 @@ export default function Tank({ route, navigation }) {
       </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
-        { modalContent[modalIndex] }
+        <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent)}</Paragraph>
       </Modal>
       <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} />
     </KeyboardAwareScrollView>
