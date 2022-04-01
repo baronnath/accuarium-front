@@ -157,6 +157,7 @@ const es = {
       onlyFem: 'Solo hembras',
       harem: 'Harén',
       inverseHarem: 'Harén invertido',
+      mixedGroup: 'Grupo mixto',
     },
     validation: {
         email: {
@@ -286,6 +287,59 @@ const es = {
     },
     server: {
         connectionError: 'Error de conexión con el servidor',
+    },
+    behavior: {
+      schooling: {
+          description: '',
+      },
+      territorial: {
+          description: '',
+      },
+      aggressive: {
+          description: '',
+      },
+      jumper: {
+          description: '',
+      },
+      algaeEater: {
+          description: '',
+      },
+      predator: {
+          description: '',
+      },
+      quiet: {
+          description: '',
+      },
+      sandDigger: {
+          description: '',
+      },
+      snailEater: {
+          description: '',
+      },
+      clumsy: {
+          description: '',
+      },
+      lively: {
+          description: '',
+      },
+      nocturnal: {
+          description: '',
+      },
+      peaceful: {
+          description: '',
+      },
+      shy: {
+          description: '',
+      },
+      gregarious: {
+          description: 'This is a description',
+      },
+      lover: {
+          description: '',
+      },
+      plantEater: {
+          description: '',
+      },
     },
 }
 

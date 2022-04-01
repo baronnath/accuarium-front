@@ -157,6 +157,7 @@ const en = {
       onlyFem: 'Only females',
       harem: 'Harem',
       inverseHarem: 'Inverse harem',
+      mixedGroup: 'Mixed group',
     },
     validation: {
         email: {
@@ -245,7 +246,7 @@ const en = {
         khBetween: 'This species kH should be between %{min} - %{max}',
         modalParameters: 'The optimal parameters are based on the tank main species. Make sure the rest of living species parameters are as close as possible to these numbers.',
         modalFreeSpace: 'Each fish requires some liters for itself. An overcrowded aquarium can cause many issues.',
-        cleanupCrew: 'This percent is a vague guide based in the tank volume. The cleanup crew should be at least the 15% of the livestock in your tank.',
+        modalCleanupCrew: 'This percent is a vague guide based in the tank volume. The cleanup crew should be at least the 15% of the livestock in your tank.',
         warning: {
             title: 'Warning',
             subtitle: 'Please select the main species',
@@ -286,6 +287,59 @@ const en = {
     },
     server: {
         connectionError: 'Server connection error',
+    },
+    behavior: {
+      schooling: {
+          description: '',
+      },
+      territorial: {
+          description: '',
+      },
+      aggressive: {
+          description: '',
+      },
+      jumper: {
+          description: '',
+      },
+      algaeEater: {
+          description: '',
+      },
+      predator: {
+          description: '',
+      },
+      quiet: {
+          description: '',
+      },
+      sandDigger: {
+          description: '',
+      },
+      snailEater: {
+          description: '',
+      },
+      clumsy: {
+          description: '',
+      },
+      lively: {
+          description: '',
+      },
+      nocturnal: {
+          description: '',
+      },
+      peaceful: {
+          description: '',
+      },
+      shy: {
+          description: '',
+      },
+      gregarious: {
+          description: 'This is a description',
+      },
+      lover: {
+          description: '',
+      },
+      plantEater: {
+          description: '',
+      },
     },
 }
 
