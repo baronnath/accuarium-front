@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
-import { ucFirst } from '../../../helpers/helpers';
+import { ucFirst, toCamelCase } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Dimensions, LayoutAnimation, UIManager, TouchableOpacity, ScrollView } from 'react-native';
 import { Card } from 'react-native-paper';
@@ -19,6 +19,7 @@ import Paragraph from '../../../components/Paragraph';
 import GroupIcon from '../../../components/GroupIcon';
 import Slider from '../../../components/Slider';
 import Spinner from '../../../components/Spinner';
+import Modal from '../../../components/Modal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
 import unitConverter from '../../../helpers/unitConverter';
@@ -39,6 +40,9 @@ export default function Species({ route, navigation }) {
   const [species, setSpecies] = useState(false);
   const [othernamesExpanded, setOthernamesExpanded] = useState({ expanded: false });
   const [scientificNameSynonymsExpanded, setScientificNameSynonymsExpanded] = useState({ expanded: false });
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+
 
   if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -68,7 +72,7 @@ export default function Species({ route, navigation }) {
     setter({ expanded: !value.expanded });
   }
 
-  function paramIcon(icon, size, caption, color) {
+  function paramIcon(icon, size, color) {
     let icons = iconToArray(icon);
     return <>
       <View style={{ flexDirection: 'row' }}>
@@ -84,19 +88,23 @@ export default function Species({ route, navigation }) {
           })
         }
       </View>
-      
-      { caption &&
-        <Paragraph style={styles.paramDesc}>
-          {ucFirst(caption)}
-        </Paragraph>
-      }
     </>
   }
 
   function getBehaviour(icon, caption, color) {
     let icons = iconToArray(icon);
-    return <TouchableOpacity activeOpacity={0.8} onPress={() => alert('Missing description!')} >
-      <Surface elevation={6} style={[styles.surface, styles.widthSurface, styles.row]}>
+    return <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        setModalVisible(true);
+        setModalContent(`behavior.${toCamelCase(caption)}.description`);
+      }}
+    >
+      <Surface
+        elevation={color == theme.colors.warning ? 1 : 6}
+        style={[styles.surface, styles.widthSurface, styles.row]}
+        color={caption == 'cleaning' ? theme.colors.quaternary : null}
+      >
         {
           icons.map(ic => {
             return (
@@ -122,6 +130,40 @@ export default function Species({ route, navigation }) {
         </View>
       </Surface>
     </TouchableOpacity>
+  }
+
+  function getCoexistance(coexist) {
+    return(
+      <Surface
+        style={[styles.surface,{alignItems: 'center'}]}
+        color={species.coexistence[coexist] ? theme.colors.quaternary : theme.colors.disabled}
+      >
+        { paramIcon(getCoexistanceIcon(coexist), 30, species.coexistence[coexist] ? theme.colors.primary : theme.colors.disabled) }
+        <Paragraph style={{ color: species.coexistence[coexist] ? theme.colors.primary : theme.colors.disabled }}>
+          { ucFirst(i18n.t(`coexistence.${coexist}`)) }
+        </Paragraph>
+      </Surface>
+    );
+  }                  
+
+
+  function getCoexistanceIcon(coexist) {
+    switch(coexist){
+      case 'couple':
+        return ['gender-male','gender-female'];
+      case 'onlyMasc':
+        return ['gender-male'];
+      case 'onlyFem':
+        return ['gender-female'];
+      case 'harem':
+        return ['gender-male','gender-female','gender-female'];
+      case 'inverseHarem':
+        return ['gender-female','gender-male','gender-male'];
+      case 'mixedGroup':
+        return ['arrow-collapse-all'];
+      default:
+        return ['fish'];
+    }
   }
 
   function iconToArray(icon) {
@@ -266,6 +308,7 @@ export default function Species({ route, navigation }) {
               <Surface
                 elevation={12}
                 style={styles.surface}
+                color={theme.colors.quaternary}
               >
                   <View style={[styles.paramsContainer,{ marginBottom: theme.container.padding }]}>
                     {paramIcon('ruler',30)}
@@ -278,7 +321,7 @@ export default function Species({ route, navigation }) {
               </Surface>
               <View style={{flex:1,justifyContent:'flex-start'}}>
                 <Surface style={[styles.surface, styles.smallSurface, { marginBottom: theme.container.padding / 2 }]}>
-                    {paramIcon(getFeedIcon(species.feed.en),28)}
+                    {paramIcon(getFeedIcon(species.feed.name.en),28)}
                     {paramValues(ucFirst(species.feed.name[locale]),i18n.t('general.feed.one'))}
                 </Surface>
                 <Surface style={[styles.surface, styles.smallSurface, { marginTop: 0 }]}>
@@ -291,6 +334,7 @@ export default function Species({ route, navigation }) {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
+              style={{ marginBottom: theme.container.padding }}
               // pagingEnabled={true}
             >
               {/* Temperature */}
@@ -316,7 +360,7 @@ export default function Species({ route, navigation }) {
                 </View>
               </Surface>
               {/* pH */}
-              <Surface elevation={6} style={styles.surface}>
+              <Surface elevation={1} style={styles.surface}>
                 <View>
                   <Subheader style={styles.waterParam}>
                     pH
@@ -381,47 +425,42 @@ export default function Species({ route, navigation }) {
               }
             </ScrollView>
 
+            {/* Behavior */}
             <View style={styles.container}>
               <Subheader style={styles.subheader}>{i18n.t('general.behavior.one')}</Subheader>
-              <Separator style={{marginBottom: 0}}/>
+              <Separator style={styles.separator}/>
+                {/* Wild */}
                 { species.wild &&
                     getBehaviour('paw', 'wild', theme.colors.error)
                 }
+                {/* Cleaning */}
                 { species.cleaning &&
                     getBehaviour('spray-bottle', 'cleaning', theme.colors.accent)
                 }
 
                 { species.behavior.map(behavior => {
-                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : null)
+                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : theme.colors.primary)
                   })
                 }
             </View>
 
-
-            
+            {/* Coexistance */}
             <View style={styles.container}>
-              
-              
               <Subheader style={styles.subheader}>{i18n.t('coexistence.one')}</Subheader>
-              <Separator/>
+              <Separator style={styles.separator}/>
 
-              <View style={styles.paramsContainer}>
-
-                <View style={styles.row}>
-                  { paramIcon('fish', 24, i18n.t('coexistence.indiv'), species.coexistence.indiv ? null : theme.colors.disabled) }
-                  { paramIcon(['gender-male','gender-female'], 24, i18n.t('coexistence.couple'), species.coexistence.couple ? null : theme.colors.disabled) }
-                  { paramIcon('gender-male', 24, i18n.t('coexistence.onlyMasc'), species.coexistence.onlyMasc ? null : theme.colors.disabled) }
-                  { paramIcon('gender-female', 24, i18n.t('coexistence.onlyFem'), species.coexistence.onlyFem ? null : theme.colors.disabled) }
-                  { paramIcon(['gender-male','gender-female','gender-female'], 24, i18n.t('coexistence.harem'), species.coexistence.harem ? null : theme.colors.disabled) }
-                  { paramIcon(['gender-female','gender-male','gender-male'], 24, i18n.t('coexistence.inverseHarem'), species.coexistence.inverseHarem ? null : theme.colors.disabled) }
-                </View>
-                
-              </View>
-
-              
-
-              
-            
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                { getCoexistance('indiv', 'fish') }
+                { getCoexistance('couple', 'fish') }
+                { getCoexistance('onlyFem', 'fish') }
+                { getCoexistance('onlyMasc', 'fish') }
+                { getCoexistance('mixedGroup', 'fish') }
+                { getCoexistance('harem', 'fish') }
+                { getCoexistance('inverseHarem', 'fish') }
+              </ScrollView>
             </View>
             
           </>
@@ -430,6 +469,10 @@ export default function Species({ route, navigation }) {
         }
 
       </Background>
+      <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
+        <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
+        <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent)}</Paragraph>
+      </Modal>
     </KeyboardAwareScrollView>
   );
 }
@@ -475,19 +518,10 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     marginBottom: 2,
   },
-  // card: {
-  //   marginVertical: 25,
-  //   flex: 1,
-  //   alignSelf: 'stretch',
-  // },
-  // cardContent: {
-  //   marginVertical: 10,
-  //   marginHorizontal: 25,
-  // },
   container:{
     flex: 1,
     width: '100%',
-    marginVertical: theme.container.padding,
+    marginBottom: theme.container.padding,
   },
   row: {
     flex: 1,
@@ -538,8 +572,8 @@ const styles = StyleSheet.create({
   },
   subheader: {
     // marginTop: 15,
-    color: theme.colors.lightText,
-    alignSelf: 'flex-end',
+    color: theme.colors.primary,
+    // alignSelf: 'flex-end',
     fontSize: 12,
     lineHeight: 10,
   },
@@ -562,9 +596,12 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   paramDesc: {
-    // color: theme.colors.lightText,
+    color: theme.colors.primary,
     fontSize: 9,
     lineHeight: 9,
     // textAlign: 'left',
   },
+  separator: {
+    marginBottom: 0,
+  }
 });
