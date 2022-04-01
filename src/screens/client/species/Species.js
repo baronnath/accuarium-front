@@ -60,6 +60,7 @@ export default function Species({ route, navigation }) {
     Api.getSpeciesById(speciesId)
       .then(res => {
           setSpecies(res.data.species);
+          console.log(res.data.species.scientificNameSynonyms.length )
       })
       .catch(err => {
           handleAlert(err);          
@@ -103,7 +104,6 @@ export default function Species({ route, navigation }) {
       <Surface
         elevation={color == theme.colors.warning ? 1 : 6}
         style={[styles.surface, styles.widthSurface, styles.row]}
-        color={caption == 'cleaning' ? theme.colors.quaternary : null}
       >
         {
           icons.map(ic => {
@@ -231,14 +231,16 @@ export default function Species({ route, navigation }) {
                 </View>
             }
 
-            <TouchableOpacity activeOpacity={0.8} onPress={() => changeLayout(othernamesExpanded,setOthernamesExpanded)} >
+            <TouchableOpacity activeOpacity={0.8} onPress={() => { if(!!species.otherNames[locale].length) changeLayout(othernamesExpanded,setOthernamesExpanded) }} >
               <Header style={styles.header}>
-                {ucFirst(species.name[locale])}
-                <MaterialCommunityIcons
-                  name="chevron-down"
-                  size={20}
-                  color={theme.colors.text}
-                />
+                { ucFirst(species.name[locale]) }
+                { !!species.otherNames[locale].length &&
+                  <MaterialCommunityIcons
+                    name="chevron-down"
+                    size={20}
+                    color={theme.colors.text}
+                  />
+                }
               </Header>
             </TouchableOpacity>
 
@@ -259,14 +261,16 @@ export default function Species({ route, navigation }) {
               </View>
             </View>
 
-            <TouchableOpacity activeOpacity={0.8} onPress={() => changeLayout(scientificNameSynonymsExpanded,setScientificNameSynonymsExpanded)} >
+            <TouchableOpacity activeOpacity={0.8} onPress={() => { if(!!species.scientificNameSynonyms.length) changeLayout(scientificNameSynonymsExpanded,setScientificNameSynonymsExpanded) }} >
               <Paragraph style={styles.scientific} fontStyle="italic">
-                {species.scientificName}
-                <MaterialCommunityIcons
-                  name="chevron-down"
-                  size={15}
-                  color={theme.colors.lightText}
-                />
+                { species.scientificName }
+                { !!species.scientificNameSynonyms.length &&
+                  <MaterialCommunityIcons
+                    name="chevron-down"
+                    size={15}
+                    color={theme.colors.lightText}
+                  />
+                }
               </Paragraph>
             </TouchableOpacity>
 

@@ -144,7 +144,7 @@ export default function Tank({ route, navigation }) {
             :
 
             !isEmpty(tank) &&
-              <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+              <View style={styles.container} showsVerticalScrollIndicator={false}>
                 <Header></Header>
                 <OptionsMenu>
                   <Menu
@@ -288,7 +288,7 @@ export default function Tank({ route, navigation }) {
                   </View>
                 }
 
-              </ScrollView>
+              </View>
         }
        
       </Background>
@@ -307,16 +307,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  scrollContainer: {
+  container: {
     flex: 1,
     width: '100%',
     flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 30,
-  },
-  scroll: {
-    alignSelf: 'stretch',
+    paddingBottom: theme.container.padding * 2,
   },
   tankName: {
     fontSize: 14,
@@ -343,9 +340,9 @@ const styles = StyleSheet.create({
     flex:1,
     position: 'relative',
     width: '80%',
-    marginVertical: 40,
-    padding: 15,
-    paddingTop: 30,
+    marginVertical: theme.container.padding * 2,
+    padding: theme.container.padding ,
+    paddingTop: theme.container.padding * 2,
     borderColor: theme.colors.disabled,
     borderWidth: 1,
     borderRadius: 5,
@@ -364,11 +361,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     right: 5,
-  },
-  image: {
-    marginVertical: 10,
-    width: '100%',
-    height: 200,
   },
   titleContainer: {
     flex:3,

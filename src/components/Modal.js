@@ -24,6 +24,8 @@ const styles = StyleSheet.create({
 		marginHorizontal: theme.container.padding * 2,
 		padding: theme.container.padding,
 		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: theme.colors.terciary,
 	},
 });
 

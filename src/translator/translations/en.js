@@ -289,6 +289,12 @@ const en = {
         connectionError: 'Server connection error',
     },
     behavior: {
+      cleaning: {
+          description: '',
+      },
+      wild: {
+          description: '',
+      },
       schooling: {
           description: '',
       },

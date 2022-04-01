@@ -289,6 +289,12 @@ const es = {
         connectionError: 'Error de conexión con el servidor',
     },
     behavior: {
+      cleaning: {
+          description: '',
+      },
+      wild: {
+          description: '',
+      },
       schooling: {
           description: '',
       },
