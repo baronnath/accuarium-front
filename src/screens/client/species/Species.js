@@ -92,6 +92,39 @@ export default function Species({ route, navigation }) {
     </>
   }
 
+  function getParam(param, measure, icon) {
+    if(species.parameters[param].min && species.parameters[param].max) {
+      return(
+        <Surface elevation={9} style={styles.surface}>
+          <View>
+            { icon }
+            <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
+              { param != 'ph' ?
+                  <>
+                    <Subheader style={styles.waterParam}>
+                      {`${unitConverter(species.parameters[param].min, measure, 'base', user.units[measure])} - ${unitConverter(species.parameters[param].max, measure, 'base', user.units[measure])}`}
+                    </Subheader>
+                    <Subheader style={styles.waterParamUnit}>
+                      {i18n.t(`measures.${user.units[measure]}Abbr`)}
+                    </Subheader>
+                  </>
+                :
+                  <>
+                    <Subheader style={styles.waterParam}>
+                      {`${species.parameters[param].min} - ${species.parameters[param].max}`}
+                    </Subheader>
+                  </>
+              }
+            </View>
+            <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
+              {ucFirst(i18n.t(`general.${measure}`))}
+            </Paragraph>
+          </View>
+        </Surface>
+      );
+    }
+  }
+
   function getBehaviour(icon, caption, color) {
     let icons = iconToArray(icon);
     return <TouchableOpacity
@@ -339,94 +372,18 @@ export default function Species({ route, navigation }) {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               style={{ marginBottom: theme.container.padding }}
+              showsHorizontalScrollIndicator={true}
+              persistentScrollbar={true}
               // pagingEnabled={true}
             >
               {/* Temperature */}
-              <Surface elevation={12} style={styles.surface}>
-                <View>
-                  <MaterialCommunityIcons
-                    name="thermometer-low" 
-                    color={theme.colors.text}
-                    size={50}
-                    style={{marginLeft:'-10%'}}
-                  />
-                  <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
-                    <Subheader style={styles.waterParam}>
-                      {`${unitConverter(species.parameters.temperature.min, 'temperature', 'base', user.units.temperature)} - ${unitConverter(species.parameters.temperature.max, 'temperature', 'base', user.units.temperature)}`}
-                    </Subheader>
-                    <Subheader style={styles.waterParamUnit}>
-                      {i18n.t(`measures.${user.units.temperature}Abbr`)}
-                    </Subheader>
-                  </View>
-                  <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
-                    {ucFirst(i18n.t('general.temperature'))}
-                  </Paragraph>
-                </View>
-              </Surface>
+              { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={50} style={{marginLeft:'-10%'}} />) }
               {/* pH */}
-              <Surface elevation={1} style={styles.surface}>
-                <View>
-                  <Subheader style={styles.waterParam}>
-                    pH
-                  </Subheader>
-                  <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
-                    <Subheader style={styles.waterParam}>
-                      {`${species.parameters.ph.min} - ${species.parameters.ph.max}`}
-                    </Subheader>
-                  </View>
-                  <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
-                    {ucFirst(i18n.t('general.ph'))}
-                  </Paragraph>
-                </View>
-              </Surface>
+              { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
               {/* gh */}
-              { species.parameters.gh.min != 0 && species.parameters.gh.max != 0 &&
-                <Surface elevation={6} style={styles.surface}>
-                  <View>
-                    <MaterialCommunityIcons
-                      name="focus-field" 
-                      color={theme.colors.text}
-                      size={50}
-                      style={{marginLeft:'-3%'}}
-                    />
-                    <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
-                      <Subheader style={styles.waterParam}>
-                        {`${unitConverter(species.parameters.gh.min, 'hardness', 'base', user.units.hardness)} - ${unitConverter(species.parameters.gh.max, 'hardness', 'base', user.units.hardness)}`}
-                      </Subheader>
-                      <Subheader style={styles.waterParamUnit}>
-                        {i18n.t(`measures.${user.units.hardness}Abbr`)}
-                      </Subheader>
-                    </View>
-                    <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
-                      {ucFirst(i18n.t('general.hardness'))}
-                    </Paragraph>
-                  </View>
-                </Surface>
-              }
+              { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
               {/* kh */}
-              { species.parameters.kh.min && species.parameters.kh.max &&
-                <Surface elevation={6} style={styles.surface}>
-                  <View>
-                    <MaterialCommunityIcons
-                      name="focus-field-horizontal" 
-                      color={theme.colors.text}
-                      size={50}
-                      style={{marginLeft:'-3%'}}
-                    />
-                    <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
-                      <Subheader style={styles.waterParam}>
-                        {`${unitConverter(species.parameters.kh.min, 'hardness', 'base', user.units.hardness)} - ${unitConverter(species.parameters.kh.max, 'hardness', 'base', user.units.hardness)}`}
-                      </Subheader>
-                      <Subheader style={styles.waterParamUnit}>
-                        {i18n.t(`measures.${user.units.hardness}Abbr`)}
-                      </Subheader>
-                    </View>
-                    <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
-                      {ucFirst(i18n.t('general.hardness'))}
-                    </Paragraph>
-                  </View>
-                </Surface>
-              }
+              { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
             </ScrollView>
 
             {/* Behavior */}
@@ -439,11 +396,11 @@ export default function Species({ route, navigation }) {
                 }
                 {/* Cleaning */}
                 { species.cleaning &&
-                    getBehaviour('spray-bottle', 'cleaning', theme.colors.accent)
+                    getBehaviour('spray-bottle', 'cleaning')
                 }
 
                 { species.behavior.map(behavior => {
-                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : theme.colors.primary)
+                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : theme.colors.text)
                   })
                 }
             </View>
@@ -572,7 +529,7 @@ const styles = StyleSheet.create({
   },
   waterParamUnit: {
     textAlign: 'left',
-    marginLeft: 5,
+    marginLeft: 8,
   },
   subheader: {
     // marginTop: 15,
