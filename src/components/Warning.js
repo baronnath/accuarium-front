@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
       flex: 1,
       alignSelf: 'stretch',
       marginTop: 25,
-      backgroundColor: theme.colors.secondary,
+      backgroundColor: theme.colors.warning,
       borderRadius: 5,
   },
   title: {

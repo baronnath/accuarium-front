@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: theme.colors.primary,
     fontFamily: 'Aleo_700Bold',
-    paddingVertical: 14,
-    marginTop: 20,
+    paddingVertical: theme.container.padding / 2,
+    marginTop: theme.container.padding,
   },
 });
 
