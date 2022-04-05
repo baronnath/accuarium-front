@@ -21,11 +21,12 @@ export function calculateVolume(dimensions) {
 }
 
 export function findMainSpecies(species) {
-  const main = species.find(sp => sp.main);
-  if(main)
-    return main;
-  else
-    return null;
+  let main = null;
+
+  if(species.length)
+    main = species.find(sp => sp.main);
+
+  return main;
 }
 
 export function splitSpeciesByDepth(species) {
