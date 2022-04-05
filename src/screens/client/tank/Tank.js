@@ -16,7 +16,10 @@ import Paragraph from '../../../components/Paragraph';
 import Warning from '../../../components/Warning';
 import GraphicTank from './GraphicTank';
 import Modal from '../../../components/Modal';
+import Surface from '../../../components/Surface';
+import Subheader from '../../../components/Subheader';
 import Spinner from '../../../components/Spinner';
+import GroupIcon from '../../../components/GroupIcon';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as tankActions } from '../../../ducks/tank';
@@ -45,9 +48,12 @@ export default function Tank({ route, navigation }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [tankParameters, setTankParameters] = useState({});
+  const [image, setImage] = useState(null);
   const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
 
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
+  
   useFocusEffect(
     React.useCallback(() => {
       setId(tankId);
@@ -55,25 +61,28 @@ export default function Tank({ route, navigation }) {
   );
 
   useEffect(() => {
-    dispatch(tankActions.getTank(tankId));
-  }, [tankId]);
+    if(id){
+      dispatch(tankActions.getTank(id));
+      getImage(`${backend.imagesUrl}tank/${id}.jpg`);
+    }
+  }, [id]);
 
   useEffect(() => {
 
-    if(!isEmpty(tank)){
+    if(!isEmpty(tank) && tank._id.toString() == id){ // Cheack that tank data in redux has been updated with last id received
 
-      if(tank.species){
+      if(tank.species.length){
         setMainSpecies(findMainSpecies(tank.species));
       }
 
       // Convert to user unit measure
       try{
-        if(tank.width)
-          tank.width = unitConverter(tank.width, 'length', 'base', user.units.length);
-        if(tank.height)
-          tank.height = unitConverter(tank.height, 'length', 'base', user.units.length);
-        if(tank.length)
-          tank.length = unitConverter(tank.length, 'length', 'base', user.units.length);
+        if(tank.measures.width)
+          tank.measures.width = unitConverter(tank.measures.width, 'length', 'base', user.units.length);
+        if(tank.measures.height)
+          tank.measures.height = unitConverter(tank.measures.height, 'length', 'base', user.units.length);
+        if(tank.measures.length)
+          tank.measures.length = unitConverter(tank.measures.length, 'length', 'base', user.units.length);
         if(tank.liters)
           tank.liters = unitConverter(tank.liters, 'volume', 'base', user.units.volume);
       }catch(err){
@@ -81,7 +90,7 @@ export default function Tank({ route, navigation }) {
         return;
       }
 
-      if(tank.liters){
+      if(!!tank.liters){
         calculateDetails();
       }
 
@@ -91,6 +100,7 @@ export default function Tank({ route, navigation }) {
 
   useEffect(() => {
     if(mainSpecies){
+      console.log('ENTRA',mainSpecies);
       dispatch(tankActions.getCompatibility(tankId));
 
       // Set tank parameters from main species
@@ -131,7 +141,70 @@ export default function Tank({ route, navigation }) {
     return;
   }
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
+  function getMeasure(measure) {
+    return(
+      <View style={styles.measure}>
+        <Paragraph fontWeight='bold'>
+          { tank.measures[measure] ?
+              `${tank.measures[measure]} ${user.units.length}`
+            :
+              '?'
+          }
+        </Paragraph>
+        <Paragraph style={styles.paramDesc}>
+          {ucFirst(i18n.t(`general.${measure}`))}
+        </Paragraph>
+      </View>
+    )
+  }
+
+  function getImage(uri) {
+    axios.get(uri)
+      .then(res => {
+         if (res.status != 404) {
+          setImage(
+            <Image
+              source={{ uri: uri }}
+              style={styles.image}
+              defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
+            />
+          );
+        }
+      });
+  }
+
+  function getParam(param, measure, icon) {
+    if(tankParameters[param]) {
+      return(
+        <Surface elevation={9} style={[styles.surface, {flex:1}]}>
+          <View>
+            { icon }
+            <View style={styles.row}>
+              { param != 'ph' ?
+                  <>
+                    <Subheader style={styles.waterParam}>
+                      { `${unitConverter(tankParameters[param], measure, 'base', user.units[measure])}` }
+                    </Subheader>
+                    <Subheader style={styles.waterParamUnit}>
+                      { i18n.t(`measures.${user.units[measure]}Abbr`) }
+                    </Subheader>
+                  </>
+                :
+                  <>
+                    <Subheader style={styles.waterParam}>
+                      { tankParameters[param] }
+                    </Subheader>
+                  </>
+              }
+            </View>
+            <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
+              {ucFirst(i18n.t(`general.${measure}`))}
+            </Paragraph>
+          </View>
+        </Surface>
+      );
+    }
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -145,7 +218,10 @@ export default function Tank({ route, navigation }) {
 
             !isEmpty(tank) &&
               <View style={styles.container} showsVerticalScrollIndicator={false}>
-                <Header></Header>
+                <Header style={styles.topLeft}>
+                  <MaterialCommunityIcons name="fishbowl-outline" size={36} color={theme.colors.lightText} /> {tank.name}
+                </Header>
+                
                 <OptionsMenu>
                   <Menu
                     visible={isMenuVisible}
@@ -169,6 +245,111 @@ export default function Tank({ route, navigation }) {
                     />
                   </Menu>
                 </OptionsMenu>
+
+                {/* Volumen, measures and main species */}
+                <View style={styles.row}>
+                  <View style={{flex:1,justifyContent:'flex-start'}}>
+                    {/* Volume */}
+                    <Surface
+                      elevation={12}
+                      style={styles.surface}
+                      color={theme.colors.quaternary}
+                    >
+                      <View style={styles.row}>
+                        { tank.liters ?
+                            <>
+                              <Subheader style={styles.param}>{tank.liters}</Subheader>
+                              <Subheader style={styles.paramUnit}>{i18n.t('measures.' + user.units.volume + 'Abbr')}</Subheader>
+                            </>
+                          :
+                            <Subheader>?</Subheader>
+                        }
+                      </View>
+                      <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
+                        { ucFirst(i18n.t('general.volume')) }
+                      </Paragraph>
+                    </Surface>
+                    {/* Main species */}
+                    <TouchableOpacity
+                      onPress={() => { !!mainSpecies && navigation.navigate('Species', { screen: 'Species', params: { speciesId : mainSpecies.species._id } }) } }
+                    >
+                      <Surface
+                        elevation={12}
+                        style={styles.surface}
+                        color={!!mainSpecies ? null : theme.colors.warning}
+                      >
+                        { !!mainSpecies ?
+                            <>
+                              <GroupIcon
+                                name={mainSpecies.species.group.icon} 
+                                color={theme.colors.accent}
+                                size={30}
+                              />
+                              <Subheader style={styles.mainSpecies}>{ ucFirst(mainSpecies.species.name[locale]) }</Subheader>
+                              <Paragraph style={[styles.paramDesc, {textAlign: 'left'}]}>
+                                <MaterialCommunityIcons name="star-circle" size={8} /> {ucFirst(i18n.t('general.mainSpecies.one'))}
+                              </Paragraph>
+                            </>
+                          :
+                              <Paragraph>
+                                <MaterialCommunityIcons name="alert-circle-outline" size={18} color={theme.colors.background} /> {i18n.t('tank.warning.subtitle')}
+                              </Paragraph>
+
+                        }
+                      </Surface>
+                   </TouchableOpacity>
+                  </View>
+                  {/* Measures */}
+                  <Surface style={[styles.surface, styles.smallSurface]}>
+                    { getMeasure('length') }
+                    { getMeasure('height') }
+                    { getMeasure('width') }
+                  </Surface>
+                </View>
+
+                {/* Image */}
+                { image && image }
+
+                {/* Params */}
+                <View style={styles.row}>
+                  {/* Temperature */}
+                  { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={18} style={{marginLeft:'-10%'}} />) }
+                  {/* pH */}
+                  { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
+                  {/* gh */}
+                  { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
+                  {/* kh */}
+                  { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
+                </View>
+
+                {/* Free space and cleaning */}
+                { tank.liters &&
+                  <View style={styles.row}>
+                    <TouchableOpacity
+                      style={{flex:1}}
+                      onPress={() => {
+                        setModalVisible(true);
+                        setModalContent('tank.modalFreeSpace');
+                      }}
+                    >
+                      <Surface style={{margin:0, marginRight: theme.container.padding / 4}} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.warning }>
+                        <Paragraph><MaterialCommunityIcons name="water-percent" size={22} /> { freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
+                      </Surface>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{flex:1}}
+                      onPress={() => {
+                        setModalVisible(true);
+                        setModalContent('tank.modalCleanupCrew');
+                      }}
+                    >
+                      <Surface style={{margin:0, marginLeft: theme.container.padding / 4}} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }>
+                       <Paragraph><MaterialCommunityIcons name="spray-bottle" size={20} /> { cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
+                      </Surface>
+                    </TouchableOpacity>
+                  </View>
+                }
+
                 <View style={styles.rowContainer}>
                   <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
                   <View style={styles.titleContainer}>
@@ -315,6 +496,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: theme.container.padding * 2,
   },
+  topLeft: {
+    alignSelf: 'stretch',
+    justifyContent: 'flex-start',
+    fontSize: 22,
+    color: theme.colors.lightText,
+  },
+  row: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    // justifyContent: 'space-between',
+    width: '100%',
+    marginVertical: 5,
+  },
+  surface: {
+    margin: 0,
+    marginBottom: theme.container.padding / 2,
+    marginRight: theme.container.padding / 2,
+    // justifyContent: 'flex-start',
+    paddingTop: theme.container.padding * 1.3,
+  },
+  smallSurface: {
+    alignItems:'center',
+    marginRight: 0,
+    padding: theme.container.padding,
+    marginBottom: theme.container.padding / 2,
+
+  },
   tankName: {
     fontSize: 14,
     // color: theme.colors.text,
@@ -328,9 +538,8 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   mainSpecies: {
-    marginLeft: 5,
+    alignSelf: 'flex-start',
     marginVertical: 0,
-    lineHeight: 20,
   },
   rowContainer: {
     flexDirection:'row',
@@ -347,6 +556,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
+  param: {
+    textAlign: 'left',
+    fontSize: 50,
+    lineHeight: 50,
+  },
+  paramUnit: {
+    textAlign: 'left',
+    marginLeft: 8,
+  },
+  paramDesc: {
+    color: theme.colors.primary,
+    fontSize: 9,
+    lineHeight: 9,
+    // textAlign: 'left',
+  },
+  measure: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   parameters: {
     flex:1,
     alignItems: 'center',
@@ -356,6 +584,24 @@ const styles = StyleSheet.create({
     flex:1,
     fontSize: 12
     ,
+  },
+  image: {
+    flex:1,
+    width: '100%',
+    resizeMode: "stretch",
+    aspectRatio: 1.25,
+    marginBottom: theme.container.padding / 2,
+  },
+  waterParam: {
+    textAlign: 'left',
+    fontSize: 12,
+    lineHeight: 12,
+  },
+  waterParamUnit: {
+    fontSize: 6,
+    lineHeight: 6,
+    textAlign: 'left',
+    marginLeft: 2,
   },
   infoIcon: {
     position: 'absolute',
