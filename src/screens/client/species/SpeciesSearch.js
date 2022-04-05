@@ -6,6 +6,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
 import { View, StyleSheet, FlatList } from 'react-native';
+import { Menu } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
@@ -41,6 +43,7 @@ export default function SpeciesSearch({ route, navigation }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
+  const [isMenuVisible, setMenuVisible] = useState(false);
   const [filters, setFilters] = useState({});
   const [areFiltersVisible, setFiltersVisible] = useState(false);
   const dispatch = useDispatch();
@@ -58,6 +61,8 @@ export default function SpeciesSearch({ route, navigation }) {
     'behavior',
     'color',
   ];
+
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
 
     // const onChangeSort = field => {
   //   let newDirection;
@@ -143,6 +148,9 @@ export default function SpeciesSearch({ route, navigation }) {
       dispatchSearch(query);
   }
 
+  function openMenu () { setMenuVisible(true); }
+  function closeMenu () { setMenuVisible(false); }
+
   function switchGrid(speciesId){
     setGrid(!grid);
   }
@@ -204,20 +212,45 @@ export default function SpeciesSearch({ route, navigation }) {
   }
 
   return (
-    <>
+    <KeyboardAwareScrollView
+      resetScrollToCoords={{x:0, y:0}}
+    >
       <Background justify="top">
+      <View style={styles.container} showsVerticalScrollIndicator={false}>
+
         <Header>
           {i18n.t('speciesSearch.title')}
         </Header>
+
+        <OptionsMenu>
+          <Menu
+            visible={isMenuVisible}
+            onDismiss={closeMenu}
+            anchor={menuButton}>
+            <Menu.Item
+              icon="filter-outline"
+              onPress={ () => {
+                setMenuVisible(false),
+                setFiltersVisible(true)
+              }}
+              title={i18n.t('general.filter')}
+            />
+            <Menu.Item
+              icon="view-list-outline"
+              onPress={ () => {
+                setMenuVisible(false),
+                switchGrid()
+              }}
+              title={i18n.t('general.viewList')}
+            />
+          </Menu>
+        </OptionsMenu>
 
         { main && 
          <FixedAlert visible={true} onClose={() => setMain(null)} type="warning" wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
         }
 
-        <OptionsMenu>
-          <MaterialCommunityIcons size={26} color={theme.colors.lightText} name="filter-outline" onPress={() => setFiltersVisible(true)} />
-          <MaterialCommunityIcons size={26} color={theme.colors.lightText} name={ grid ? 'view-list-outline' : 'view-grid-outline' } onPress={() => {switchGrid()}} />
-        </OptionsMenu>
+        
         
         <Searchbar
           placeholder={i18n.t('general.search')}
@@ -260,16 +293,24 @@ export default function SpeciesSearch({ route, navigation }) {
                 <Paragraph style={{paddingVertical: 20}}>{i18n.t('speciesSearch.noMore')}</Paragraph> 
           }
           ListFooterComponentStyle={styles.listFootStyle}
-        />  
+        />
+      </View>  
       </Background>
       
       <SpeciesSearchFilter visible={areFiltersVisible} setVisible={setFiltersVisible} filters={filters} changeFilter={changeFilter} removeFilter={removeFilter} clearFilter={clearFilter} />
-    </>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: theme.container.padding * 2,
   },
   subheader: {
     lineHeight: 18,
