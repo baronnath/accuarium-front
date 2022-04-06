@@ -51,7 +51,7 @@ export default function GraphicTankSpecies({ species }) {
   function parameterCompatibility() {
     return <>
       <Paragraph style={styles.caption}>{i18n.t('tank.notCompatibleParameters')}</Paragraph>
-      { !parametersCompat.temperature && 
+      { parametersCompat.temperature === false && 
         <View style={styles.rowContainer}>
           <View style={styles.compatIcon}>
             <MaterialCommunityIcons
@@ -66,7 +66,7 @@ export default function GraphicTankSpecies({ species }) {
           </Paragraph>
         </View>
       }
-      { !parametersCompat.ph && 
+      { parametersCompat.ph === false && 
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons style={{marginTop: 1}}
@@ -83,7 +83,7 @@ export default function GraphicTankSpecies({ species }) {
             <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}</Paragraph>
           </View>
       }
-      { !parametersCompat.gh && 
+      { parametersCompat.gh === false && 
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
@@ -98,7 +98,7 @@ export default function GraphicTankSpecies({ species }) {
             </Paragraph>
           </View>
       }
-      { !parametersCompat.kh && 
+      { parametersCompat.kh === false && 
           <View style={styles.rowContainer}>
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons

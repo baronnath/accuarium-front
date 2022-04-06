@@ -60,7 +60,7 @@ export function isCompatible(compatibility){
   Object.keys(compatibility.parameters).map(function(speciesId) {
     isParamCompat[speciesId] = true;
     Object.keys(compatibility.parameters[speciesId]).map(function(parameter) {
-      if(!compatibility.parameters[speciesId][parameter]){
+      if(compatibility.parameters[speciesId][parameter] === false){
         isCompat = false;
         isParamCompat[speciesId] = false;
       }
@@ -71,7 +71,7 @@ export function isCompatible(compatibility){
   Object.keys(compatibility.species).map(function(speciesIdA) {
     isSpeciesCompat[speciesIdA] = true
     Object.keys(compatibility.species[speciesIdA]).map(function(speciesIdB) {
-      if(compatibility.species[speciesIdA][speciesIdB].compatibility != 2){
+      if(compatibility.species[speciesIdA][speciesIdB].compatibility != 1){
         isCompat = false;
         isSpeciesCompat[speciesIdA] = false;
       }
