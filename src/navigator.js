@@ -47,7 +47,7 @@ export default function Navigator() {
   const dispatch = useDispatch();
 
   const screenOptions = {
-    headerShown: false
+    headerShown: false,
   };
 
   // useLayoutEffect(async() => {
@@ -63,21 +63,21 @@ export default function Navigator() {
         activeColor={theme.colors.surface}
         inactiveColor={theme.colors.disabled}
         barStyle={styles.bottomNav}
-        initialRouteName="Tanks"
+        initialRouteName="Species"
       >
-        <Tab.Screen name="Species"
-          component={SpeciesNav}
-          options={{
-            tabBarIcon: ({ color, size  }) => (
-              <Icon name="fish" color={color} size={26} />
-            ),
-          }}
-        />
         <Tab.Screen name="Tanks"
           component={TankNav}
           options={{
             tabBarIcon: ({ color, size }) => (
               <Icon name="fishbowl" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen name="Species"
+          component={SpeciesNav}
+          options={{
+            tabBarIcon: ({ color, size  }) => (
+              <Icon name="fish" color={color} size={26} />
             ),
           }}
         />
