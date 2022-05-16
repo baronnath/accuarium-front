@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -20,6 +20,7 @@ import SpeciesSearchFilter from './SpeciesSearchFilter';
 import Tag from '../../../components/Tag';
 import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
+import { actions as tankActions } from '../../../ducks/tank';
 import { ucFirst } from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
@@ -33,7 +34,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
   const [isLoading, setLoading] = useState(true);
   const [grid, setGrid] = useState(true);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(null);
   const [isFinalPage, setFinalPage] = useState(false);
   const [sort, setSort] = useState({
     field: 'name',
@@ -62,7 +63,7 @@ export default function SpeciesSearch({ route, navigation }) {
     'color',
   ];
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
 
     // const onChangeSort = field => {
   //   let newDirection;
@@ -78,18 +79,29 @@ export default function SpeciesSearch({ route, navigation }) {
   // }
 
   useEffect(() => {
-    // Initial filters
-    clearFilter();
+    clearFilter(); // Initial filters
+    dispatchSearch(); // Initial search dispatch
   },[]);
 
-  useEffect(() => {
-    setPage(0);
-    setFinalPage(false);
-    setResults([]);
-    const timer = setTimeout(() => dispatchSearch(query), 1200);
-    return () => clearTimeout(timer);
-  },[query, filters]);
+  useEffect(() =>{
+    dispatch(tankActions.getTankByUser(user._id));
+  },[user]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      resetSearch();
+    }, 1000);
+    return () => clearTimeout(timer);
+  },[query]);
+
+  // Search is triggered when page state is state
+  useEffect(() => {
+    if (isFinalPage) {
+      return;
+    }
+    if(page !== null && !isLoading) // check the useEffect dependency to avoid been triggeren on mount (on screen load)
+      dispatchSearch();
+  },[page]);
 
   useEffect(()=>{
     if(main){
@@ -101,9 +113,16 @@ export default function SpeciesSearch({ route, navigation }) {
     if(route.params){
       setMain(route.params.setMainSpeciesTank);
     }
-  },[route])
+  },[route]);
+
+  // useEffect with page as dependency won't trigger if same value is assigned to page: value is assigned as integer to force the state change
+  function resetSearch() {
+    setFinalPage(false);
+    setResults([]);
+    setPage(page === 0 ? '0' : 0);
+  }
   
-  function dispatchSearch(searchKey){
+  function dispatchSearch(){
     setLoading(true);
     
     // Extract values from filters
@@ -132,7 +151,6 @@ export default function SpeciesSearch({ route, navigation }) {
           }
           setTotalResults(res.data.total);
           setLoading(false);
-          setPage(page + 1); // for next call
       })
       .catch(err => {
           handleAlert(err);  
@@ -141,11 +159,7 @@ export default function SpeciesSearch({ route, navigation }) {
   }
 
   function onScrollEnd() {
-    if (isFinalPage) {
-      return;
-    }
-    if(!isLoading)
-      dispatchSearch(query);
+    setPage(parseInt(page) + 1); // for next call
   }
 
   function openMenu () { setMenuVisible(true); }
@@ -208,49 +222,49 @@ export default function SpeciesSearch({ route, navigation }) {
   }
 
   function getTag(key, label, id = null) {
-    return <Tag onClose={() => removeFilter(key, id)}>{label}</Tag>;
+    // return <Tag onClose={() => removeFilter(key, id)}>{label}</Tag>;
+    return <Tag>{label}</Tag>;
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
+    <>
       <Background justify="top">
-      <View style={styles.container} showsVerticalScrollIndicator={false}>
 
-        <Header>
-          {i18n.t('speciesSearch.title')}
-        </Header>
+        <View style={styles.container}>
+          <Header>
+            {i18n.t('speciesSearch.title')}
+          </Header>
 
-        <OptionsMenu>
-          <Menu
-            visible={isMenuVisible}
-            onDismiss={closeMenu}
-            anchor={menuButton}>
-            <Menu.Item
-              icon="filter-outline"
-              onPress={ () => {
-                setMenuVisible(false),
-                setFiltersVisible(true)
-              }}
-              title={i18n.t('general.filter')}
-            />
-            <Menu.Item
-              icon="view-list-outline"
-              onPress={ () => {
-                setMenuVisible(false),
-                switchGrid()
-              }}
-              title={i18n.t('general.viewList')}
-            />
-          </Menu>
-        </OptionsMenu>
+          <OptionsMenu>
+            <Menu
+              visible={isMenuVisible}
+              onDismiss={closeMenu}
+              anchor={menuButton}
+              style={styles.topRight}
+            >
+              <Menu.Item
+                icon="filter-outline"
+                onPress={ () => {
+                  setMenuVisible(false),
+                  setFiltersVisible(true)
+                }}
+                title={i18n.t('general.filter.other')}
+              />
+              <Menu.Item
+                icon={grid ? "view-list-outline" : "view-grid-outline"}
+                onPress={ () => {
+                  setMenuVisible(false),
+                  switchGrid()
+                }}
+                title={i18n.t(grid ? 'general.listView' : 'general.gridView')}
+              />
+            </Menu>
+          </OptionsMenu>
+        </View>
 
         { main && 
          <FixedAlert visible={true} onClose={() => setMain(null)} type="warning" wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
         }
-
-        
         
         <Searchbar
           placeholder={i18n.t('general.search')}
@@ -258,7 +272,15 @@ export default function SpeciesSearch({ route, navigation }) {
           value={query}
         />
        
-        <View style={styles.tagContainer}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{ marginBottom: theme.container.padding }}
+          showsHorizontalScrollIndicator={true}
+          persistentScrollbar={true}
+          // pagingEnabled={true}
+        >
+        {/*<View style={styles.tagContainer}>*/}
           { filters &&
               Object.entries(filters).map(([key, filter]) => {
                 if(tagFilters.includes(key) && filter.value !== false){
@@ -271,7 +293,7 @@ export default function SpeciesSearch({ route, navigation }) {
                 }
               })
           }
-        </View>
+        </ScrollView>
 
         <FlatList
           style={styles.flatList}
@@ -285,7 +307,7 @@ export default function SpeciesSearch({ route, navigation }) {
               <SpeciesCard species={item} grid={grid} main={main ? main._id : null} setMain={setMain}/>
           )}
           onEndReached={onScrollEnd}
-          onEndReachedThreshold={0.9}
+          onEndReachedThreshold={0.2}
           ListFooterComponent={
             isLoading
               ? <Spinner />
@@ -294,28 +316,32 @@ export default function SpeciesSearch({ route, navigation }) {
           }
           ListFooterComponentStyle={styles.listFootStyle}
         />
-      </View>  
       </Background>
       
-      <SpeciesSearchFilter visible={areFiltersVisible} setVisible={setFiltersVisible} filters={filters} changeFilter={changeFilter} removeFilter={removeFilter} clearFilter={clearFilter} />
-    </KeyboardAwareScrollView>
+      <SpeciesSearchFilter visible={areFiltersVisible} setVisible={setFiltersVisible} filters={filters} changeFilter={changeFilter} removeFilter={removeFilter} clearFilter={clearFilter} resetSearch={resetSearch}/>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
-  },
-  container: {
     flex: 1,
     width: '100%',
+    flexDirection:'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: theme.container.padding * 2,
+  },
+  container: {
+    width: '100%',
+    alignItems: 'center',
   },
   subheader: {
     lineHeight: 18,
     marginBottom: 20,
     color: theme.colors.primary,
+  },
+  topRight: {
+    justifyContent: 'flex-end',
   },
   wrapperAlert: {
     marginBottom: 20,
@@ -335,20 +361,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   listFootStyle: {
-    paddingBottom: 150,
-
-  },
-  flatContainer: {
-    marginTop: 20,
-    width: '100%',
-  },
-  columnFirst: {
-      flex: 4,
-  },
-  columnSecond: {
-    flex: 4,
-  },
-  columnActions: {
-    flex: 2,
+    paddingBottom: theme.container.padding * 2,
   },
 });

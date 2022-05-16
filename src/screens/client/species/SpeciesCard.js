@@ -38,7 +38,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     let tankId = null;
     if(main)
       tankId = main;
-    else (tanks.length == 1)
+    else if(tanks.length == 1)
       tankId = tanks[0]._id;
 
     return tankId; 

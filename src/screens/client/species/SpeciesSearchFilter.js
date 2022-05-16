@@ -21,7 +21,7 @@ import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 
-export default function SpeciesSearchFilter({ visible, setVisible, filters, changeFilter, removeFilter, clearFilter }) {
+export default function SpeciesSearchFilter({ visible, setVisible, filters, changeFilter, removeFilter, clearFilter, resetSearch }) {
 
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
@@ -122,9 +122,27 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
     return (
       <>
         { clear && 
-          <Button onPress={() => clearFilter()} mode="text" style={styles.inlineButton}>{i18n.t('general.clear')}</Button>
+          <Button
+            onPress={() => {
+              resetSearch();
+              clearFilter();
+            }}
+            mode="text"
+            style={styles.inlineButton}
+          >
+            {i18n.t('general.clear')}
+          </Button>
         }
-        <Button onPress={() => onClose(false)} mode="text" style={styles.inlineButton}>{i18n.t('general.ok')}</Button>
+        <Button
+          onPress={() => {
+            onClose(false);
+            resetSearch();
+          }}
+          mode="text"
+          style={styles.inlineButton}
+        >
+          {i18n.t('general.ok')}
+        </Button>
       </>
     );
   }
@@ -214,7 +232,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                     }}
                   >
                     { item.icon ? 
-                        <MaterialCommunityIcons size={24} style={styles.leftCheckbox} name={item.icon}/>
+                        <MaterialCommunityIcons size={24} style={styles.leftCheckbox} name={item.icon} color={theme.colors.text}/>
                       : !!item.hex && item.hex != '-1' ?
                         <View style={[styles.circle, {backgroundColor: `#${item.hex}`}]} />
                       :

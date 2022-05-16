@@ -109,6 +109,12 @@ const en = {
         },
         salt: 'Saltwater',
         wild: 'Wild',
+        filter: {
+          one: 'Filter',
+          other: 'Filters',
+        },
+        listView: 'List view',
+        gridView: 'Grid view',
     },
     measures: {
         ppm: 'Parts per million',

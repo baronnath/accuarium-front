@@ -109,6 +109,12 @@ const es = {
         },
         salt: 'Agua salada',
         wild: 'Salvaje',
+        filter: {
+          one: 'Filtro',
+          other: 'Filtros',
+        },
+        listView: 'Listado',
+        gridView: 'Cuadrícula',
     },
     measures: {
         ppm: 'Partes por millón',
