@@ -20,6 +20,7 @@ import Surface from '../../../components/Surface';
 import Subheader from '../../../components/Subheader';
 import Spinner from '../../../components/Spinner';
 import GroupIcon from '../../../components/GroupIcon';
+import Separator from '../../../components/Separator';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { actions as tankActions } from '../../../ducks/tank';
@@ -52,7 +53,7 @@ export default function Tank({ route, navigation }) {
   const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" onPress={() => {openMenu()}} />;
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
   
   useFocusEffect(
     React.useCallback(() => {
@@ -226,7 +227,8 @@ export default function Tank({ route, navigation }) {
                   <Menu
                     visible={isMenuVisible}
                     onDismiss={closeMenu}
-                    anchor={menuButton}>
+                    anchor={menuButton}
+                  >
                     <Menu.Item
                       icon="square-edit-outline"
                       onPress={ () => {
@@ -311,6 +313,8 @@ export default function Tank({ route, navigation }) {
                 { image && image }
 
                 {/* Params */}
+                <Subheader style={styles.subheader}>{i18n.t('general.waterChemistry')}</Subheader>
+                <Separator style={styles.separator}/>
                 <View style={styles.row}>
                   {/* Temperature */}
                   { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={18} style={{marginLeft:'-10%'}} />) }
@@ -332,7 +336,7 @@ export default function Tank({ route, navigation }) {
                         setModalContent('tank.modalFreeSpace');
                       }}
                     >
-                      <Surface style={{margin:0, marginRight: theme.container.padding / 4}} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.warning }>
+                      <Surface style={[styles.smallSurface,{margin:0, marginRight: theme.container.padding / 4}]} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.warning }>
                         <Paragraph><MaterialCommunityIcons name="water-percent" size={22} /> { freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
                       </Surface>
                     </TouchableOpacity>
@@ -343,105 +347,17 @@ export default function Tank({ route, navigation }) {
                         setModalContent('tank.modalCleanupCrew');
                       }}
                     >
-                      <Surface style={{margin:0, marginLeft: theme.container.padding / 4}} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }>
+                      <Surface style={[styles.smallSurface,{margin:0}]} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }>
                        <Paragraph><MaterialCommunityIcons name="spray-bottle" size={20} /> { cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
                       </Surface>
                     </TouchableOpacity>
                   </View>
                 }
 
-                <View style={styles.rowContainer}>
-                  <MaterialCommunityIcons style={{flex:1}} name="fishbowl-outline" size={80} color={theme.colors.primary} />
-                  <View style={styles.titleContainer}>
-                    <Paragraph style={styles.tankName} fontWeight="light" >{ucFirst(tank.name)}</Paragraph>
-                    {
-                      tank.liters &&
-                      <Header style={styles.volume}>{tank.liters} {i18n.t('measures.' + user.units.volume + 'Abbr')} </Header>
-                    }
-                    {
-                      !!mainSpecies &&
-                        <View style={styles.rowContainer}>
-                          <MaterialCommunityIcons style={{marginTop: 0}} name="star-circle" size={20} />
-                          <Paragraph style={styles.mainSpecies}>{mainSpecies.species.name[locale]}</Paragraph>
-                        </View>
-                    }
-                  </View>
-                </View>
-                {
-                  // No main species selected warning
-                  !!tank.species.length && !mainSpecies &&
-                    <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
-                      left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
-                      onPress={() => navigation.navigate('EditTank', { tankId : tank._id }) }
-                    />
-                }     
-                <View style={styles.box}>
-                  <MaterialCommunityIcons style={styles.infoIcon}
-                    name="information-outline"
-                    size={20}
-                    color={theme.colors.lightText}
-                    onPress={() => {
-                      setModalVisible(true);
-                      setModalContent('tank.modalParameters');
-                    }}
-                  />
-
-                  <View style={styles.rowContainer}>
-                    <View style={styles.parameters}>
-                      <FontAwesome5
-                        name="temperature-high"
-                        size={25}
-                      />
-                    </View>
-                    <View style={[styles.rowContainer, styles.parameters]}>
-                        <MaterialCommunityIcons style={{marginVertical: -10, marginTop: 1}}
-                          name="alpha-p"
-                          size={35}
-                        />
-                        <MaterialCommunityIcons style={{marginLeft:-25, marginVertical: -8}}
-                          name="alpha-h"
-                          size={40}
-                        />
-                    </View>
-                    <View style={[styles.rowContainer, styles.parameters]}>
-                      <MaterialCommunityIcons
-                        name="focus-field"
-                        size={26}
-                      />
-                    </View>
-                    <View style={[styles.rowContainer, styles.parameters]}>
-                      <MaterialCommunityIcons
-                        name="focus-field-horizontal"
-                        size={26}
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.rowContainer}>
-                    <Paragraph style={styles.values} fontWeight="bold">
-                      { !isEmpty(tankParameters) && !!tankParameters.temperature &&
-                          tankParameters.temperature + i18n.t('measures.' + user.units.temperature + 'Abbr')
-                      }
-                    </Paragraph>
-                    <Paragraph style={styles.values} fontWeight="bold">
-                      { !isEmpty(tankParameters) && !!tankParameters.ph &&
-                          tankParameters.ph
-                      }
-                    </Paragraph>
-                    <Paragraph style={styles.values} fontWeight="bold">
-                      { !isEmpty(tankParameters) && !!tankParameters.gh &&
-                          tankParameters.gh + ' ' + i18n.t('measures.' + user.units.hardness + 'Abbr')
-                      }
-                    </Paragraph>
-                    <Paragraph style={styles.values} fontWeight="bold">
-                    { !isEmpty(tankParameters) && !!tankParameters.kh &&
-                          tankParameters.kh + ' ' + i18n.t('measures.' + user.units.hardness + 'Abbr')
-                      }
-                    </Paragraph>
-                  </View>
-                </View>
-
+                
+                {/* Graphic tank with species split by swimming area */}
                 { tank.species &&
-                  <GraphicTank />
+                  <GraphicTank style={{marginTop: 5}}/>
                 }
                 
                 { tank.liters &&
@@ -492,8 +408,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     flexDirection:'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     paddingBottom: theme.container.padding * 2,
   },
   topLeft: {
@@ -521,7 +437,8 @@ const styles = StyleSheet.create({
   smallSurface: {
     alignItems:'center',
     marginRight: 0,
-    padding: theme.container.padding,
+    paddingHorizontal: theme.container.padding * .25,
+    paddingVertical: theme.container.padding,
     marginBottom: theme.container.padding / 2,
 
   },
@@ -530,6 +447,13 @@ const styles = StyleSheet.create({
     // color: theme.colors.text,
     marginBottom: 0,
     lineHeight: 30,
+  },
+  subheader: {
+    // marginTop: 15,
+    color: theme.colors.primary,
+    // alignSelf: 'flex-end',
+    fontSize: 12,
+    lineHeight: 10,
   },
   volume: {
     fontSize: 48,
@@ -626,5 +550,8 @@ const styles = StyleSheet.create({
   },
   modalParagraph: {
     // color: theme.colors.text,
+  },
+  separator: {
+    marginBottom: 5,
   },
 });
