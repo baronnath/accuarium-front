@@ -1,14 +1,16 @@
 // src/screens/species/SpeciesCard.js
 
 import React, { useState, useEffect, memo } from 'react';
-import { StyleSheet, Image, View, ScrollView } from 'react-native';
+import { StyleSheet, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { backend } from '../../../../app.json';
 import Paragraph from '../../../components/Paragraph';
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
+import Toggler from '../../../components/Toggler';
 import { ucFirst } from '../../../helpers/helpers';
 import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
@@ -30,9 +32,6 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
-
-  // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
-  const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
 
   function defaultTank() {
     let tankId = null;
@@ -66,57 +65,112 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     <>
       {
         grid ?
-          <Card
-            style={styles.card}
+          <TouchableOpacity
+            style={styles.gridCard}
             theme={theme}
             onPress={() => navigation.navigate('Species', { speciesId : species._id }) }
             key={species._id}
-            {...props}
           >
-            <Card.Title
-              title={ucFirst(species.name[locale])}
-              subtitle={ species.scientificName}
-              right={
-                (props) => !!tanks.length &&
+            { species.images && species.images.length &&
+              <View style={styles.gridImageContainer}>
+                <Image
+                  style={styles.gridImage}
+                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${species.images[0]}` }}
+                />
+              </View>
+            }
+
+            <View style={styles.gridActions}>
+
+              <View style={{flex:5}}>
+                {/* Species name and other names */}
+                <Toggler
+                  title={species.name[locale]}
+                  description={i18n.t('species.otherNames')}
+                  list={species.otherNames[locale]}
+                  size="big"
+                  titleStyle={{color: theme.colors.text}}
+                  listStyle={{textAlign: 'left'}}
+                />
+                {/* Species scientific name and synonyms */}
+                <Toggler
+                  title={species.scientificName}
+                  description={i18n.t('species.scientificNameSynonyms')}
+                  list={species.scientificNameSynonyms}
+                  size="small"
+                  listStyle={{textAlign: 'left'}}
+                />
+              </View>
+
+              <View style={{flex: 2, justifyContent: 'center'}}>
+                <Button
+                  onPress={() => {
+                    tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
+                  }}
+                  mode="text"
+                >
                   <MaterialCommunityIcons
-                    {...props}
                     name="tray-plus"
-                    onPress={() => {
-                      tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
-                    }}
-                    color={theme.colors.accent}
+                    size={30}
+                    // color={theme.colors.accent}
                   />
-              }
-              rightStyle={styles.rightStyle}
-            />
-            <Card.Cover source={{ uri: speciesImage }} />
-          </Card>
+                </Button>
+              </View>
+
+            </View>
+
+          </TouchableOpacity>
         :
-           <Card
-            style={styles.card}
+          <TouchableOpacity
+            style={styles.listCard}
             theme={theme}
             onPress={() => navigation.navigate('Species', { speciesId : species._id }) }
             key={species._id}
-            {...props}
           >
-            <Card.Title
-              title={ucFirst(species.name[locale])}
-              subtitle={ species.scientificName}
-              left={(props) => <Image style={styles.listImage} source={{ uri: speciesImage }} />}
-              right={
-                (props) => !!tanks.length &&
-                  <MaterialCommunityIcons
-                    {...props}
-                    name="tray-plus"
-                    onPress={() => {
-                      tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
-                    }}
-                    color={theme.colors.accent}
-                  />
+            
+            <View style={[styles.listImageContainer,{flex:3}]}>
+              { species.images && species.images.length &&
+                <Image
+                  style={styles.listImage}
+                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${species.images[0]}` }}
+                />
               }
-              rightStyle={styles.rightStyle}
-            />
-          </Card>
+            </View>
+            <View style={{flex:6}}>
+              {/* Species name and other names */}
+              <Toggler
+                title={species.name[locale]}
+                description={i18n.t('species.otherNames')}
+                list={species.otherNames[locale]}
+                size="big"
+                titleStyle={{color: theme.colors.text}}
+                listStyle={{textAlign: 'left'}}
+              />
+              {/* Species scientific name and synonyms */}
+              <Toggler
+                title={species.scientificName}
+                description={i18n.t('species.scientificNameSynonyms')}
+                list={species.scientificNameSynonyms}
+                size="small"
+                listStyle={{textAlign: 'left'}}
+              />
+            </View>
+
+            <View style={{flex: 2, justifyContent: 'center'}}>
+              <Button
+                onPress={() => {
+                  tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
+                }}
+                mode="text"
+              >
+                <MaterialCommunityIcons
+                  name="tray-plus"
+                  size={30}
+                  // color={theme.colors.accent}
+                />
+              </Button>
+            </View>
+          </TouchableOpacity>
       }
       {
         !!tanks.length &&
@@ -170,18 +224,41 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
 };
 
 const styles = StyleSheet.create({
-  card:{
-    width: '100%',
-    marginBottom: 20,
+  gridCard: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    marginBottom: theme.container.padding * 2,
+  },
+  gridActions: {
+    flex: 1,
+    flexDirection: 'row',
   },
   rightStyle: {
     paddingRight: 15,
   },
-  listImage: {
-    width: 50,
-    height: 50,
+  gridImageContainer: {
+    flexDirection: 'row',
+  },
+  gridImage: {
+    resizeMode: 'contain',
+    flex: 1,
+    aspectRatio: 1.75,
     borderRadius: 5,
-    marginLeft: -5,
+  },
+  listCard: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    marginBottom: theme.container.padding / 2,
+    flexDirection: 'row',
+  },
+  listImageContainer: {
+    justifyContent: 'center'
+  },
+  listImage: {
+    width: '80%',
+    height: 70,
+    borderRadius: 5,
+    resizeMode: 'contain',
   },
   modalTitle: {
     fontSize: 30,
@@ -196,12 +273,6 @@ const styles = StyleSheet.create({
   listContainer: {
     width: '100%',
     maxHeight: '70%',
-  },
-  list:{
-    paddingVertical: 10,
-  },
-  listRight: {
-    alignSelf: 'center',
   },
   quantityContainer: {
     flexDirection: 'row',

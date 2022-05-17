@@ -313,8 +313,7 @@ export default function Tank({ route, navigation }) {
                 { image && image }
 
                 {/* Params */}
-                <Subheader style={styles.subheader}>{i18n.t('general.waterChemistry')}</Subheader>
-                <Separator style={styles.separator}/>
+                <Subheader>{i18n.t('general.waterChemistry')}</Subheader>
                 <View style={styles.row}>
                   {/* Temperature */}
                   { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={18} style={{marginLeft:'-10%'}} />) }
@@ -356,6 +355,7 @@ export default function Tank({ route, navigation }) {
 
                 
                 {/* Graphic tank with species split by swimming area */}
+                <Subheader>{i18n.t('general.graphicTank')}</Subheader>
                 { tank.species &&
                   <GraphicTank style={{marginTop: 5}}/>
                 }
@@ -447,13 +447,6 @@ const styles = StyleSheet.create({
     // color: theme.colors.text,
     marginBottom: 0,
     lineHeight: 30,
-  },
-  subheader: {
-    // marginTop: 15,
-    color: theme.colors.primary,
-    // alignSelf: 'flex-end',
-    fontSize: 12,
-    lineHeight: 10,
   },
   volume: {
     fontSize: 48,
@@ -550,8 +543,5 @@ const styles = StyleSheet.create({
   },
   modalParagraph: {
     // color: theme.colors.text,
-  },
-  separator: {
-    marginBottom: 5,
   },
 });

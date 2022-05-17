@@ -28,9 +28,6 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
 
   const [visible, setVisible] = useState(false);
 
-  // const speciesImage = `${backend.imagesUrl}species/${species._id}.jpg`;
-  const speciesImage = 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg'; // TO FIX :Remove when SSL in backend
-
   function openMenu () { setVisible(true); }
   function closeMenu () { setVisible(false); }
 
@@ -70,7 +67,7 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
 
   return( 
     <Card
-      style={[styles.card,main && styles.cardMain]}
+      style={[styles.card, main && styles.cardMain]}
       theme={theme}
       {...props}
     >
@@ -91,24 +88,23 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
                 />
             </TouchableOpacity>
             <View>
-             <Image style={styles.listImage} source={{ uri: speciesImage }} />
-             <View style={styles.absoluteCenter}
-             > 
-              { main ?
-                  <MaterialCommunityIcons
-                    onPress={() => { handleSpecies(species._id, 'main') }}
-                    name="star"
-                    size={26}
-                    color={theme.colors.secondary}
-                  />
-                :
-                   <MaterialCommunityIcons
-                    onPress={() => { handleSpecies(species._id, 'main') }}
-                    name="star-outline"
-                    size={26}
-                    color={theme.colors.placeholder}
-                  />
-              }
+              <Image style={styles.listImage} source={{ uri: species.images && species.images.length && `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${species.images[0]}` }} />
+              <View style={styles.absoluteCenter}> 
+                { main ?
+                    <MaterialCommunityIcons
+                      onPress={() => { handleSpecies(species._id, 'main') }}
+                      name="star"
+                      size={26}
+                      color={theme.colors.secondary}
+                    />
+                  :
+                     <MaterialCommunityIcons
+                      onPress={() => { handleSpecies(species._id, 'main') }}
+                      name="star-outline"
+                      size={26}
+                      color={theme.colors.placeholder}
+                    />
+                }
               </View>
             </View>
           </View>
@@ -152,7 +148,8 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
 const styles = StyleSheet.create({
   card:{
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 0,
+    backgroundColor: theme.colors.background,
   },
   cardMain: {
     borderColor: theme.colors.primary,
@@ -194,10 +191,10 @@ const styles = StyleSheet.create({
     // paddingTop: 10,
   },
   listImage: {
-    backgroundColor: theme.colors.primary,
     width: 50,
     height: 50,
     borderRadius: 5,
+    resizeMode: 'contain',
     marginLeft: 5,
   },
   quantityContainer: {

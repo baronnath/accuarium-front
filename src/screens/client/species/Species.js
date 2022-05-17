@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { ucFirst, toCamelCase } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
-import { StyleSheet, View, Platform, Image, Dimensions, LayoutAnimation, UIManager, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Platform, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { Card } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Svg, { Path } from 'react-native-svg';
@@ -20,6 +20,7 @@ import GroupIcon from '../../../components/GroupIcon';
 import Slider from '../../../components/Slider';
 import Spinner from '../../../components/Spinner';
 import Modal from '../../../components/Modal';
+import Toggler from '../../../components/Toggler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
 import unitConverter from '../../../helpers/unitConverter';
@@ -38,15 +39,8 @@ export default function Species({ route, navigation }) {
   const [isLoading, setLoading] = useState(false);
   const [id, setId] = useState(false);
   const [species, setSpecies] = useState(false);
-  const [othernamesExpanded, setOthernamesExpanded] = useState({ expanded: false });
-  const [scientificNameSynonymsExpanded, setScientificNameSynonymsExpanded] = useState({ expanded: false });
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-
-
-  if (Platform.OS === 'android') {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  } 
 
   useFocusEffect(
     React.useCallback(() => {
@@ -67,11 +61,6 @@ export default function Species({ route, navigation }) {
       });
 
   }, [speciesId]);
-
-  function changeLayout(value, setter) { 
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setter({ expanded: !value.expanded });
-  }
 
   function paramIcon(icon, size, color) {
     let icons = iconToArray(icon);
@@ -264,65 +253,21 @@ export default function Species({ route, navigation }) {
                 </View>
             }
 
-            <TouchableOpacity activeOpacity={0.8} onPress={() => { if(!!species.otherNames[locale].length) changeLayout(othernamesExpanded,setOthernamesExpanded) }} >
-              <Header style={styles.header}>
-                { ucFirst(species.name[locale]) }
-                { !!species.otherNames[locale].length &&
-                  <MaterialCommunityIcons
-                    name="chevron-down"
-                    size={20}
-                    color={theme.colors.text}
-                  />
-                }
-              </Header>
-            </TouchableOpacity>
+            {/* Species name and other names */}
+            <Toggler
+              title={species.name[locale]}
+              description={i18n.t('species.otherNames')}
+              list={species.otherNames[locale]}
+              size='big'
+            />
 
-            <View style={{ height: othernamesExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
-              <Paragraph style={styles.otherNamesTitle}>
-                {i18n.t('species.otherNames')}:
-              </Paragraph>
-              <View style={styles.otherNamesContainer}>
-                { species.otherNames &&
-                    <Paragraph style={styles.otherName}>
-                      { species.otherNames[locale].map((name, i, {length}) => {
-                          let comma = i + 1 === length ? '' : ', ';
-                          return ucFirst(name) + comma;
-                        })
-                      }
-                    </Paragraph>
-                }
-              </View>
-            </View>
-
-            <TouchableOpacity activeOpacity={0.8} onPress={() => { if(!!species.scientificNameSynonyms.length) changeLayout(scientificNameSynonymsExpanded,setScientificNameSynonymsExpanded) }} >
-              <Paragraph style={styles.scientific} fontStyle="italic">
-                { species.scientificName }
-                { !!species.scientificNameSynonyms.length &&
-                  <MaterialCommunityIcons
-                    name="chevron-down"
-                    size={15}
-                    color={theme.colors.lightText}
-                  />
-                }
-              </Paragraph>
-            </TouchableOpacity>
-
-            <View style={{ height: scientificNameSynonymsExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
-              <Paragraph style={styles.otherNamesTitle}>
-                {i18n.t('species.scientificNameSynonyms')}:
-              </Paragraph>
-              <View style={styles.otherNamesContainer}>
-                { species.scientificNameSynonyms &&
-                    <Paragraph style={styles.scientific}>
-                      { species.scientificNameSynonyms.map((name, i, {length}) => {
-                          let comma = i + 1 === length ? '' : ', ';
-                          return ucFirst(name) + comma;
-                        })
-                      }
-                    </Paragraph>
-                }
-              </View>
-            </View>
+            {/* Species scientific name and synonyms */}
+            <Toggler
+              title={species.scientificName}
+              description={i18n.t('species.scientificNameSynonyms')}
+              list={species.scientificNameSynonyms}
+              size='small'
+            />
 
             {/* TO BE FIXED: remove this SVG (default no pic found)
             <Svg height="150" width="100%" viewBox="0 7.5 100 20">
@@ -388,8 +333,7 @@ export default function Species({ route, navigation }) {
 
             {/* Behavior */}
             <View style={styles.container}>
-              <Subheader style={styles.subheader}>{i18n.t('general.behavior.one')}</Subheader>
-              <Separator style={styles.separator}/>
+              <Subheader>{i18n.t('general.behavior.one')}</Subheader>
                 {/* Wild */}
                 { species.wild &&
                     getBehaviour('paw', 'wild', theme.colors.error)
@@ -407,8 +351,7 @@ export default function Species({ route, navigation }) {
 
             {/* Coexistance */}
             <View style={styles.container}>
-              <Subheader style={styles.subheader}>{i18n.t('coexistence.one')}</Subheader>
-              <Separator style={styles.separator}/>
+              <Subheader>{i18n.t('coexistence.one')}</Subheader>
 
               <ScrollView
                 horizontal={true}
@@ -531,13 +474,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 8,
   },
-  subheader: {
-    // marginTop: 15,
-    color: theme.colors.primary,
-    // alignSelf: 'flex-end',
-    fontSize: 12,
-    lineHeight: 10,
-  },
   classification: {
     flex: 1,
   },
@@ -562,7 +498,4 @@ const styles = StyleSheet.create({
     lineHeight: 9,
     // textAlign: 'left',
   },
-  separator: {
-    marginBottom: 0,
-  }
 });

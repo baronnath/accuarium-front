@@ -115,6 +115,7 @@ const en = {
         },
         listView: 'List view',
         gridView: 'Grid view',
+        graphicTank: 'Tank schema',
     },
     measures: {
         ppm: 'Parts per million',
