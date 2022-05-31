@@ -297,61 +297,61 @@ const es = {
     },
     behavior: {
       cleaning: {
-          description: '',
+          description: 'Reduce el crecimiento de algas, elimina los restos de comida y restos de plantas muertas en el tanque.',
       },
       wild: {
-          description: '',
+          description: 'Nunca o raramente se ha conseguido reproducir en cautividad.',
       },
       schooling: {
-          description: '',
+          description: 'Nada junto otros individuos de su misma especie de forma sincronizada en la misma dirección con una finalidad específica. Por ejemplo, alimentarse, reproducirse or defenderse.',
       },
       territorial: {
-          description: '',
+          description: 'Un individuo o una pareja reproductora defiende un área.',
       },
       aggressive: {
-          description: '',
+          description: 'Ataca otros individuos de su misma especie.',
       },
       jumper: {
-          description: '',
+          description: 'Es capaz de saltar fuera del agua.',
       },
       algaeEater: {
-          description: '',
+          description: 'Se alimenta de las algas que crecen en el tanque.',
       },
       predator: {
-          description: '',
+          description: 'Se alimenta de otras especies, normalmente de menor tamaño.',
       },
       quiet: {
-          description: '',
+          description: 'Poca actividad.',
       },
       sandDigger: {
-          description: '',
+          description: 'Suele excavar o mover las arenas para alimentarse o buscar refugio.',
       },
       snailEater: {
-          description: '',
+          description: 'Se alimenta de caracoles.',
       },
       clumsy: {
-          description: '',
+          description: 'No es buen nadador. Esto suele deberse a la selección artificial reforzando cierta apariencia.',
       },
       lively: {
-          description: '',
+          description: 'Lleno de vida y energia. Un nadador activo.',
       },
       nocturnal: {
-          description: '',
+          description: 'Principalmente activo durante la noche o el crepúsculo.',
       },
       peaceful: {
-          description: '',
+          description: 'Se lleva bien con los otras especies. No es agresivo.',
       },
       shy: {
-          description: '',
+          description: 'Tímido y asustadizo. Tiende a esconderse y asustarse con frecuencia.',
       },
       gregarious: {
-          description: 'This is a description',
+          description: 'Live in flocks or loosely organized communitites.',
       },
       lover: {
-          description: '',
+          description: 'Only one mate at a time.',
       },
       plantEater: {
-          description: '',
+          description: 'Feed on plants.',
       },
     },
 }

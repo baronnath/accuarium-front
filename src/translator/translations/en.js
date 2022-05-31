@@ -297,61 +297,61 @@ const en = {
     },
     behavior: {
       cleaning: {
-          description: '',
+          description: 'Reduce the growth of algae, remove the uneaten food decaying and plant matter in the tank.',
       },
       wild: {
-          description: '',
+          description: 'Rarely or impossible to breed in captivity.',
       },
       schooling: {
-          description: '',
+          description: 'Swim together in the same direction, speed and time with other same species fish. Fish come together for a specific purpose, for example to feed, spawn or defense.',
       },
       territorial: {
-          description: '',
+          description: 'Defend an area as a single individual or breeding couple.',
       },
       aggressive: {
-          description: '',
+          description: 'Attack its own species.',
       },
       jumper: {
-          description: '',
+          description: 'Capable of jumping out of the water.',
       },
       algaeEater: {
-          description: '',
+          description: 'Feed on the algae growing in the tank.',
       },
       predator: {
-          description: '',
+          description: 'Feed on other species, usually smaller.',
       },
       quiet: {
-          description: '',
+          description: 'Little activity or excitement.',
       },
       sandDigger: {
-          description: '',
+          description: 'Use to dig or move sand to feed or find shelter.',
       },
       snailEater: {
-          description: '',
+          description: 'Feed on snails.',
       },
       clumsy: {
-          description: '',
+          description: 'Not a skilled swimmer. This is usually due to the artificail selection enforcing a specific appearance.',
       },
       lively: {
-          description: '',
+          description: 'Full of live and energy. An active swimmer.',
       },
       nocturnal: {
-          description: '',
+          description: 'Active mostly at night.',
       },
       peaceful: {
-          description: '',
+          description: 'Come along with the rest of species easely. Not aggressive.',
       },
       shy: {
-          description: '',
+          description: 'Timid and skittish. Try to hide and scare often.',
       },
       gregarious: {
-          description: 'This is a description',
+          description: 'Live in flocks or loosely organized communitites.',
       },
       lover: {
-          description: '',
+          description: 'Only one mate at a time.',
       },
       plantEater: {
-          description: '',
+          description: 'Feed on plants.',
       },
     },
 }
