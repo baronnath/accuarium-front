@@ -217,11 +217,13 @@ export default function Species({ route, navigation }) {
     //       console.log('HEY',`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`)
     // })
     return species.images.map(img => {
-      return <Image
-        source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}` }}
-        style={styles.image}
-        defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
-      />
+      return <View style={{paddingHorizontal: theme.container.padding}}>
+        <Image
+          source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}` }}
+          style={styles.image}
+          defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
+        />
+      </View>
     })
   }
 
@@ -405,7 +407,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    resizeMode: "center",
+    resizeMode: "contain",
     aspectRatio: 1.25,
   },
   otherNamesContainer: {
