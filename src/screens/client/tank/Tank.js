@@ -260,7 +260,7 @@ export default function Tank({ route, navigation }) {
                       <View style={styles.row}>
                         { tank.liters ?
                             <>
-                              <Subheader style={styles.param}>{tank.liters}</Subheader>
+                              <Subheader style={styles.param}>{unitConverter(tank.liters, 'volume', 'base', user.units['volume'])}</Subheader>
                               <Subheader style={styles.paramUnit}>{i18n.t('measures.' + user.units.volume + 'Abbr')}</Subheader>
                             </>
                           :
