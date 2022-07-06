@@ -117,9 +117,13 @@ const styles = StyleSheet.create({
   card:{
     flex: 1,
     width: '100%',
-    marginBottom: 20,
+    marginBottom: theme.container.padding / 2,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.container.padding,
+    paddingVertical: theme.container.padding / 2,
+    borderRadius: 5,
     // justifyContent: 'space-between',
   },
   row: {
