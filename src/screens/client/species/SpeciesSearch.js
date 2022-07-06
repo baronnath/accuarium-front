@@ -159,7 +159,8 @@ export default function SpeciesSearch({ route, navigation }) {
   }
 
   function onScrollEnd() {
-    setPage(parseInt(page) + 1); // for next call
+    if(!isLoading)
+      setPage(parseInt(page) + 1); // for next call
   }
 
   function openMenu () { setMenuVisible(true); }
