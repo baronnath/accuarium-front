@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 		backgroundColor: theme.colors.surface,
 		marginHorizontal: theme.container.padding * 2,
 		padding: theme.container.padding,
-		borderRadius: 5,
+		borderRadius: theme.roundness,
 		borderWidth: 1,
 		borderColor: theme.colors.terciary,
 	},

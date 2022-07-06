@@ -390,18 +390,6 @@ const styles = StyleSheet.create({
     width:75,
     marginHorizontal: 3,
   },
-  pickerContainer: {
-    width: '100%',
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: theme.colors.placeholder,
-    padding: 0,
-    overflow: "hidden",
-    backgroundColor: theme.colors.background,
-    marginBottom: 14,
-    paddingHorizontal: 4,
-    paddingVertical: 3,
-  },
   picker: {
     width: '100%',
     margin: 0,

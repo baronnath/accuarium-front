@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   listImage: {
     width: 50,
     height: 50,
-    borderRadius: 5,
+    borderRadius: theme.roundness,
     resizeMode: 'contain',
     marginLeft: 5,
   },

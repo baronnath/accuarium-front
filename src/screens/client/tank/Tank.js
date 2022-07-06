@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     paddingTop: theme.container.padding * 2,
     borderColor: theme.colors.disabled,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: theme.roundness,
   },
   param: {
     textAlign: 'left',

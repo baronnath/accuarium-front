@@ -11,7 +11,7 @@ const Surface = ({ elevation = 1 , justify = 'center', style, color, children, .
     surface: {
       elevation: elevation,
       margin: theme.container.padding,
-      borderRadius: 5,
+      borderRadius: theme.roundness,
       justifyContent: justify,
       padding: theme.container.padding,
     },

@@ -84,6 +84,8 @@ const TankCard = ({ tank, ...props }) => {
             <Header style={styles.title}>
               { tank.name } 
             </Header>
+          </View>
+          <View style={styles.row}>
             <Paragraph style={styles.volume}>{unitConverter(tank.liters, 'volume', 'base', user.units['volume']) + i18n.t('measures.' + user.units.volume + 'Abbr')}</Paragraph>
           </View>
           { !!mainSpecies &&
@@ -121,32 +123,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
-    paddingHorizontal: theme.container.padding,
-    paddingVertical: theme.container.padding / 2,
-    borderRadius: 5,
+    paddingHorizontal: theme.container.padding / 2,
+    paddingVertical: theme.container.padding / 4,
+    borderRadius: theme.roundness,
     // justifyContent: 'space-between',
   },
   row: {
     flexDirection: 'row',
   },
   imageContainer:{
-    flex: 2,
+    flex: 3,
   },
   image: {
     flex: 1,
-    // aspectRatio: 1.75,
-    height: 70,
-    borderRadius: 5,
+    // aspectRatio: 1.25,
+    height: '100%',
+    borderRadius: theme.roundness,
     resizeMode: 'contain',
   },
   description: {
     flex: 7,
-    paddingLeft: theme.container.padding,
+    paddingLeft: theme.container.padding / 2,
     textAlign: 'left',
   },
   volume: {
     textAlign: 'left',
-    marginLeft: theme.container.padding / 2,
     alignSelf: 'flex-end',
     marginBottom: theme.container.padding * .2,
   },

@@ -26,7 +26,7 @@ function Slider({items, button = null, height = null, ...props}){
     dot: {
       width: 10,
       height: 10,
-      borderRadius: 5,
+      borderRadius: theme.roundness,
       marginHorizontal: 8,
       backgroundColor: theme.colors.lightText,
     },

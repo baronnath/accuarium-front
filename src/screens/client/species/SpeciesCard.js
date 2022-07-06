@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     flex: 1,
     aspectRatio: 1.75,
-    borderRadius: 5,
+    borderRadius: theme.roundness,
   },
   listCard: {
     flex: 1,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   listImage: {
     width: '80%',
     height: 70,
-    borderRadius: 5,
+    borderRadius: theme.roundness,
     resizeMode: 'contain',
   },
   modalTitle: {

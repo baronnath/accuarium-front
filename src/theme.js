@@ -62,4 +62,5 @@ export const theme = {
   bottomNav: {
     height: 50,
   },
+  roundness: 5,
 };
