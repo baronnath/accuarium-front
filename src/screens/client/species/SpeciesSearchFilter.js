@@ -118,6 +118,11 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
     </View>
   }
 
+  function getParamUnit(measure = null) {
+    let unit = i18n.t(`measures.${user.units[measure]}Abbr`);
+    return `(${unit})`;
+  }
+
   function getActions(onClose, clear = true) {
     return (
       <>
@@ -273,16 +278,16 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
           <>
             <Subheader style={styles.header}>{i18n.t('general.parameter.other')}</Subheader>
 
-            <Subheader style={styles.subheader}>{i18n.t('general.temperature')}</Subheader>
+            <Subheader style={styles.subheader}>{i18n.t('general.temperature')} {getParamUnit('temperature')}</Subheader>
             { getParamInput('Temp', ['thermometer-low','thermometer-high'], 'temperature') }
 
             <Subheader style={styles.subheader}>{i18n.t('general.ph')}</Subheader>
             { getParamInput('Ph', ['water-outline','water']) }
             
-            <Subheader style={styles.subheader}>{i18n.t('general.gh')}</Subheader>
+            <Subheader style={styles.subheader}>{i18n.t('general.gh')} {getParamUnit('hardness')}</Subheader>
             { getParamInput('Gh', ['crop-free','focus-field'], 'hardness') }
 
-            <Subheader style={styles.subheader}>{i18n.t('general.kh')}</Subheader>
+            <Subheader style={styles.subheader}>{i18n.t('general.kh')} {getParamUnit('hardness')}</Subheader>
             { getParamInput('Kh', ['crop-free','focus-field-horizontal'], 'hardness') }
               
           </>
@@ -339,18 +344,15 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
 
         <Subheader style={styles.header}>{i18n.t('general.measures')}</Subheader>
         <>
-          <Subheader style={styles.subheader}>{i18n.t('general.size')}</Subheader>
+          <Subheader style={styles.subheader}>{i18n.t('general.size')} {getParamUnit('length')}</Subheader>
           { getParamInput('Length', ['ruler','ruler'], 'length') }
           
-          <Subheader style={styles.subheader}>{i18n.t('general.minTank')}</Subheader>
-          { getParamInput('MinTank', ['cube-outline','cube'], 'length') }
+          <Subheader style={styles.subheader}>{i18n.t('general.minTank')} {getParamUnit('volume')}</Subheader>
+          { getParamInput('MinTank', ['cube-outline','cube'], 'volume') }
         </>
 
         <Subheader style={styles.header}>{i18n.t('general.property.other')}</Subheader>
-        <>
-          <Subheader style={styles.subheader}>{i18n.t('general.size')}</Subheader>
-          { getParamInput('Length', ['ruler','ruler'], 'length') }
-          
+        <>          
           <View style={styles.row}>
             <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="spray-bottle"/>
             <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.cleanupCrew')}</Subheader>
