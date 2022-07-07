@@ -116,6 +116,9 @@ const es = {
         listView: 'Listado',
         gridView: 'Cuadrícula',
         graphicTank: 'Gráfica del tanque',
+        male: 'Macho',
+        female: 'Hembre',
+        alein: 'Alevín',
     },
     measures: {
         ppm: 'Partes por millón',

@@ -217,14 +217,24 @@ export default function Species({ route, navigation }) {
     //       console.log('HEY',`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`)
     // })
     return species.images.map(img => {
+      
       return <View style={{paddingHorizontal: theme.container.padding}}>
         <Image
-          source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}` }}
+          source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${img}` }}
           style={styles.image}
           defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
         />
+        <Paragraph style={styles.imageDescription}>{getImageDescription(img)}</Paragraph>
       </View>
     })
+  }
+
+  function getImageDescription(img) {
+    console.log(`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`);
+    const imgDescriptions = ['male', 'female', 'alevin'];
+    let description = img.split('.').shift().split('-').pop(); // Delete the extension and grab the last word
+    let found = imgDescriptions.find(desc => desc == description)
+    return found && i18n.t(`general.${description}`);
   }
 
   function getFeedIcon(feed) {
@@ -409,6 +419,11 @@ const styles = StyleSheet.create({
     width: '100%',
     resizeMode: "contain",
     aspectRatio: 1.25,
+  },
+  imageDescription: {
+    color: theme.colors.lightText,
+    marginTop: theme.container.padding,
+    marginBottom: 0,
   },
   otherNamesContainer: {
     justifyContent: 'center',

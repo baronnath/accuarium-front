@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
-import { View, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -362,6 +362,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   listFootStyle: {
-    paddingBottom: theme.container.padding * 2,
+    paddingBottom: Dimensions.get('window').height / 5,
   },
 });

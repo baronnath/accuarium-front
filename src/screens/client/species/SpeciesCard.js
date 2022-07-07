@@ -75,7 +75,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
               <View style={styles.gridImageContainer}>
                 <Image
                   style={styles.gridImage}
-                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${species.images[0]}` }}
+                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${species.images[0]}` }}
                 />
               </View>
             }

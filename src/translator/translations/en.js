@@ -6,7 +6,7 @@ const en = {
         },
         species: {
             one: 'Species',
-            other: 'Species', 
+            other: 'Species',
         },
         mainSpecies: {
             one: 'Main species',
@@ -116,6 +116,9 @@ const en = {
         listView: 'List view',
         gridView: 'Grid view',
         graphicTank: 'Tank schema',
+        male: 'Male',
+        female: 'Female',
+        alein: 'Alevin',
     },
     measures: {
         ppm: 'Parts per million',
