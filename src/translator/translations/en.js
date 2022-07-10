@@ -32,6 +32,7 @@ const en = {
         apply: 'Apply',
         clear: 'Clear',
         ok: 'OK',
+        share: 'Share',
         moreDetails: 'More details',
         property: {
           one: 'Property',
@@ -271,6 +272,10 @@ const en = {
         createTank: 'Create tank',
         emptyValues: 'Please fill your tank dimensions',
         noNumbers: 'Dimensions values must be numbers',
+        shareButton: {
+          title: 'Check out this tank',
+          message: 'Please take a look to the in th tank on this link\n %{url}',
+        },
     },
     addTank: {
         slide1: {

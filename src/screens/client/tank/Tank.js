@@ -6,12 +6,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Menu } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import TankDeleteModal from './TankDeleteModal';
+import TankMenu from './TankMenu';
 import Background from '../../../components/Background';
-import Header from '../../../components/Header';
 import OptionsMenu from '../../../components/OptionsMenu';
+import Header from '../../../components/Header';
 import Paragraph from '../../../components/Paragraph';
 import Warning from '../../../components/Warning';
 import GraphicTank from './GraphicTank';
@@ -44,7 +44,6 @@ export default function Tank({ route, navigation }) {
 
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
-  const [isMenuVisible, setMenuVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -52,8 +51,6 @@ export default function Tank({ route, navigation }) {
   const [image, setImage] = useState(null);
   const [freeSpace, setFreeSpace] = useState(100);
   const [cleanupCrew, setCleaningCrew] = useState(0);
-
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
   
   useFocusEffect(
     React.useCallback(() => {
@@ -118,9 +115,6 @@ export default function Tank({ route, navigation }) {
       setTankParameters(tankParams);
     }
   },[mainSpecies])
-
-  function openMenu () { setMenuVisible(true); }
-  function closeMenu () { setMenuVisible(false); }
 
   // Calculate free space and cleaning crew
   function calculateDetails() {
@@ -224,28 +218,7 @@ export default function Tank({ route, navigation }) {
                 </Header>
                 
                 <OptionsMenu>
-                  <Menu
-                    visible={isMenuVisible}
-                    onDismiss={closeMenu}
-                    anchor={menuButton}
-                  >
-                    <Menu.Item
-                      icon="square-edit-outline"
-                      onPress={ () => {
-                        setMenuVisible(false),
-                        navigation.navigate('EditTank', { tankId : tank._id })
-                      }}
-                      title={i18n.t('general.edit')}
-                    />
-                    <Menu.Item
-                      icon="delete-forever-outline"
-                      onPress={ () => {
-                        setMenuVisible(false),
-                        setDeleteModalVisible(true)
-                      }}
-                      title={i18n.t('general.delete')}
-                    />
-                  </Menu>
+                  <TankMenu tankId={tank._id} deleteTank={setDeleteModalVisible}/>
                 </OptionsMenu>
 
                 {/* Volumen, measures and main species */}

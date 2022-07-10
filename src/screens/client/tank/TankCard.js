@@ -7,6 +7,7 @@ import { Card, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import TankDeleteModal from './TankDeleteModal';
+import TankMenu from './TankMenu';
 import Paragraph from '../../../components/Paragraph';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -36,30 +37,6 @@ const TankCard = ({ tank, ...props }) => {
   function closeMenu () { setVisible(false); }
 
   const menuButton = <MaterialCommunityIcons {...props} size={24} color={theme.colors.lightText} name="dots-vertical" onPress={() => {openMenu()}} />;
-
-  const tankMenu =
-    <Menu
-      visible={visible}
-      onDismiss={closeMenu}
-      anchor={menuButton}>
-      <Menu.Item
-        icon="square-edit-outline"
-        onPress={() => {
-          setVisible(false),
-          navigation.navigate('EditTank', { tankId : tank._id })
-        }}
-        title={i18n.t('general.edit')}
-      />
-      <Menu.Item
-        icon="delete-forever-outline"
-        onPress={() => {
-          setVisible(false),
-          setDeleteModalVisible(true)
-        }}
-        title={i18n.t('general.delete')}
-      />
-    </Menu>
-  ;
 
   useEffect(() => {
     if(tank.species.length){
@@ -100,7 +77,7 @@ const TankCard = ({ tank, ...props }) => {
           }
         </View>
         <View style={styles.menuContainer}>
-          {tankMenu}
+          <TankMenu tankId={tank._id} deleteTank={setDeleteModalVisible} />
         </View>
         {/* <Card.Title
           title={tank.name}

@@ -32,6 +32,7 @@ const es = {
         apply: 'Aplicar',
         clear: 'Limpiar',
         ok: 'Vale',
+        share: 'Compartir',
         parameter: {
           one: 'Parámetro',
           other: 'Parámetros', 
@@ -271,6 +272,10 @@ const es = {
         createTank: 'Crear tanque',
         emptyValues: 'Completa las dimensiones del tanque',
         noNumbers: 'Las dimensiones tienen que ser números',
+        shareButton: {
+          title: 'Echa un ojo a este tanque',
+          message: 'Me gustaría que vieras el proyecto de este enlace\n %{url}',
+        },
     },
     addTank: {
         slide1: {
