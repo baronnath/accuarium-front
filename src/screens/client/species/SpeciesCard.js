@@ -7,6 +7,8 @@ import { Card, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { backend } from '../../../../app.json';
+import AddSpeciesTankModal from './AddSpeciesTankModal';
+import AddSpeciesQuantityModal from './AddSpeciesQuantityModal';
 import Paragraph from '../../../components/Paragraph';
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
@@ -175,48 +177,19 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
       {
         !!tanks.length &&
         <>
-          <Modal isVisible={isTankModalVisible} setVisible={setTankModalVisible}>
-            <MaterialCommunityIcons name="fishbowl-outline" size={60} color={theme.colors.accent} />
-            <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal1Title')}</Paragraph>
-            <Paragraph style={styles.modalParagraph}>{i18n.t('speciesCard.modal1Paragraph')}</Paragraph>
-            <ScrollView style={styles.listContainer}>
-              {
-                tanks.map(tank => {
-                  return (
-                    <List.Item
-                      key={tank._id}
-                      style={styles.list}
-                      title={tank.name}
-                      description={tank.liters && `${tank.liters} L`}
-                      right={
-                        props =>
-                          <MaterialCommunityIcons
-                            {...props}
-                            style={styles.listRight}
-                            size={28}
-                            name="tray-plus"
-                            onPress={() => {
-                              setQuantityModalVisible(true);
-                              setTankId(tank._id);
-                            }}
-                          />
-                      }
-                    />
-                  )
-                })
-              } 
-            </ScrollView>
-          </Modal>
-          <Modal isVisible={isQuantityModalVisible} setVisible={setQuantityModalVisible}>
-            <Paragraph style={styles.modalTitle}>{i18n.t('speciesCard.modal2Title')}</Paragraph>
-            <Paragraph style={styles.modalParagraph}>{i18n.t('speciesCard.modal2Paragraph')}</Paragraph>
-            <View style={styles.quantityContainer}>
-             <MaterialCommunityIcons size={50} name="minus-circle-outline" style={[styles.quantityModifier, quantity <= 1 && styles.disabled]} onPress={() => {quantity > 1 && setQuantity(quantity-1)}} />
-             <Paragraph style={styles.quantity}>{quantity}</Paragraph>
-             <MaterialCommunityIcons size={50} name="plus-circle-outline" style={styles.quantityModifier} onPress={() => {setQuantity(quantity+1)}} />
-            </View>
-            <Button style={styles.submitButton} onPress={() => {addSpeciesToTank()}}>{i18n.t('speciesCard.addSpecies')}</Button>
-          </Modal>
+          <AddSpeciesTankModal 
+            isVisible={isTankModalVisible}
+            setVisible={setTankModalVisible}
+            setQuantityModalVisible={setQuantityModalVisible}
+            setTankId={setTankId}
+          />
+          <AddSpeciesQuantityModal
+            isVisible={isQuantityModalVisible}
+            setVisible={setQuantityModalVisible}
+            setQuantity={setQuantity}
+            quantity={quantity}
+            submit={addSpeciesToTank}
+          />
         </>
       }
     </>

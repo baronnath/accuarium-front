@@ -1,9 +1,9 @@
 // src/screens/client/tank/TankMenu.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Share } from 'react-native';
+import { StyleSheet, Share } from 'react-native';
 import * as Linking from 'expo-linking';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Menu } from 'react-native-paper';

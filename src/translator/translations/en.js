@@ -214,6 +214,10 @@ const en = {
     species: {
         otherNames: 'Other names',
         scientificNameSynonyms: 'Scientific name synonyms',
+        shareButton: {
+          title: 'Check out this species',
+          message: 'Please take a look to the species %{name} in this link\n %{url}',
+        },
     },
     speciesCard: {
         modal1Title: 'Which tank',
@@ -274,7 +278,7 @@ const en = {
         noNumbers: 'Dimensions values must be numbers',
         shareButton: {
           title: 'Check out this tank',
-          message: 'Please take a look to the in th tank on this link\n %{url}',
+          message: 'Please take a look to the tank in this link\n %{url}',
         },
     },
     addTank: {
