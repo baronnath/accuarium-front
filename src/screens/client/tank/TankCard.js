@@ -52,7 +52,7 @@ const TankCard = ({ tank, ...props }) => {
       >
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: tankImage }}
+            source={{ uri: tankImage + '?' + new Date()}} // Date is added to avoid image to cache
             style={styles.image}
           />
         </View>

@@ -8,7 +8,7 @@ import { backend } from '../../../../app.json';
 import {
   StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
 } from 'react-native';
-import { ToggleButton, Checkbox } from 'react-native-paper';
+import { ToggleButton, Checkbox, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getStatusBarHeight } from 'react-native-status-bar-height';
@@ -35,18 +35,18 @@ import translator from '../../../translator/translator';
 export default function EditTank({ route, navigation }) {
   const { tankId } = route.params;
 
+  const dispatch = useDispatch();
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
   const i18n = translator(locale);
   const [tank, setTank] = useState({});
   const [editedTank, setEditedTank] = useState({});
+  const [image, setImage] = useState({});
   const [errors, setErrors] = useState({});
   const isLoading = useSelector(state => state.tanks.isLoading);
 
   const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
-
-  const dispatch = useDispatch();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -77,6 +77,7 @@ export default function EditTank({ route, navigation }) {
       if(!helpers.isEmpty(tank)){
         setEditedTank(helpers.clone(tank));
         setMainSpecies(findMainSpecies(tank.species));
+        setImage(`${backend.imagesUrl}tank/${tank._id}.jpg`);
       }
     // }
   }, [tank]);
@@ -92,6 +93,10 @@ export default function EditTank({ route, navigation }) {
       ...prevTank,
       [field]: value
     }));
+
+    if(field == 'image'){
+      setImage(value.uri);
+    }
   }
 
   async function handleMeasure(field, value) {
@@ -246,6 +251,21 @@ export default function EditTank({ route, navigation }) {
                 autoCapitalize="none"
                 autofill="name"
               />
+
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: image + '?' + new Date() }} // Date is added to avoid image to cache
+                  style={styles.image}
+                />
+                <IconButton
+                  icon="camera"
+                  size={32}
+                  style={styles.imageButton}
+                  color={theme.colors.surface}
+                  onPress={() => pickImage()}
+                />
+              </View>
+
               <View style={[styles.inputRow, styles.subheader]}>
                 <MaterialCommunityIcons style={styles.subheaderIcon}name="cube-scan" size={30} color={theme.colors.text} />
                 <Subheader>{i18n.t('general.measures')}</Subheader>
@@ -432,5 +452,23 @@ const styles = StyleSheet.create({
   item: {
     flex:1,
     width: '100%',
+  },
+  imageContainer:{
+    flex: 1
+  },
+  image: {
+    flex:1,
+    width: '100%',
+    resizeMode: "stretch",
+    aspectRatio: 1.25,
+    marginTop: theme.container.padding,
+    marginBottom: theme.container.padding / 2,
+    borderRadius: theme.roundness,
+  },
+  imageButton: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    backgroundColor: theme.colors.primary
   },
 });

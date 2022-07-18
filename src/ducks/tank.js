@@ -173,6 +173,7 @@ function updateTank(tank){
           height: tank.measures.height,
           liters: tank.liters,
           species: tank.species,
+          image: tank.image,
         }
 
         axios.put(backend.url + '/tank', params)

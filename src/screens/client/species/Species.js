@@ -10,6 +10,8 @@ import { StyleSheet, View, Platform, Image, Dimensions, TouchableOpacity, Scroll
 import { Card } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Svg, { Path } from 'react-native-svg';
+import SpeciesMenu from './SpeciesMenu';
+import OptionsMenu from '../../../components/OptionsMenu';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -264,6 +266,10 @@ export default function Species({ route, navigation }) {
                   />
                 </View>
             }
+
+            <OptionsMenu>
+              <SpeciesMenu species={species} />
+            </OptionsMenu>
 
             {/* Species name and other names */}
             <Toggler

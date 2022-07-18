@@ -98,7 +98,6 @@ export default function Tank({ route, navigation }) {
 
   useEffect(() => {
     if(mainSpecies){
-      console.log('ENTRA',mainSpecies);
       dispatch(tankActions.getCompatibility(tankId));
 
       // Set tank parameters from main species
@@ -159,7 +158,7 @@ export default function Tank({ route, navigation }) {
          if (res.status != 404) {
           setImage(
             <Image
-              source={{ uri: uri }}
+              source={{ uri: uri + '?' + new Date()}} // Date is added to avoid image to cache
               style={styles.image}
               defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
             />
