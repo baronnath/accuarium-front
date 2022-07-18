@@ -117,3 +117,23 @@ exports.round = (function() {
 //    nameOf(() => myVariable.name[10])    // myVariable.name[10]
 //    nameOf(() => MySuperClass)           // MySuperClass
 exports.varToString = (f) => (f).toString().replace(/[ |\(\)=>]/g,'');
+
+// Return 2 initials from string name
+// input and output examples:
+//     'Albus Percival Wulfric Brian dumbledore',   // AD
+//     'Harry Potter',                              // HP
+//     'Ron',                                       // R
+//     '',                                          // <empty>
+//     'Çigkofte With Érnie',                       // ÇÉ
+//     'Hermione ',                                 // H  (Notice that there is a space after the name) 
+//     'Neville LongBottom '                        // NL (space after name is trimmed)
+exports.getInitials = (fullName) => {
+  const allNames = fullName.trim().split(' ');
+  const initials = allNames.reduce((acc, curr, index) => {
+    if(index === 0 || index === allNames.length - 1){
+      acc = `${acc}${curr.charAt(0).toUpperCase()}`;
+    }
+    return acc;
+  }, '');
+  return initials;
+}

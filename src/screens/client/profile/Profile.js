@@ -114,7 +114,12 @@ export default function Profile({ route, navigation }) {
       <Background justify="top" style={styles.background}>
         { !helpers.isEmpty(editedUser) && 
           <>
-            <Avatar.Image style={styles.image} size={100} source={{uri: editedUser.image}} />
+            <Avatar.Text
+              size={100}
+              label={helpers.getInitials(editedUser.name)}
+              // color={theme.colors.surface}
+              labelStyle={styles.avatar}
+            />
             <Header>
               {helpers.ucFirst(editedUser.name)}
             </Header>
@@ -296,6 +301,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 0,
+  },
+  avatar:{
+    fontFamily: 'Aleo_700Bold',
   },
   leftSide: {
     flex: 4,
