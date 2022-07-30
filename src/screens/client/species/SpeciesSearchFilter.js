@@ -23,8 +23,11 @@ import { theme } from '../../../theme';
 
 export default function SpeciesSearchFilter({ visible, setVisible, filters, changeFilter, removeFilter, clearFilter, resetSearch }) {
 
+  const excludingTypes = ['amphibian','plant']; 
+
   const user = useSelector(state => state.user.data);
   const tanks = useSelector(state => state.tanks.tanks);
+  const locale = user.locale;
 
   const [paramFilterSwitch, setParamFilterSwitch] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -36,7 +39,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
   const [feeds, setFeeds] = useState(null);
   const [colors, setColors] = useState(null);
 
-  const i18n = translator(user.locale);
+  const i18n = translator(locale);
 
   useEffect(() => {
 
@@ -69,7 +72,13 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
   function getRegularInput(key) {
     return <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
       <Paragraph style={[styles.subheader, styles.leftSide]}>{i18n.t(`general.${key}.one`)}</Paragraph>
-      <Paragraph fontWeight='bold' style={styles.centerSide}>{filters[key] && filters[key].displayValue}</Paragraph>
+      <Paragraph fontWeight='bold' style={styles.centerSide}>
+        {filters[key] && (filters[key].displayValue && helpers.isArray(filters[key].displayValue) ?
+          filters[key].displayValue.join(', ')
+          :
+          filters[key].displayValue)
+        }
+      </Paragraph>
       <View style={styles.rightSide}>
         <MaterialCommunityIcons
           name="chevron-right"
@@ -213,14 +222,14 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                   array.map(item => {  
                     return (
                       <RadioButton.Item
-                        label={helpers.ucFirst(item.name[user.locale] ? item.name[user.locale] : item.name)}
+                        label={helpers.ucFirst(item.name[locale] ? item.name[locale] : item.name)}
                         value={item._id}
                         style={styles.list}
                         mode="ios"
                         key={item._id}
                         onPress={() => {
                           setModalVisible(false);
-                          changeFilter(key, { displayValue: helpers.ucFirst(item.name[user.locale] ? item.name[user.locale] : item.name), value: item._id })
+                          changeFilter(key, { displayValue: helpers.ucFirst(item.name[locale] ? item.name[locale] : item.name), value: item._id })
                         }}
                       />
                     )
@@ -233,22 +242,22 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
                   <TouchableOpacity
                     style={[styles.row, styles.checkboxContainer]}
                     onPress={() => {
-                      changeFilter(key, { displayValue: helpers.ucFirst(item.name[user.locale] ? item.name[user.locale] : item.name), value: item._id }, true)
+                      changeFilter(key, { displayValue: helpers.ucFirst(item.name[locale] ? item.name[locale] : item.name), value: item._id }, true)
                     }}
                   >
                     { item.icon ? 
                         <MaterialCommunityIcons size={24} style={styles.leftCheckbox} name={item.icon} color={theme.colors.text}/>
                       : !!item.hex && item.hex != '-1' ?
                         <View style={[styles.circle, {backgroundColor: `#${item.hex}`}]} />
-                      :
-                      <LinearGradient style={styles.circle}
-                        colors={['#ee5353', '#ff9f43', '#ffeaa7', '#00b894', '#2e86de', '#6c5ce7']}
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 1, y: 1 }}
-                      />
+                        :
+                        <LinearGradient style={styles.circle}
+                          colors={['#ee5353', '#ff9f43', '#ffeaa7', '#00b894', '#2e86de', '#6c5ce7']}
+                          start={{ x: 0, y: 1 }}
+                          end={{ x: 1, y: 1 }}
+                        />
                     }
                  
-                    <Paragraph style={[styles.subheader, styles.centerCheckbox]}>{helpers.ucFirst(item.name[user.locale] ? item.name[user.locale] : item.name)}</Paragraph>
+                    <Paragraph style={[styles.subheader, styles.centerCheckbox]}>{helpers.ucFirst(item.name[locale] ? item.name[locale] : item.name)}</Paragraph>
                     <Checkbox.Item
                       style={styles.rightCheckbox}
                       status={filters[key] && filters[key].value.includes(item._id) ? 'checked' : 'unchecked'}
@@ -313,24 +322,26 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
             { !types ?
                 <Spinner />
               :
-                types.map(type => {     
-                  return (
-                    <ToggleButton
-                      icon={type.icon}
-                      value={type._id}
-                      onPress={() => {
-                        removeFilter('family');
-                        removeFilter('group');
-                        changeFilter('type', { displayValue: helpers.ucFirst(type.name[user.locale]), value: type._id });
-                      }}
-                      status={filters.type && filters.type.value == type._id ? 'checked' : 'unchecked'}
-                      style={styles.toggleButton}
-                      theme={theme}
-                      color={filters.type && filters.type.value == type._id ? theme.colors.primary : theme.colors.lightText}
-                      size={28}
-                      key={type._id}
-                    />
-                  )
+                types.map(type => {
+                  if(!excludingTypes.includes(type.name['en'])){ 
+                    return (
+                      <ToggleButton
+                        icon={type.icon}
+                        value={type._id}
+                        onPress={() => {
+                          removeFilter('family');
+                          removeFilter('group');
+                          changeFilter('type', { displayValue: helpers.ucFirst(type.name[locale]), value: type._id });
+                        }}
+                        status={filters.type && filters.type.value == type._id ? 'checked' : 'unchecked'}
+                        style={styles.toggleButton}
+                        theme={theme}
+                        color={filters.type && filters.type.value == type._id ? theme.colors.primary : theme.colors.lightText}
+                        size={30}
+                        key={type._id}
+                      />
+                    )
+                  }
                 })
             }
           </View>

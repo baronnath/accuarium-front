@@ -184,6 +184,7 @@ export default function SpeciesSearch({ route, navigation }) {
           }
           filters[key].value.push(value.value);
           filters[key].displayValue.push(value.displayValue);
+          console.log(filters[key]);
 
           return filters;
         });
@@ -201,7 +202,7 @@ export default function SpeciesSearch({ route, navigation }) {
     if(id){ // remove id from array of values
       setFilters(prevFilters => {
         let filters = { ...prevFilters };
-        let index = filters[key].value.indexOf(key);
+        let index = filters[key].value.indexOf(id ? String(id) : key);
         filters[key].value.splice(index,1);
         filters[key].displayValue.splice(index,1);
         return filters;
