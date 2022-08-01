@@ -4,7 +4,6 @@ import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Localization from 'expo-localization';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
@@ -65,69 +64,64 @@ function Register ({ navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-      contentContainerStyle={styles.contentContainerStyle}
-    >
-        <Background style={styles.container} justify="top">
-          <BackButton goBack={() => navigation.navigate('Login')} />
+    <Background style={styles.container} justify="top">
+      <BackButton goBack={() => navigation.navigate('Login')} />
 
-          <Logo />
+      <Logo />
 
-          <Header>{i18n.t('general.register')}</Header>
+      <Header>{i18n.t('general.register')}</Header>
 
 
-          <TextInput
-            label={i18n.t('general.name')}
-            name="name"
-            returnKeyType="next"
-            value={user.values.name}
-            onChangeText={(name) => handleChange('name', name)}
-            error={!!user.errors.name}
-            errorText={user.errors.name}
-          />
+      <TextInput
+        label={i18n.t('general.name')}
+        name="name"
+        returnKeyType="next"
+        value={user.values.name}
+        onChangeText={(name) => handleChange('name', name)}
+        error={!!user.errors.name}
+        errorText={user.errors.name}
+      />
 
-          <TextInput
-            label={i18n.t('general.email')}
-            name="email"
-            returnKeyType="next"
-            value={user.values.email}
-            onChangeText={(email) => handleChange('email', email)}
-            error={!!user.errors.email}
-            errorText={user.errors.email}
-            autoCapitalize="none"
-            autofill="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
+      <TextInput
+        label={i18n.t('general.email')}
+        name="email"
+        returnKeyType="next"
+        value={user.values.email}
+        onChangeText={(email) => handleChange('email', email)}
+        error={!!user.errors.email}
+        errorText={user.errors.email}
+        autoCapitalize="none"
+        autofill="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+      />
 
-          <TextInput
-            label={i18n.t('general.password')}
-            name="password"
-            returnKeyType="done"
-            value={user.values.password}
-            onChangeText={(password) => handleChange('password', password)}
-            error={!!user.errors.password}
-            errorText={user.errors.password}
-            secureTextEntry
-          />
-            
+      <TextInput
+        label={i18n.t('general.password')}
+        name="password"
+        returnKeyType="done"
+        value={user.values.password}
+        onChangeText={(password) => handleChange('password', password)}
+        error={!!user.errors.password}
+        errorText={user.errors.password}
+        secureTextEntry
+      />
+        
 
-          <Button
-            mode="contained"
-            onPress={handleSubmit}
-            style={styles.button}>
-              {i18n.t('general.signUp')}
-          </Button>
+      <Button
+        mode="contained"
+        onPress={handleSubmit}
+        style={styles.button}>
+          {i18n.t('general.signUp')}
+      </Button>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>{i18n.t('register.haveAccount')} </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.link}>{i18n.t('general.login')}</Text>
-            </TouchableOpacity>
-          </View>
-        </Background>
-    </KeyboardAwareScrollView>
+      <View style={styles.row}>
+        <Text style={styles.label}>{i18n.t('register.haveAccount')} </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.link}>{i18n.t('general.login')}</Text>
+        </TouchableOpacity>
+      </View>
+    </Background>
   );
 };
 

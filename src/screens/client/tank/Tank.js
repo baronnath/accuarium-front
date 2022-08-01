@@ -6,7 +6,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import TankDeleteModal from './TankDeleteModal';
 import TankMenu from './TankMenu';
 import Background from '../../../components/Background';
@@ -201,9 +200,6 @@ export default function Tank({ route, navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
       <Background justify="top">
         { isLoading ?
 
@@ -359,14 +355,12 @@ export default function Tank({ route, navigation }) {
                 }
               </View>
         }
-       
-      </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
         <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent)}</Paragraph>
       </Modal>
-      <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} />
-    </KeyboardAwareScrollView>
+      <TankDeleteModal tankId={tankId} isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} /> 
+    </Background>
   );
 }
 
@@ -374,7 +368,6 @@ export default function Tank({ route, navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
   },
   container: {
     flex: 1,

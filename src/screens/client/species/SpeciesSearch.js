@@ -7,7 +7,6 @@ import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
 import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
 import { Menu } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';

@@ -10,21 +10,18 @@ import {
 import { theme } from '../theme';
 
 const Background = ({ justify, style, children }) => (
-  <ImageBackground
-    source={require('../assets/background_dot.png')}
-    resizeMode="repeat"
+
+  <ScrollView
     style={styles.background}
+    contentContainerStyle={[
+      styles.container,
+      justify == 'top' ? styles.containerTop : styles.containerCenter,
+      style
+    ]}
   >
-    <KeyboardAvoidingView
-      style={[
-        styles.container,
-        justify == 'top' ? styles.containerTop : styles.containerCenter,
-        style
-      ]}
-      behavior="padding">
-          {children}
-    </KeyboardAvoidingView>
-  </ImageBackground>
+    {children}
+  </ScrollView>
+
 );
 
 const styles = StyleSheet.create({
@@ -32,6 +29,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flexGrow: 1,
     alignSelf: 'stretch',
     alignItems: 'center',
     padding: theme.container.padding,

@@ -8,7 +8,6 @@ import { ucFirst, toCamelCase } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { Card } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Svg, { Path } from 'react-native-svg';
 import SpeciesMenu from './SpeciesMenu';
 import OptionsMenu from '../../../components/OptionsMenu';
@@ -251,151 +250,147 @@ export default function Species({ route, navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
-      <Background justify="top">
-        { species ?
-          <>
-            { species.group &&
-                <View style={styles.topLeft}>
-                  <GroupIcon
-                    name={species.group.icon} 
-                    color={theme.colors.lightText}
-                    size={36}
-                  />
-                </View>
-            }
-
-            <OptionsMenu>
-              <SpeciesMenu species={species} />
-            </OptionsMenu>
-
-            {/* Species name and other names */}
-            <Toggler
-              title={species.name[locale]}
-              description={i18n.t('species.otherNames')}
-              list={species.otherNames[locale]}
-              size='big'
-            />
-
-            {/* Species scientific name and synonyms */}
-            <Toggler
-              title={species.scientificName}
-              description={i18n.t('species.scientificNameSynonyms')}
-              list={species.scientificNameSynonyms}
-              size='small'
-            />
-
-            {/* TO BE FIXED: remove this SVG (default no pic found)
-            <Svg height="150" width="100%" viewBox="0 7.5 100 20">
-              <Path x="15" y="15" stroke={theme.colors.disabled} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeDasharray="3, 3" d="M66.5,22.2c0,0-29.7-39.6-66.5-10.6l0,0C36.8,40.6,66.5,0,66.5,0"/>
-            </Svg>
-            */}
-
-            { species.images &&
-              <Slider items={getSliderImages()} height={Dimensions.get('window').width} />
-            }
-            
-            {/* Family and group */}
-            <View style={[styles.row,{ marginBottom: theme.container.padding * 2 }]}>
-             <Paragraph style={styles.classification}>{ucFirst(species.family.name[locale])}</Paragraph> 
-             <Paragraph style={[styles.classification,{ borderLeftWidth: 1, borderLeftColor: theme.colors.lightText }]}>{ucFirst(species.group.name[locale])}</Paragraph> 
-            </View>
-
-            {/* Sizes, feed (diet) and swimming area */}
-            <View style={styles.row}>
-              <Surface
-                elevation={12}
-                style={styles.surface}
-                color={theme.colors.quaternary}
-              >
-                  <View style={[styles.paramsContainer,{ marginBottom: theme.container.padding }]}>
-                    {paramIcon('ruler',30)}
-                    {paramValues(`${species.length.min} - ${species.length.max} ` + i18n.t('measures.' + user.units.length + 'Abbr'),i18n.t('general.size'))}
-                  </View>
-                  <View style={styles.paramsContainer}>
-                    {paramIcon('cube-scan',32)}
-                    {paramValues(species.minTankVolume + ' ' + i18n.t('measures.' + user.units.volume + 'Abbr'),i18n.t('general.minTank'))}
-                  </View>
-              </Surface>
-              <View style={{flex:1,justifyContent:'flex-start'}}>
-                <Surface style={[styles.surface, styles.smallSurface, { marginBottom: theme.container.padding / 2 }]}>
-                    {paramIcon(getFeedIcon(species.feed.name.en),28)}
-                    {paramValues(ucFirst(species.feed.name[locale]),i18n.t('general.feed.one'))}
-                </Surface>
-                <Surface style={[styles.surface, styles.smallSurface, { marginTop: 0 }]}>
-                    {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swimArea'))}
-                </Surface>
+    <Background justify="top">
+      { species ?
+        <>
+          { species.group &&
+              <View style={styles.topLeft}>
+                <GroupIcon
+                  name={species.group.icon} 
+                  color={theme.colors.lightText}
+                  size={36}
+                />
               </View>
-            </View>
+          }
 
-            {/* Water chemistry */}
+          <OptionsMenu>
+            <SpeciesMenu species={species} />
+          </OptionsMenu>
+
+          {/* Species name and other names */}
+          <Toggler
+            title={species.name[locale]}
+            description={i18n.t('species.otherNames')}
+            list={species.otherNames[locale]}
+            size='big'
+          />
+
+          {/* Species scientific name and synonyms */}
+          <Toggler
+            title={species.scientificName}
+            description={i18n.t('species.scientificNameSynonyms')}
+            list={species.scientificNameSynonyms}
+            size='small'
+          />
+
+          {/* TO BE FIXED: remove this SVG (default no pic found)
+          <Svg height="150" width="100%" viewBox="0 7.5 100 20">
+            <Path x="15" y="15" stroke={theme.colors.disabled} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeDasharray="3, 3" d="M66.5,22.2c0,0-29.7-39.6-66.5-10.6l0,0C36.8,40.6,66.5,0,66.5,0"/>
+          </Svg>
+          */}
+
+          { species.images &&
+            <Slider items={getSliderImages()} height={Dimensions.get('window').width} />
+          }
+          
+          {/* Family and group */}
+          <View style={[styles.row,{ marginBottom: theme.container.padding * 2 }]}>
+           <Paragraph style={styles.classification}>{ucFirst(species.family.name[locale])}</Paragraph> 
+           <Paragraph style={[styles.classification,{ borderLeftWidth: 1, borderLeftColor: theme.colors.lightText }]}>{ucFirst(species.group.name[locale])}</Paragraph> 
+          </View>
+
+          {/* Sizes, feed (diet) and swimming area */}
+          <View style={styles.row}>
+            <Surface
+              elevation={12}
+              style={styles.surface}
+              color={theme.colors.quaternary}
+            >
+                <View style={[styles.paramsContainer,{ marginBottom: theme.container.padding }]}>
+                  {paramIcon('ruler',30)}
+                  {paramValues(`${species.length.min} - ${species.length.max} ` + i18n.t('measures.' + user.units.length + 'Abbr'),i18n.t('general.size'))}
+                </View>
+                <View style={styles.paramsContainer}>
+                  {paramIcon('cube-scan',32)}
+                  {paramValues(species.minTankVolume + ' ' + i18n.t('measures.' + user.units.volume + 'Abbr'),i18n.t('general.minTank'))}
+                </View>
+            </Surface>
+            <View style={{flex:1,justifyContent:'flex-start'}}>
+              <Surface style={[styles.surface, styles.smallSurface, { marginBottom: theme.container.padding / 2 }]}>
+                  {paramIcon(getFeedIcon(species.feed.name.en),28)}
+                  {paramValues(ucFirst(species.feed.name[locale]),i18n.t('general.feed.one'))}
+              </Surface>
+              <Surface style={[styles.surface, styles.smallSurface, { marginTop: 0 }]}>
+                  {paramValues(ucFirst(species.depth.name[locale]),i18n.t('general.swimArea'))}
+              </Surface>
+            </View>
+          </View>
+
+          {/* Water chemistry */}
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={{ marginBottom: theme.container.padding }}
+            showsHorizontalScrollIndicator={true}
+            persistentScrollbar={true}
+            // pagingEnabled={true}
+          >
+            {/* Temperature */}
+            { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={50} style={{marginLeft:'-10%'}} />) }
+            {/* pH */}
+            { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
+            {/* gh */}
+            { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
+            {/* kh */}
+            { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
+          </ScrollView>
+
+          {/* Behavior */}
+          <View style={styles.container}>
+            <Subheader>{i18n.t('general.behavior.one')}</Subheader>
+              {/* Wild */}
+              { species.wild &&
+                  getBehaviour('paw', 'wild', theme.colors.error)
+              }
+              {/* Cleaning */}
+              { species.cleaning &&
+                  getBehaviour('spray-bottle', 'cleaning')
+              }
+
+              { species.behavior.map(behavior => {
+                  return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : theme.colors.text)
+                })
+              }
+          </View>
+
+          {/* Coexistance */}
+          <View style={styles.container}>
+            <Subheader>{i18n.t('coexistence.one')}</Subheader>
+
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              style={{ marginBottom: theme.container.padding }}
-              showsHorizontalScrollIndicator={true}
-              persistentScrollbar={true}
-              // pagingEnabled={true}
             >
-              {/* Temperature */}
-              { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={50} style={{marginLeft:'-10%'}} />) }
-              {/* pH */}
-              { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
-              {/* gh */}
-              { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
-              {/* kh */}
-              { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
+              { getCoexistance('indiv', 'fish') }
+              { getCoexistance('couple', 'fish') }
+              { getCoexistance('onlyFem', 'fish') }
+              { getCoexistance('onlyMasc', 'fish') }
+              { getCoexistance('mixedGroup', 'fish') }
+              { getCoexistance('harem', 'fish') }
+              { getCoexistance('inverseHarem', 'fish') }
             </ScrollView>
+          </View>
+          
+        </>
+        :
+        <Spinner/>
+      }
 
-            {/* Behavior */}
-            <View style={styles.container}>
-              <Subheader>{i18n.t('general.behavior.one')}</Subheader>
-                {/* Wild */}
-                { species.wild &&
-                    getBehaviour('paw', 'wild', theme.colors.error)
-                }
-                {/* Cleaning */}
-                { species.cleaning &&
-                    getBehaviour('spray-bottle', 'cleaning')
-                }
-
-                { species.behavior.map(behavior => {
-                    return getBehaviour(behavior.icon, behavior.name[locale], behavior.warning ? theme.colors.warning : theme.colors.text)
-                  })
-                }
-            </View>
-
-            {/* Coexistance */}
-            <View style={styles.container}>
-              <Subheader>{i18n.t('coexistence.one')}</Subheader>
-
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                { getCoexistance('indiv', 'fish') }
-                { getCoexistance('couple', 'fish') }
-                { getCoexistance('onlyFem', 'fish') }
-                { getCoexistance('onlyMasc', 'fish') }
-                { getCoexistance('mixedGroup', 'fish') }
-                { getCoexistance('harem', 'fish') }
-                { getCoexistance('inverseHarem', 'fish') }
-              </ScrollView>
-            </View>
-            
-          </>
-          :
-          <Spinner/>
-        }
-
-      </Background>
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
         <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
         <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent)}</Paragraph>
       </Modal>
-    </KeyboardAwareScrollView>
+    </Background>
   );
 }
 
