@@ -4,7 +4,6 @@ import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import * as Localization from 'expo-localization';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { axios }from '../helpers/axios';
 import { backend } from '../../app.json';
 import Background from '../components/Background';
@@ -82,46 +81,41 @@ const Verify = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-      contentContainerStyle={styles.contentContainerStyle}
-    >
-        <Background style={styles.container} justify="top">
-          <BackButton goBack={() => navigation.navigate('Register')} />
+    <Background style={styles.container} justify="top">
+      <BackButton goBack={() => navigation.navigate('Register')} />
 
-          <Logo />
+      <Logo />
 
-          <Header>{i18n.t('verify.title')}</Header>
-          <Text>{i18n.t('verify.description')}</Text>
+      <Header>{i18n.t('verify.title')}</Header>
+      <Text>{i18n.t('verify.description')}</Text>
 
-          <TextInput
-            label={i18n.t('general.code')}
-            name="code"
-            returnKeyType="next"
-            value={user.values.code}
-            onChangeText={(code) => handleChange('code', code)}
-            error={!!user.errors.code}
-            errorText={user.errors.code}
-            autoCapitalize="characters"
-          />
+      <TextInput
+        label={i18n.t('general.code')}
+        name="code"
+        returnKeyType="next"
+        value={user.values.code}
+        onChangeText={(code) => handleChange('code', code)}
+        error={!!user.errors.code}
+        errorText={user.errors.code}
+        autoCapitalize="characters"
+      />
 
-          <View style={styles.forgotPassword}>
-            <TouchableOpacity
-              onPress={() => {resendCode()}}
-            >
-              <Text style={styles.label}>{i18n.t('verify.resend')}</Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.forgotPassword}>
+        <TouchableOpacity
+          onPress={() => {resendCode()}}
+        >
+          <Text style={styles.label}>{i18n.t('verify.resend')}</Text>
+        </TouchableOpacity>
+      </View>
 
-          <Button
-            mode="contained"
-            onPress={handleSubmit}
-            style={styles.button}>
-              {i18n.t('general.verify')}
-          </Button>
+      <Button
+        mode="contained"
+        onPress={handleSubmit}
+        style={styles.button}>
+          {i18n.t('general.verify')}
+      </Button>
 
-        </Background>
-    </KeyboardAwareScrollView>
+    </Background>
   );
 };
 

@@ -8,7 +8,6 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text } from 'react-native';
 import { ToggleButton, Avatar, Title, Caption } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -47,9 +46,6 @@ export default function Tank({ route, navigation }) {
   }, [tankId, id]);
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
       <Background justify="top">
         <MenuButton />
         { tank ?
@@ -135,7 +131,6 @@ export default function Tank({ route, navigation }) {
         }
 
       </Background>
-    </KeyboardAwareScrollView>
   );
 }
 

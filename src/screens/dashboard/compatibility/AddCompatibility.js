@@ -7,7 +7,6 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker } from 'react-native';
 import { ToggleButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -72,34 +71,30 @@ export default function AddCompatibility({ navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
-      <Background justify="top">
-        <MenuButton />
-        <Header>
-          New compatibility
-        </Header>
+    <Background justify="top">
+      <MenuButton />
+      <Header>
+        New compatibility
+      </Header>
 
-        <View style={styles.inputRow}>
-          <TextInput
-            label="XLSX file"
-            name="uploadFile"
-            returnKeyType="next"
-            value={uploadFile ? uploadFile.name : ''}
-            editable={false}
-            autoCapitalize="none"
-            style={{flex:9, marginRight: 4, marginTop: 0}}
-          />
-          <Button
-            style={{flex: 1, marginTop: 6, marginBottom: 12, marginLeft: 4}}
-            onPress={pickDocument}
-          >...</Button>
-        </View>
-        <Button onPress={onUpload}>Upload</Button>
+      <View style={styles.inputRow}>
+        <TextInput
+          label="XLSX file"
+          name="uploadFile"
+          returnKeyType="next"
+          value={uploadFile ? uploadFile.name : ''}
+          editable={false}
+          autoCapitalize="none"
+          style={{flex:9, marginRight: 4, marginTop: 0}}
+        />
+        <Button
+          style={{flex: 1, marginTop: 6, marginBottom: 12, marginLeft: 4}}
+          onPress={pickDocument}
+        >...</Button>
+      </View>
+      <Button onPress={onUpload}>Upload</Button>
 
-      </Background>
-    </KeyboardAwareScrollView>
+    </Background>
   );
 }
 

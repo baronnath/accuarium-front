@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { ToggleButton, Checkbox } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -321,9 +320,6 @@ export default function AddTank({ navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
       <Background justify="top">
         <MenuButton />
         <Header>
@@ -505,7 +501,6 @@ export default function AddTank({ navigation }) {
         <Button onPress={onSubmit} >Send</Button>
 
       </Background>
-    </KeyboardAwareScrollView>
   );
 }
 

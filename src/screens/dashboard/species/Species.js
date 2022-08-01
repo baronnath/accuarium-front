@@ -8,7 +8,6 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, Text } from 'react-native';
 import { ToggleButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -50,9 +49,6 @@ export default function Species({ route, navigation }) {
   }, [speciesId]);
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
       <Background justify="top">
         <MenuButton />
         { species ?
@@ -136,7 +132,6 @@ export default function Species({ route, navigation }) {
         }
 
       </Background>
-    </KeyboardAwareScrollView>
   );
 }
 

@@ -7,7 +7,6 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker, ScrollView } from 'react-native';
 import { ToggleButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Fab from '../Fab';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';

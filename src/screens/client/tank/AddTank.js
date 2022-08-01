@@ -8,7 +8,6 @@ import {
   StyleSheet, View, Image, TouchableOpacity
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
@@ -256,15 +255,11 @@ export default function AddTank({ navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
-      <Background>
+    <Background>
 
-        <Slider items={sliderItems} button={i18n.t('general.next')} />
+      <Slider items={sliderItems} button={i18n.t('general.next')} />
 
-      </Background>
-    </KeyboardAwareScrollView>
+    </Background>
   );
 }
 

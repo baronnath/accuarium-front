@@ -7,7 +7,6 @@ import { ucFirst } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, Image, Picker } from 'react-native';
 import { ToggleButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import MenuButton from '../../../components/MenuButton';
@@ -263,9 +262,6 @@ export default function AddSpecies({ navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-    >
       <Background justify="top">
         <MenuButton />
         <Header>
@@ -522,7 +518,6 @@ export default function AddSpecies({ navigation }) {
         <Button onPress={onUpload}>Upload</Button>
 
       </Background>
-    </KeyboardAwareScrollView>
   );
 }
 

@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { ToggleButton, Checkbox, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import EditSpeciesCard from '../species/EditSpeciesCard';
 import Background from '../../../components/Background';
@@ -229,151 +228,146 @@ export default function EditTank({ route, navigation }) {
   }
 
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-      contentContainerStyle={styles.background}
-    >
-      <Background justify="top" style={styles.background}>
-        <Header>
-        {i18n.t('tank.editTank')}
-        </Header>
-        {
-          !helpers.isEmpty(editedTank) &&
-            <View style={styles.formContainer}>
-              <TextInput
-                label={i18n.t('tank.alias')}
-                name="name"
-                returnKeyType="next"
-                onChangeText={(name) => { handleChange('name', name) } }
-                value={editedTank.name}
-                error={!!errors.name}
-                errorText={errors.name}
-                autoCapitalize="none"
-                autofill="name"
+    <Background justify="top" style={styles.background}>
+      <Header>
+      {i18n.t('tank.editTank')}
+      </Header>
+      {
+        !helpers.isEmpty(editedTank) &&
+          <View style={styles.formContainer}>
+            <TextInput
+              label={i18n.t('tank.alias')}
+              name="name"
+              returnKeyType="next"
+              onChangeText={(name) => { handleChange('name', name) } }
+              value={editedTank.name}
+              error={!!errors.name}
+              errorText={errors.name}
+              autoCapitalize="none"
+              autofill="name"
+            />
+
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: image + '?' + new Date() }} // Date is added to avoid image to cache
+                style={styles.image}
               />
-
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: image + '?' + new Date() }} // Date is added to avoid image to cache
-                  style={styles.image}
-                />
-                <IconButton
-                  icon="camera"
-                  size={32}
-                  style={styles.imageButton}
-                  color={theme.colors.surface}
-                  onPress={() => pickImage()}
-                />
-              </View>
-
-              <View style={[styles.inputRow, styles.subheader]}>
-                <MaterialCommunityIcons style={styles.subheaderIcon}name="cube-scan" size={30} color={theme.colors.text} />
-                <Subheader>{i18n.t('general.measures')}</Subheader>
-              </View>
-              <View style={styles.inputRow}>
-                <View style={styles.inputWrap}>
-                  <TextInput
-                    style={styles.inputLeft}
-                    label={i18n.t('general.width')}
-                    name="width"
-                    returnKeyType="next"
-                    value={editedTank.measures.width && editedTank.measures.width.toString()}
-                    onChangeText={(width) => handleMeasure('width', width)}
-                    error={!!errors.width}
-                    errorText={errors.width}
-                  />
-                </View>
-                <View style={styles.inputWrap}>
-                  <TextInput
-                    style={styles.inputLeft}
-                    label={i18n.t('general.height')}
-                    name="height"
-                    returnKeyType="next"
-                    value={editedTank.measures.height && editedTank.measures.height.toString()}
-                    onChangeText={(height) => handleMeasure('height', height)}
-                    error={!!errors.height}
-                    errorText={errors.height}
-                  />
-                </View>
-                <View style={styles.inputWrap}>
-                  <TextInput
-                    style={styles.inputRight}
-                    label={i18n.t('general.length')}
-                    name="length"
-                    returnKeyType="next"
-                    value={editedTank.measures.length && editedTank.measures.length.toString()}
-                    onChangeText={(length) => handleMeasure('length', length)}
-                    error={!!errors.length}
-                    errorText={errors.length}
-                  />
-                </View>
-              </View>
-              <View style={styles.inputRow}>
-                <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
-                  <Button
-                    style={styles.inputRight,{height: 58, marginTop: 6}}
-                    onPress={() => calculateLiters()}
-                  >
-                    <MaterialCommunityIcons
-                      name="calculator-variant"
-                      size={28}
-                    />
-                  </Button>
-                </View>
-                <View style={styles.inputWrap, {flex: 8}}>
-                  <TextInput
-                    label={i18n.t('general.liters')}
-                    name="liters"
-                    returnKeyType="next"
-                    onChangeText={(liters) => handleChange('liters', liters)}
-                    value={editedTank.liters && editedTank.liters.toString()}
-                    error={!!errors.liters}
-                    errorText={errors.liters}
-                    autoCapitalize="none"
-                    autofill="liters"
-                    style={styles.inputLeft}
-                  />
-                </View>
-              </View>
-              <Paragraph>{i18n.t('tank.clickFormula')}</Paragraph>
-              { !!editedTank['species'].length && 
-                <View style={styles.speciesContainer}>
-                  <View style={[styles.inputRow, styles.subheader]}>
-                    <MaterialCommunityIcons style={styles.subheaderIcon} name="fish" size={30} color={theme.colors.text} />
-                    <Subheader>Species</Subheader>
-                  </View>
-                  {
-                    // No main species selected warning
-                    !!editedTank.species.length && !mainSpecies &&
-                      <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
-                        left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
-                      />
-                  } 
-                  <FlatList
-                    style={styles.flatList}
-                    contentContainerStyle={styles.flatListContainer}
-                    showsHorizontalScrollIndicator={false}
-                    data={editedTank.species}
-                    keyExtractor={species => species._id}
-                    renderItem={({item}) => (
-                        <EditSpeciesCard
-                          species={item.species}
-                          quantity={item.quantity}
-                          main={item.main}
-                          removeSpecies={removeSpecies}
-                          handleSpecies={handleSpecies}
-                        />
-                    )}
-                    ListFooterComponent={ isLoading && <Spinner /> }
-                  />
-                </View>
-              }
-              <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
+              <IconButton
+                icon="camera"
+                size={32}
+                style={styles.imageButton}
+                color={theme.colors.surface}
+                onPress={() => pickImage()}
+              />
             </View>
-        }
 
-      </Background>
-    </KeyboardAwareScrollView>
+            <View style={[styles.inputRow, styles.subheader]}>
+              <MaterialCommunityIcons style={styles.subheaderIcon}name="cube-scan" size={30} color={theme.colors.text} />
+              <Subheader>{i18n.t('general.measures')}</Subheader>
+            </View>
+            <View style={styles.inputRow}>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.inputLeft}
+                  label={i18n.t('general.width')}
+                  name="width"
+                  returnKeyType="next"
+                  value={editedTank.measures.width && editedTank.measures.width.toString()}
+                  onChangeText={(width) => handleMeasure('width', width)}
+                  error={!!errors.width}
+                  errorText={errors.width}
+                />
+              </View>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.inputLeft}
+                  label={i18n.t('general.height')}
+                  name="height"
+                  returnKeyType="next"
+                  value={editedTank.measures.height && editedTank.measures.height.toString()}
+                  onChangeText={(height) => handleMeasure('height', height)}
+                  error={!!errors.height}
+                  errorText={errors.height}
+                />
+              </View>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  style={styles.inputRight}
+                  label={i18n.t('general.length')}
+                  name="length"
+                  returnKeyType="next"
+                  value={editedTank.measures.length && editedTank.measures.length.toString()}
+                  onChangeText={(length) => handleMeasure('length', length)}
+                  error={!!errors.length}
+                  errorText={errors.length}
+                />
+              </View>
+            </View>
+            <View style={styles.inputRow}>
+              <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
+                <Button
+                  style={styles.inputRight,{height: 58, marginTop: 6}}
+                  onPress={() => calculateLiters()}
+                >
+                  <MaterialCommunityIcons
+                    name="calculator-variant"
+                    size={28}
+                  />
+                </Button>
+              </View>
+              <View style={styles.inputWrap, {flex: 8}}>
+                <TextInput
+                  label={i18n.t('general.liters')}
+                  name="liters"
+                  returnKeyType="next"
+                  onChangeText={(liters) => handleChange('liters', liters)}
+                  value={editedTank.liters && editedTank.liters.toString()}
+                  error={!!errors.liters}
+                  errorText={errors.liters}
+                  autoCapitalize="none"
+                  autofill="liters"
+                  style={styles.inputLeft}
+                />
+              </View>
+            </View>
+            <Paragraph>{i18n.t('tank.clickFormula')}</Paragraph>
+            { !!editedTank['species'].length && 
+              <View style={styles.speciesContainer}>
+                <View style={[styles.inputRow, styles.subheader]}>
+                  <MaterialCommunityIcons style={styles.subheaderIcon} name="fish" size={30} color={theme.colors.text} />
+                  <Subheader>Species</Subheader>
+                </View>
+                {
+                  // No main species selected warning
+                  !!editedTank.species.length && !mainSpecies &&
+                    <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
+                      left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
+                    />
+                } 
+                <FlatList
+                  style={styles.flatList}
+                  contentContainerStyle={styles.flatListContainer}
+                  showsHorizontalScrollIndicator={false}
+                  data={editedTank.species}
+                  keyExtractor={species => species._id}
+                  renderItem={({item}) => (
+                      <EditSpeciesCard
+                        species={item.species}
+                        quantity={item.quantity}
+                        main={item.main}
+                        removeSpecies={removeSpecies}
+                        handleSpecies={handleSpecies}
+                      />
+                  )}
+                  ListFooterComponent={ isLoading && <Spinner /> }
+                />
+              </View>
+            }
+            <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
+          </View>
+      }
+
+    </Background>
   );
 }
 

@@ -8,7 +8,6 @@ import helpers from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, TouchableOpacity} from 'react-native';
 import { Avatar, RadioButton } from 'react-native-paper';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -107,119 +106,113 @@ export default function Profile({ route, navigation }) {
   }
    
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{x:0, y:0}}
-      contentContainerStyle={styles.contentContainerStyle}
-    >
-      <Background justify="top" style={styles.background}>
-        { !helpers.isEmpty(editedUser) && 
-          <>
-            <Avatar.Text
-              size={100}
-              label={helpers.getInitials(editedUser.name)}
-              // color={theme.colors.surface}
-              labelStyle={styles.avatar}
-            />
-            <Header>
-              {helpers.ucFirst(editedUser.name)}
-            </Header>
+    <Background justify="top" style={styles.background}>
+      { !helpers.isEmpty(editedUser) && 
+        <>
+          <Avatar.Text
+            size={100}
+            label={helpers.getInitials(editedUser.name)}
+            // color={theme.colors.surface}
+            labelStyle={styles.avatar}
+          />
+          <Header>
+            {helpers.ucFirst(editedUser.name)}
+          </Header>
 
-            <View style={styles.container}>
-              <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>{i18n.t('general.language')}</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUser.locale}</Paragraph>
-                <TouchableOpacity style={styles.rightSide}>
-                  <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={30}
-                    color={theme.colors.lightText}
-                    onPress={() => setLocaleDialogVisible(true)}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <Subheader style={styles.subheader}>{i18n.t('general.measureUnits')}</Subheader>
-
-              <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>{i18n.t('general.hardness')}</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.hardness+'Abbr')}</Paragraph>
-                <TouchableOpacity style={styles.rightSide}>
-                  <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={30}
-                    color={theme.colors.lightText}
-                    onPress={() => {
-                      setUnitsDialogVisible(true);
-                      setUnit('hardness')
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>{i18n.t('general.volume')}</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.volume+'Abbr')}</Paragraph>
-                <TouchableOpacity style={styles.rightSide}>
-                  <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={30}
-                    color={theme.colors.lightText}
-                    onPress={() => {
-                      setUnitsDialogVisible(true);
-                      setUnit('volume');
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>{i18n.t('general.length')}</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.length+'Abbr')}</Paragraph>
-                <TouchableOpacity style={styles.rightSide}>
-                  <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={30}
-                    color={theme.colors.lightText}
-                    onPress={() => {
-                      setUnitsDialogVisible(true);
-                      setUnit('length');
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.row}>
-                <Paragraph style={styles.leftSide}>{i18n.t('general.temperature')}</Paragraph>
-                <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.temperature+'Abbr')}</Paragraph>
-                <TouchableOpacity style={styles.rightSide}>
-                  <MaterialCommunityIcons
-                    name="chevron-right"
-                    size={30}
-                    color={theme.colors.lightText}
-                    onPress={() => {
-                      setUnitsDialogVisible(true);
-                      setUnit('temperature')
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-              
+          <View style={styles.container}>
+            <View style={styles.row}>
+              <Paragraph style={styles.leftSide}>{i18n.t('general.language')}</Paragraph>
+              <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUser.locale}</Paragraph>
+              <TouchableOpacity style={styles.rightSide}>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={30}
+                  color={theme.colors.lightText}
+                  onPress={() => setLocaleDialogVisible(true)}
+                />
+              </TouchableOpacity>
             </View>
 
-            <Button
-              icon="logout-variant"
-              onPress={signOut}
-              mode="outlined"
-              style={styles.logout}
-            >
-              {i18n.t('general.logout')}
-            </Button>
-            <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
-          </>
-        }
-      </Background>
+            <Subheader style={styles.subheader}>{i18n.t('general.measureUnits')}</Subheader>
 
+            <View style={styles.row}>
+              <Paragraph style={styles.leftSide}>{i18n.t('general.hardness')}</Paragraph>
+              <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.hardness+'Abbr')}</Paragraph>
+              <TouchableOpacity style={styles.rightSide}>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={30}
+                  color={theme.colors.lightText}
+                  onPress={() => {
+                    setUnitsDialogVisible(true);
+                    setUnit('hardness')
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
 
+            <View style={styles.row}>
+              <Paragraph style={styles.leftSide}>{i18n.t('general.volume')}</Paragraph>
+              <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.volume+'Abbr')}</Paragraph>
+              <TouchableOpacity style={styles.rightSide}>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={30}
+                  color={theme.colors.lightText}
+                  onPress={() => {
+                    setUnitsDialogVisible(true);
+                    setUnit('volume');
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.row}>
+              <Paragraph style={styles.leftSide}>{i18n.t('general.length')}</Paragraph>
+              <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.length+'Abbr')}</Paragraph>
+              <TouchableOpacity style={styles.rightSide}>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={30}
+                  color={theme.colors.lightText}
+                  onPress={() => {
+                    setUnitsDialogVisible(true);
+                    setUnit('length');
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.row}>
+              <Paragraph style={styles.leftSide}>{i18n.t('general.temperature')}</Paragraph>
+              <Paragraph fontWeight='bold' style={styles.centerSide}>{i18n.t('measures.'+editedUser.units.temperature+'Abbr')}</Paragraph>
+              <TouchableOpacity style={styles.rightSide}>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={30}
+                  color={theme.colors.lightText}
+                  onPress={() => {
+                    setUnitsDialogVisible(true);
+                    setUnit('temperature')
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            
+          </View>
+
+          <Button
+            icon="logout-variant"
+            onPress={signOut}
+            mode="outlined"
+            style={styles.logout}
+          >
+            {i18n.t('general.logout')}
+          </Button>
+          <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
+        </>
+      }
+      
       <Dialog
         isVisible={isLocaleDialogVisible}
         setVisible={() => setLocaleDialogVisible()}
@@ -279,7 +272,7 @@ export default function Profile({ route, navigation }) {
           </RadioButton.Group>
         }
       </Dialog>
-    </KeyboardAwareScrollView>
+    </Background>
   );
 }
 
