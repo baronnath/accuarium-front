@@ -184,7 +184,6 @@ export default function SpeciesSearch({ route, navigation }) {
           }
           filters[key].value.push(value.value);
           filters[key].displayValue.push(value.displayValue);
-          console.log(filters[key]);
 
           return filters;
         });

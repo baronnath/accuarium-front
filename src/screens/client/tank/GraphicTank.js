@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomLeftRadius: 5,
     marginTop: 15,
-    marginBottom: 40,
+    marginBottom: theme.container.padding / 2,
   },
   container: {
     paddingLeft: 5,

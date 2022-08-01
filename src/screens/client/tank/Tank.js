@@ -297,6 +297,13 @@ export default function Tank({ route, navigation }) {
                   { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
                 </View>
 
+                
+                {/* Graphic tank with species split by swimming area */}
+                <Subheader>{i18n.t('general.graphicTank')}</Subheader>
+                { tank.species &&
+                  <GraphicTank style={{marginTop: 5}}/>
+                }
+                
                 {/* Free space and cleaning */}
                 { tank.liters &&
                   <View style={styles.row}>
@@ -307,8 +314,21 @@ export default function Tank({ route, navigation }) {
                         setModalContent('tank.modalFreeSpace');
                       }}
                     >
-                      <Surface style={[styles.smallSurface,{margin:0, marginRight: theme.container.padding / 4}]} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.warning }>
-                        <Paragraph><MaterialCommunityIcons name="water-percent" size={22} /> { freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
+                      <Surface
+                        style={[styles.smallSurface,styles.smallSurfaceHorizontal]}
+                        color={ freeSpace > 0 ? theme.colors.primary : theme.colors.warning }
+                      >
+                        <View style={styles.row}>
+                          <MaterialCommunityIcons name="water-percent" size={36} />
+                          <View style={{flex: 1}}>
+                            <Paragraph style={styles.smallSurfaceHorizontalText} fontWeight="bold">
+                              { freeSpace }%
+                            </Paragraph>
+                            <Paragraph style={styles.smallSurfaceHorizontalText}>
+                              {i18n.t('general.freeSpace')}
+                            </Paragraph>
+                          </View>
+                        </View>
                       </Surface>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -318,45 +338,25 @@ export default function Tank({ route, navigation }) {
                         setModalContent('tank.modalCleanupCrew');
                       }}
                     >
-                      <Surface style={[styles.smallSurface,{margin:0}]} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }>
-                       <Paragraph><MaterialCommunityIcons name="spray-bottle" size={20} /> { cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
+                      <Surface
+                        style={[styles.smallSurface,styles.smallSurfaceHorizontal]}
+                        color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }
+                      >
+                        <View style={styles.row}>
+                          <MaterialCommunityIcons name="spray-bottle" size={36} />
+                          <View style={{flex: 1}}>
+                            <Paragraph style={styles.smallSurfaceHorizontalText} fontWeight="bold">
+                              { cleanupCrew }%
+                            </Paragraph>
+                            <Paragraph style={styles.smallSurfaceHorizontalText}>
+                              {i18n.t('general.cleanupCrew')}
+                            </Paragraph>
+                          </View>
+                        </View>
                       </Surface>
                     </TouchableOpacity>
                   </View>
                 }
-
-                
-                {/* Graphic tank with species split by swimming area */}
-                <Subheader>{i18n.t('general.graphicTank')}</Subheader>
-                { tank.species &&
-                  <GraphicTank style={{marginTop: 5}}/>
-                }
-                
-                { tank.liters &&
-                  <View style={[styles.rowContainer,styles.moreDetailsContainer]}>
-                    <TouchableOpacity
-                      style={[styles.rowContainer, styles.moreDetail]}
-                      onPress={() => {
-                        setModalVisible(true);
-                        setModalContent('tank.modalFreeSpace');
-                      }}
-                    >
-                      <MaterialCommunityIcons name="water-percent" size={22} color={ freeSpace > 0 ? theme.colors.primary : theme.colors.error }/>
-                      <Paragraph>{ freeSpace }% {i18n.t('general.freeSpace')}</Paragraph>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.rowContainer, styles.moreDetail]}
-                      onPress={() => {
-                        setModalVisible(true);
-                        setModalContent('tank.modalCleanupCrew');
-                      }}
-                    >
-                      <MaterialCommunityIcons name="spray-bottle" size={20} color={ cleanupCrew >= 15 ? theme.colors.primary : theme.colors.warning }/>
-                      <Paragraph>{ cleanupCrew }% {i18n.t('general.cleanupCrew')}</Paragraph>
-                    </TouchableOpacity>
-                  </View>
-                }
-
               </View>
         }
        
@@ -412,7 +412,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.container.padding * .25,
     paddingVertical: theme.container.padding,
     marginBottom: theme.container.padding / 2,
-
+  },
+  smallSurfaceHorizontal:{
+    margin:0,
+    marginRight: theme.container.padding / 4
+  },
+  smallSurfaceHorizontalText:{
+    paddingLeft: theme.container.padding / 8,
+    color: theme.colors.surface,
+    textAlign: 'left',
+    marginBottom: 0,
   },
   tankName: {
     fontSize: 14,
