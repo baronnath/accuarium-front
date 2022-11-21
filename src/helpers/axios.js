@@ -7,7 +7,7 @@ const ax = require('axios');
 // const http	= require('http');
 // const https = require('https');
 
-export const axios = ax.create({
+export const axios = ax.default.create({
 	timeout: 60000, // 60sec
 
 	// Keep alive pools and reuses TCP connections so it's faster

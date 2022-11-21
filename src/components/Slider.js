@@ -3,7 +3,7 @@
 import React, { memo, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Dimensions, Text } from 'react-native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-new-snap-carousel';
 import Button from './Button';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { theme } from '../theme';

@@ -1,17 +1,18 @@
 // src/translator/tranlator.js
 
-import i18n from 'i18n-js';
+import { I18n } from "i18n-js";
 import store from '../store';
 import en from './translations/en';
 import es from './translations/es';
 
 
-i18n.translations = {
+const translations = {
     en: en,
     es: es,
   };
 
-i18n.fallbacks = true;
+const i18n = new I18n(translations);
+i18n.enableFallback = true;
 
 export default (locale = null) => {
     if(!locale)
