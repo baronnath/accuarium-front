@@ -2,27 +2,9 @@
 
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import AppLoading from 'expo-app-loading';
-import {
-	useFonts,
-	Montserrat_300Light,
-	Montserrat_300Light_Italic,
-	Montserrat_400Regular,
-  Montserrat_400Regular_Italic,
-  Montserrat_700Bold,
-  Montserrat_700Bold_Italic,
-} from '@expo-google-fonts/montserrat';
 import { theme } from '../theme';
 
 const Paragraph = ({ style, fontStyle, fontWeight, children }) => {
-	let [fontsLoaded] = useFonts({
-    Montserrat_300Light,
-		Montserrat_300Light_Italic,
-		Montserrat_400Regular,
-	  Montserrat_400Regular_Italic,
-	  Montserrat_700Bold,
-  	Montserrat_700Bold_Italic,
-  });
 
   let fontOptions;
   if(fontWeight == 'light')
@@ -41,9 +23,6 @@ const Paragraph = ({ style, fontStyle, fontWeight, children }) => {
 		fontOptions = styles.regular;
 
 	return(
-		!fontsLoaded ?
-			<AppLoading />
-		:
 	  	<Text style={[styles.text,fontOptions,style]}>{children}</Text>
 	);
 };

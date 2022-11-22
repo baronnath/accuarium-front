@@ -1,17 +1,27 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { DarkTheme as PaperDarkTheme, Provider as PaperProvider } from 'react-native-paper';
 import { navigationRef } from './src/helpers/navigator';
 import { linkingRef } from './src/helpers/linking';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, View } from 'react-native';
 import { Provider as StoreProvider } from 'react-redux';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+import { loadAsync } from 'expo-font';
+import { Aleo_700Bold } from '@expo-google-fonts/aleo';
+import {
+  useFonts,
+  Montserrat_300Light,
+  Montserrat_300Light_Italic,
+  Montserrat_400Regular,
+  Montserrat_400Regular_Italic,
+  Montserrat_700Bold,
+  Montserrat_700Bold_Italic,
+} from '@expo-google-fonts/montserrat';
 import { name as appName } from './app.json';
 import store from './src/store';
 import Navigator from './src/navigator';
 import Alert from './src/components/Alert';
-import { loadAsync } from 'expo-font';
 import { theme } from './src/theme';
 
 
@@ -21,26 +31,57 @@ const CombinedDarkTheme = {
   colors: theme.colors,
 };
 
+SplashScreen.preventAutoHideAsync();
+
 export default function Main() {
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        await loadFonts();
+       
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setIsLoaded(true);
+      }
+    }
+
+    prepare();
+  }, []);
   
 
   const loadFonts = async () => {
     await loadAsync({
       'group-icons': require("./src/assets/group-icons/font/group-icons.ttf"),
-      // All Other Fonts
+      Aleo_700Bold,
+      Montserrat_300Light,
+      Montserrat_300Light_Italic,
+      Montserrat_400Regular,
+      Montserrat_400Regular_Italic,
+      Montserrat_700Bold,
+      Montserrat_700Bold_Italic,
     });
   };
 
+  const onLayoutRootView = useCallback(async () => {
+    if (isLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isLoaded]);
+
+  if (!isLoaded) {
+    return null;
+  }
+
   return (
-    !isLoaded ?
-      <AppLoading
-        startAsync={loadFonts}
-        onFinish={() => {setIsLoaded(true)}}
-        onError={(error) => console.log(error)}
-      />
-    :
-      <StoreProvider store={store}>
+    <View
+      style={{ flex: 1 }}
+      onLayout={onLayoutRootView}>
+        <StoreProvider store={store}>
         <PaperProvider theme={CombinedDarkTheme}>
           <NavigationContainer ref={navigationRef}  linking={linkingRef} theme={CombinedDarkTheme}>
             <Navigator />
@@ -48,6 +89,7 @@ export default function Main() {
           </NavigationContainer>
         </PaperProvider>
       </StoreProvider>
+    </View>
   );
 }
 
