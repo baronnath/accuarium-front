@@ -17,7 +17,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import unitConverter from '../../../helpers/unitConverter';
-import { calculateVolume } from '../../../helpers/tank';
+import { calculateVolume, isValidImage } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/tank';
@@ -184,10 +184,10 @@ export default function AddTank({ navigation }) {
       base64: true,
     });
 
-    if (!result.cancelled) {
+    const validImage = await isValidImage(result);
+    if (!result.cancelled && validImage){
       handleChange('image', result);
     }
-
   };
 
   function calculateLiters() {

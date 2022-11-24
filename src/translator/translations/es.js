@@ -280,6 +280,11 @@ const es = {
           title: 'Echa un vistazo a este tanque',
           message: 'Me gustaría que vieras el proyecto de este enlace\n %{url}',
         },
+        imageValidation: {
+          size: 'El tamaño de la imagen debe ser menor de 15MB',
+          unknown: 'No se reconoce la imagen. Utiliza otra imagen.',
+          format: 'El formato de la imagen debe ser jpg o jpeg',
+        }
     },
     addTank: {
         slide1: {

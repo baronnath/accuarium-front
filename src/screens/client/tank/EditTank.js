@@ -25,7 +25,7 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
-import { findMainSpecies, calculateVolume } from '../../../helpers/tank';
+import { findMainSpecies, calculateVolume, isValidImage } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
 import validator from '../../../validators/tank';
@@ -76,7 +76,7 @@ export default function EditTank({ route, navigation }) {
       if(!helpers.isEmpty(tank)){
         setEditedTank(helpers.clone(tank));
         setMainSpecies(findMainSpecies(tank.species));
-        setImage(`${backend.imagesUrl}tank/${tank._id}.jpg`);
+        setImage(`${backend.imagesUrl}tank/${tank._id}.jpeg`);
       }
     // }
   }, [tank]);
@@ -117,10 +117,10 @@ export default function EditTank({ route, navigation }) {
       base64: true,
     });
 
-    if (!result.cancelled) {
+    const validImage = await isValidImage(result);
+    if (!result.cancelled && validImage){
       handleChange('image', result);
     }
-
   };
 
   function calculateLiters() {

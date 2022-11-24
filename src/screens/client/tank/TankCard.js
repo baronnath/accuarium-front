@@ -30,7 +30,7 @@ const TankCard = ({ tank, ...props }) => {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
 
-  const tankImage = `${backend.imagesUrl}tank/${tank._id}.jpg`;
+  const tankImage = `${backend.imagesUrl}tank/${tank._id}.jpeg`;
 
 
   function openMenu () { setVisible(true); }
@@ -100,8 +100,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
-    paddingHorizontal: theme.container.padding / 2,
-    paddingVertical: theme.container.padding / 4,
+    paddingLeft: 0,
+    paddingRight: theme.container.padding / 2,
+    paddingVertical: 0,
     borderRadius: theme.roundness,
     // justifyContent: 'space-between',
   },
@@ -115,8 +116,9 @@ const styles = StyleSheet.create({
     flex: 1,
     // aspectRatio: 1.25,
     height: '100%',
-    borderRadius: theme.roundness,
-    resizeMode: 'contain',
+    borderTopLeftRadius: theme.roundness,
+    borderBottomLeftRadius: theme.roundness,
+    resizeMode: 'cover',
   },
   description: {
     flex: 7,

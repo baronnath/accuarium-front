@@ -280,6 +280,11 @@ const en = {
           title: 'Check out this tank',
           message: 'Please take a look to the tank in this link\n %{url}',
         },
+        imageValidation: {
+          size: 'Image size must be smaller than 15MB',
+          unknown: 'Can\'t select this file as the size is unknown.',
+          format: 'Image format must be jpg or jpeg',
+        }
     },
     addTank: {
         slide1: {

@@ -60,7 +60,7 @@ export default function Tank({ route, navigation }) {
   useEffect(() => {
     if(id){
       dispatch(tankActions.getTank(id));
-      getImage(`${backend.imagesUrl}tank/${id}.jpg`);
+      getImage(`${backend.imagesUrl}tank/${id}.jpeg`);
     }
   }, [id]);
 
