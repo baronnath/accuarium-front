@@ -223,7 +223,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
   function getTag(key, label, id = null) {
     // return <Tag onClose={() => removeFilter(key, id)}>{label}</Tag>;
-    return <Tag>{label}</Tag>;
+    return <Tag style={styles.tag}>{label}</Tag>;
   }
 
   return (
@@ -272,16 +272,8 @@ export default function SpeciesSearch({ route, navigation }) {
           value={query}
         />
        
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={{ marginBottom: theme.container.padding }}
-          showsHorizontalScrollIndicator={true}
-          persistentScrollbar={true}
-          // pagingEnabled={true}
-        >
-        {/*<View style={styles.tagContainer}>*/}
-          { filters &&
+        <View style={styles.tagContainer}>
+          { true && 
               Object.entries(filters).map(([key, filter]) => {
                 if(tagFilters.includes(key) && filter.value !== false){
                   if(Array.isArray(filter.displayValue))
@@ -293,7 +285,7 @@ export default function SpeciesSearch({ route, navigation }) {
                 }
               })
           }
-        </ScrollView>
+        </View>
 
         <FlatList
           style={styles.flatList}
@@ -347,11 +339,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   tagContainer: {
+    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    marginBottom: 10,
     width: '100%',
     justifyContent: 'center',
+    marginBottom: theme.container.padding,
+  },
+  tag: {
+    marginBottom: theme.container.padding / 4,
+    marginRight: theme.container.padding / 2,
   },
   flatList:{
     width: '100%',
