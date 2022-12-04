@@ -65,7 +65,6 @@ export default function Tank({ route, navigation }) {
   }, [id]);
 
   useEffect(() => {
-
     if(!isEmpty(tank) && tank._id.toString() == id){ // Cheack that tank data in redux has been updated with last id received
 
       if(tank.species.length){
@@ -213,7 +212,7 @@ export default function Tank({ route, navigation }) {
                 </Header>
                 
                 <OptionsMenu>
-                  <TankMenu tankId={tank._id} deleteTank={setDeleteModalVisible}/>
+                  <TankMenu deleteTank={setDeleteModalVisible}/>
                 </OptionsMenu>
 
                 {/* Volumen, measures and main species */}

@@ -63,7 +63,7 @@ export default function Navigator() {
         activeColor={theme.colors.surface}
         inactiveColor={theme.colors.disabled}
         barStyle={styles.bottomNav}
-        initialRouteName="TankNav"
+        initialRouteName="SpeciesNav"
       >
         <Tab.Screen name="TankNav"
           component={TankNav}
