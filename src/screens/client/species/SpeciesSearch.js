@@ -20,7 +20,7 @@ import Tag from '../../../components/Tag';
 import SpeciesCard from './SpeciesCard';
 import Spinner from '../../../components/Spinner';
 import { actions as tankActions } from '../../../ducks/tank';
-import { ucFirst } from '../../../helpers/helpers';
+import { ucFirst, isEmpty } from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
 import { theme } from '../../../theme';
 import translator from '../../../translator/translator';
@@ -272,20 +272,24 @@ export default function SpeciesSearch({ route, navigation }) {
           value={query}
         />
        
-        <View style={styles.tagContainer}>
-          { true && 
-              Object.entries(filters).map(([key, filter]) => {
-                if(tagFilters.includes(key) && filter.value !== false){
-                  if(Array.isArray(filter.displayValue))
-                    return filter.displayValue.map((f) => {
-                      return getTag(key, f, filter.value)
-                    })
-                  else
-                    return getTag(key, filter.displayValue)
-                }
-              })
-          }
-        </View>
+        { filters && !isEmpty(filters) &&
+          <View style={styles.tagContainer}>
+            {
+                Object.entries(filters).map(([key, filter]) => {
+                  if(tagFilters.includes(key) && filter.value !== false){
+                    if(Array.isArray(filter.displayValue))
+                      return filter.displayValue.map((f) => {
+                        return getTag(key, f, filter.value)
+                      })
+                    else
+                      return getTag(key, filter.displayValue)
+                  }
+                })
+                  
+
+            }
+          </View>
+        } 
 
         <FlatList
           style={styles.flatList}
@@ -347,7 +351,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.container.padding,
   },
   tag: {
-    marginBottom: theme.container.padding / 4,
+    flex: 0,
     marginRight: theme.container.padding / 2,
   },
   flatList:{
