@@ -63,9 +63,9 @@ export default function Navigator() {
         activeColor={theme.colors.surface}
         inactiveColor={theme.colors.disabled}
         barStyle={styles.bottomNav}
-        initialRouteName="Species"
+        initialRouteName="TankNav"
       >
-        <Tab.Screen name="Tanks"
+        <Tab.Screen name="TankNav"
           component={TankNav}
           options={{
             tabBarIcon: ({ color, size }) => (
@@ -73,7 +73,7 @@ export default function Navigator() {
             ),
           }}
         />
-        <Tab.Screen name="Species"
+        <Tab.Screen name="SpeciesNav"
           component={SpeciesNav}
           options={{
             tabBarIcon: ({ color, size  }) => (
@@ -81,7 +81,7 @@ export default function Navigator() {
             ),
           }}
         />
-        <Tab.Screen name="Profile"
+        <Tab.Screen name="ProfileNav"
           component={ProfileNav}
           options={{
             tabBarIcon: ({ color, size }) => (
