@@ -268,12 +268,14 @@ export default function Species({ route, navigation }) {
           </OptionsMenu>
 
           {/* Species name and other names */}
-          <Toggler
-            title={species.name[locale]}
-            description={i18n.t('species.otherNames')}
-            list={species.otherNames[locale]}
-            size='big'
-          />
+          {species.name && species.name[locale] != undefined && 
+            <Toggler
+              title={species.name[locale]}
+              description={i18n.t('species.otherNames')}
+              list={species.otherNames[locale]}
+              size='big'
+            />
+          }
 
           {/* Species scientific name and synonyms */}
           <Toggler
