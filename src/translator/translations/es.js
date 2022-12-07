@@ -280,11 +280,32 @@ const es = {
           title: 'Echa un vistazo a este tanque',
           message: 'Me gustaría que vieras el proyecto de este enlace\n %{url}',
         },
-        imageValidation: {
-          size: 'El tamaño de la imagen debe ser menor de 15MB',
-          unknown: 'No se reconoce la imagen. Utiliza otra imagen.',
-          format: 'El formato de la imagen debe ser jpg o jpeg',
-        }
+        validation: {
+          name:{
+            notEmpty: 'El nombre del tanque no puede estar vacío',
+          },
+          width: {
+            numberDecimals: 'El ancho solo puede ser un valor numérico (máx. 2 decimales)',
+            notValid: 'El ancho no es válido',
+          },
+          length: {
+            numberDecimals: 'El largo solo puede ser un valor numérico (máx. 2 decimales)',
+            notValid: 'El largo no es válido',
+          },
+          height: {
+            numberDecimals: 'La altura solo puede ser un valor numérico (máx. 2 decimales)',
+            notValid: 'La altura no es válida',
+          },
+          liters: {
+            numberDecimals: 'El volumen solo puede ser un valor numérico (máx. 2 decimales)',
+            notValid: 'El volumen no es válido',
+          },
+          image: {
+            size: 'El tamaño de la imagen debe ser menor de 15MB',
+            unknown: 'No se reconoce la imagen. Utiliza otra imagen',
+            format: 'El formato de la imagen debe ser jpg o jpeg',
+          },
+        },
     },
     addTank: {
         slide1: {

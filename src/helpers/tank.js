@@ -1,9 +1,6 @@
 // src/helpers/tank.js
 
-import store from '../store';
-import { actions as alertActions } from '../ducks/alert';
 import { commaToPeriod } from './helpers';
-import * as FileSystem from 'expo-file-system';
 
 export function calculateVolume(dimensions) {
     let { width, height, length } = dimensions;
@@ -86,32 +83,4 @@ export function isCompatible(compatibility){
     isParameterCompatible: isParamCompat,
     isSpeciesCompatible: isSpeciesCompat,
   };
-}
-
-export async function isValidImage(stream){
-  const { uri } = stream;
-  const maxSize = 15;
-  const validFormats = ['jpg', 'jpeg'];
-  let valid = true;
-
-  const fileInfo = await FileSystem.getInfoAsync(uri);
-
-  if (!fileInfo?.size) {
-    store.dispatch(alertActions.error('tank.imageValidation.unknown'));
-    valid = false;
-  }
-
-  const fileSize = fileInfo.size / 1024 / 1024;
-  if (fileSize > maxSize) {
-    store.dispatch(alertActions.error('tank.imageValidation.size'));
-    valid = false;
-  }
-
-  const fileExtension = uri.substr(uri.lastIndexOf('.') + 1);
-  if(!validFormats.includes(fileExtension)){
-    store.dispatch(alertActions.error('tank.imageValidation.format'));
-    valid = false;
-  }
-
-  return valid;
 }

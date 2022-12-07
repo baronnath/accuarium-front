@@ -280,11 +280,32 @@ const en = {
           title: 'Check out this tank',
           message: 'Please take a look to the tank in this link\n %{url}',
         },
-        imageValidation: {
-          size: 'Image size must be smaller than 15MB',
-          unknown: 'Can\'t select this file as the size is unknown.',
-          format: 'Image format must be jpg or jpeg',
-        }
+        validation: {
+          name:{
+            notEmpty: 'Name cannot be empty',
+          },
+          width: {
+            numberDecimals: 'Width only accepts numbers (up to 2 decimals)',
+            notValid: 'Width value is not valid',
+          },
+          length: {
+            numberDecimals: 'Length only accepts numbers (up to 2 decimals)',
+            notValid: 'Length value is not valid',
+          },
+          height: {
+            numberDecimals: 'Height only accepts numbers (up to 2 decimals)',
+            notValid: 'Height value is not valid',
+          },
+          liters: {
+            numberDecimals: 'Volume only accepts numbers (up to 2 decimals)',
+            notValid: 'Volume value is not valid',
+          },
+          image: {
+            size: 'Image size must be smaller than 15MB',
+            unknown: 'Can\'t select this file as the size is unknown',
+            format: 'Image format must be jpg or jpeg',
+          },
+        },
     },
     addTank: {
         slide1: {

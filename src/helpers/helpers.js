@@ -38,9 +38,17 @@ exports.isInteger = (string) => {
 	return /^\d+$/.test(string);
 }
 
-// Check for decimal with max 2 digits
+// Check decimal
+// 23 % 1 = 0
+// 23.5 % 1 = 0.5
 exports.isDecimal = (string) => {
-	return /^\d+(\.\d{1,2})?$/.test(string);
+    return string % 1 != 0;
+}
+
+// Check for a number or decimal with max 2 digits
+exports.maxDecimal = (string) => {
+    const pattern = /^\d+(\.\d{1,2})?$/;
+    return pattern.test(parseFloat(string));
 }
 
 // Deep clone

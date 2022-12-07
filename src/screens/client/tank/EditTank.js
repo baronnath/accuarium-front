@@ -25,10 +25,10 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
-import { findMainSpecies, calculateVolume, isValidImage } from '../../../helpers/tank';
+import { findMainSpecies, calculateVolume } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
-import validator from '../../../validators/tank';
+import validator, { isValidImage } from '../../../validators/tank';
 import translator from '../../../translator/translator';
 
 export default function EditTank({ route, navigation }) {
@@ -110,7 +110,7 @@ export default function EditTank({ route, navigation }) {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -206,17 +206,21 @@ export default function EditTank({ route, navigation }) {
       });
     }
 
+    setErrors({});
+    // Adapt to validation data (as AddTank format)
+    tankData.width = tankData.measures.width;
+    tankData.height = tankData.measures.height;
+    tankData.length = tankData.measures.length;
     const validation = validator(tankData);
+    console.log(validation, errors)
 
     if (validation !== false) {
       setErrors({
         name: validation.name,
-        // minTemperature: validation.minTemperature,
-        // maxTemperature: validation.maxTemperature,
-        // minPh: validation.minPh,
-        // maxPh: validation.maxPh,
-        // minDh: validvalueation.minDh,
-        // maxDh: validation.maxDh,
+        width: validation.width,
+        height: validation.height,
+        length: validation.length,
+        liters: validation.liters,
       });
 
       dispatch(alertActions.error('tank.data.invalid'));
@@ -276,6 +280,8 @@ export default function EditTank({ route, navigation }) {
                   onChangeText={(width) => handleMeasure('width', width)}
                   error={!!errors.width}
                   errorText={errors.width}
+                  textContentType="none"
+                  keyboardType="numeric"
                 />
               </View>
               <View style={styles.inputWrap}>
@@ -288,6 +294,8 @@ export default function EditTank({ route, navigation }) {
                   onChangeText={(height) => handleMeasure('height', height)}
                   error={!!errors.height}
                   errorText={errors.height}
+                  textContentType="none"
+                  keyboardType="numeric"
                 />
               </View>
               <View style={styles.inputWrap}>
@@ -300,6 +308,8 @@ export default function EditTank({ route, navigation }) {
                   onChangeText={(length) => handleMeasure('length', length)}
                   error={!!errors.length}
                   errorText={errors.length}
+                  textContentType="none"
+                  keyboardType="numeric"
                 />
               </View>
             </View>
@@ -327,6 +337,8 @@ export default function EditTank({ route, navigation }) {
                   autoCapitalize="none"
                   autofill="liters"
                   style={styles.inputLeft}
+                  textContentType="none"
+                  keyboardType="numeric"
                 />
               </View>
             </View>

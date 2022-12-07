@@ -17,10 +17,10 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import unitConverter from '../../../helpers/unitConverter';
-import { calculateVolume, isValidImage } from '../../../helpers/tank';
+import { calculateVolume } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
-import validator from '../../../validators/tank';
+import validator, { isValidImage } from '../../../validators/tank';
 import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
@@ -177,7 +177,7 @@ export default function AddTank({ navigation }) {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -207,18 +207,17 @@ export default function AddTank({ navigation }) {
   }
 
   async function onSubmit(){
+    setErrors({});
     const validation = validator(tank);
 
     if (validation !== false) {
 
       setErrors({
         name: validation.name,
-        // minTemperature: validation.minTemperature,
-        // maxTemperature: validation.maxTemperature,
-        // minPh: validation.minPh,
-        // maxPh: validation.maxPh,
-        // minDh: validvalueation.minDh,
-        // maxDh: validation.maxDh,
+        width: validation.width,
+        height: validation.height,
+        length: validation.length,
+        liters: validation.liters,
       });
 
 
@@ -240,14 +239,13 @@ export default function AddTank({ navigation }) {
       return;
     }
     
-
     axios.post(backend.url + '/tank', tank)
     .then(res => {
       dispatch(alertActions.success('addTank.addSpecies'));
       dispatch(tankActions.getTankByUser(user._id));
       setTank(defaultTank); // Clean inputs after creation success
       navigation.navigate('Tanks'); // Reset tank stack navigator to main screen
-      navigation.navigate('Species', { screen: 'SpeciesSearch', params: { setMainSpeciesTank: res.data.tank } });
+      navigation.navigate('SpeciesNav', { screen: 'SpeciesSearch', params: { setMainSpeciesTank: res.data.tank } });
     })
     .catch(err => {
       handleAlert(err);
