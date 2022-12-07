@@ -212,7 +212,7 @@ export default function Tank({ route, navigation }) {
                 </Header>
                 
                 <OptionsMenu>
-                  <TankMenu deleteTank={setDeleteModalVisible}/>
+                  <TankMenu tankId={tank._id}  deleteTank={setDeleteModalVisible}/>
                 </OptionsMenu>
 
                 {/* Volumen, measures and main species */}
