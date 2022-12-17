@@ -134,7 +134,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
               { species.images && species.images.length &&
                 <Image
                   style={styles.listImage}
-                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${species.images[0]}` }}
+                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${species.images[0]}` }}
                 />
               }
             </View>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   gridCard: {
     flex: 1,
     justifyContent: 'flex-start',
-    marginBottom: theme.container.padding * 2,
+    marginBottom: theme.container.padding * 4,
   },
   gridActions: {
     flex: 1,
