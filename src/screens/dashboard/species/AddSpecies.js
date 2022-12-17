@@ -268,6 +268,7 @@ export default function AddSpecies({ navigation }) {
           New species
         </Header>
 
+        {/*
         <View style={styles.toggleContainer}>
           { !types ?
               <Spinner />
@@ -494,11 +495,12 @@ export default function AddSpecies({ navigation }) {
           </View>
         </View>
 
-        <Button onPress={onSubmit} >Save</Button>
+        <Button onPress={onSubmit} >Save</Button> 
 
         <Separator/>
 
         <Paragraph>or</Paragraph>
+        */}
 
         <View style={styles.inputRow}>
           <TextInput
