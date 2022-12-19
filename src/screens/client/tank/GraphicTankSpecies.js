@@ -28,13 +28,15 @@ export default function GraphicTankSpecies({ species }) {
   const [isComp, setIsComp] = useState(null);
   const [parametersCompat, setParametersCompat] = useState(null);
   const [speciesCompat, setSpeciesCompat] = useState(null);
+  const [coexistenceCompat, setCoexistenceCompat] = useState(null);
   const [compExpanded, setCompExpanded] = useState({ expanded: false });
 
   useEffect(() => {
     if(!isEmpty(tank.compatibility)){
       setIsComp(isCompatible(tank.compatibility));
       setParametersCompat(tank.compatibility.parameters[species.species._id]);
-      setSpeciesCompat(tank.compatibility.species[species.species._id])
+      setCoexistenceCompat(tank.compatibility.coexistence[species.species._id]);
+      setSpeciesCompat(tank.compatibility.species[species.species._id]);
     }
   }, [tank]);
 
@@ -56,7 +58,7 @@ export default function GraphicTankSpecies({ species }) {
           <View style={styles.compatIcon}>
             <MaterialCommunityIcons
               name="thermometer"
-              color={theme.colors.secondary}
+              color={theme.colors.warning}
               size={23}
             />
           </View>
@@ -71,13 +73,13 @@ export default function GraphicTankSpecies({ species }) {
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons style={{marginTop: 1}}
                 name="alpha-p"
-                color={theme.colors.secondary}
+                color={theme.colors.warning}
                 size={25}
               />
             </View>
             <MaterialCommunityIcons style={{marginLeft:-20 ,marginVertical: -8}}
               name="alpha-h"
-              color={theme.colors.secondary}
+              color={theme.colors.warning}
               size={32}
             />
             <Paragraph style={styles.compatDescription}>{i18n.t('tank.phBetween', {'min': species.species.parameters.ph.min, 'max': species.species.parameters.ph.max})}</Paragraph>
@@ -88,7 +90,7 @@ export default function GraphicTankSpecies({ species }) {
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
                 name="focus-field"
-                color={theme.colors.secondary}
+                color={theme.colors.warning}
                 size={25}
               />
             </View>
@@ -103,7 +105,7 @@ export default function GraphicTankSpecies({ species }) {
             <View style={styles.compatIcon}>
               <MaterialCommunityIcons
                 name="focus-field-horizontal"
-                color={theme.colors.secondary}
+                color={theme.colors.warning}
                 size={25}
               />
             </View>
@@ -128,7 +130,7 @@ export default function GraphicTankSpecies({ species }) {
               name={species.species.group.icon}
               size={24}
               style={[styles.icons, styles.iconsComp]}
-              color={theme.colors[speciesCompat[speciesId].compatibility ? 'secondary' : 'error']}
+              color={theme.colors[speciesCompat[speciesId].compatibility ? 'warning' : 'error']}
             />
             { speciesRow(species) }
           </View>
@@ -142,10 +144,31 @@ export default function GraphicTankSpecies({ species }) {
     </>
   }
 
+  function coexistenceCompatibility() {
+    return <>
+      <Paragraph style={styles.caption}>{i18n.t('tank.notCompatibleCoexistence')}</Paragraph>
+      { coexistenceCompat === false &&
+
+        <View style={styles.rowContainer}>
+          <View style={styles.compatIcon}>
+            <MaterialCommunityIcons
+              name="alert-circle-outline"
+              color={theme.colors.warning}
+              size={23}
+            />
+          </View>
+          <Paragraph style={styles.compatDescription}>
+            {i18n.t(species.quantity == 1 ? 'tank.coexistence.one' : 'tank.coexistence.other',  {'quantity': species.quantity})}
+          </Paragraph>
+        </View>
+      }
+    </>
+  }
+
   function speciesRow(species) {
     return <TouchableOpacity
       style={styles.namesContainer}
-      onPress={() => { navigation.navigate('Species', { screen: 'Species', params: { speciesId : species.species._id } }) } }
+      onPress={() => { navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : species.species._id } }) } }
     >
       <Paragraph style={styles.name}>
         { species.species.name[locale] ? species.species.name[locale] : '' }
@@ -184,6 +207,11 @@ export default function GraphicTankSpecies({ species }) {
         <View style={styles.compatibilityContainer}>
           { isComp && isComp.isSpeciesCompatible[species.species._id] === false &&
             speciesCompatibility()
+          }
+        </View>
+        <View style={styles.compatibilityContainer}>
+          { isComp && isComp.isCoexistenceCompatible[species.species._id] === false &&
+            coexistenceCompatibility()
           }
         </View>
         <Separator style={styles.separator}/>

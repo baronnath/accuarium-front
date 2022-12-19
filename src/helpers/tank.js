@@ -55,6 +55,7 @@ export function isCompatible(compatibility){
   let isCompat = true;
   let isParamCompat = {};
   let isSpeciesCompat = {};
+  let isCoexistenceCompat = {};
 
   // Checking parameters compatibility
   Object.keys(compatibility.parameters).map(function(speciesId) {
@@ -78,9 +79,19 @@ export function isCompatible(compatibility){
     });
   });
 
+  // Checking coexistence compatibility
+  Object.keys(compatibility.coexistence).map(function(speciesId) {
+    isCoexistenceCompat[speciesId] = true
+    if(compatibility.coexistence[speciesId] === false){
+      isCompat = false;
+      isCoexistenceCompat[speciesId] = false;
+    }
+  });
+
   return {
     isCompatible: isCompat,
     isParameterCompatible: isParamCompat,
     isSpeciesCompatible: isSpeciesCompat,
+    isCoexistenceCompatible: isCoexistenceCompat,
   };
 }

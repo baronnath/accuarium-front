@@ -255,6 +255,11 @@ const en = {
         },
         notCompatibleParameters: 'Parameters not compatible',
         notCompatibleSpecies: 'Species not compatible',
+        notCompatibleCoexistence: 'Coexistence not recommended',
+        coexistence: {
+          one: 'Kepping one specimen is not recommended. Check coexistence section',
+          other: 'Kepping %{quantity} specimens is not recommended. Check coexistence section',
+        },
         temperatureBetween: 'This species temperature should be between %{min} - %{max}',
         phBetween: 'This species pH should be between %{min} - %{max}',
         ghBetween: 'This species gH should be between %{min} - %{max}',
