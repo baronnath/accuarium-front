@@ -42,7 +42,7 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
         icon="information-outline"
         onPress={() => {
           setVisible(false),
-          navigation.navigate('Species', { screen: 'Species', params: { speciesId : species._id } })
+          navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : species._id } })
         }}
         title={i18n.t('general.moreDetails')}
       />

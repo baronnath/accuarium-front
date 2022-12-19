@@ -240,7 +240,7 @@ export default function Tank({ route, navigation }) {
                     </Surface>
                     {/* Main species */}
                     <TouchableOpacity
-                      onPress={() => { !!mainSpecies && navigation.navigate('Species', { screen: 'Species', params: { speciesId : mainSpecies.species._id } }) } }
+                      onPress={() => { !!mainSpecies && navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : mainSpecies.species._id } }) } }
                     >
                       <Surface
                         elevation={12}
