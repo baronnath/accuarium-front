@@ -6,7 +6,6 @@ import { theme } from '../theme';
 
 const Header = ({ style, children }) => {
 
-
 	return(
   	<Text style={[styles.header,style]}>{children}</Text>
 	);

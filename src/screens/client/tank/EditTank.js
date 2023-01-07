@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ucFirst, isObject, clone } from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import {
-  StyleSheet, View, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
+  StyleSheet, View, ScrollView, Platform, Image, Picker, FlatList, Item, Text, TouchableHighlight, TouchableOpacity
 } from 'react-native';
 import { ToggleButton, Checkbox, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -355,14 +355,13 @@ export default function EditTank({ route, navigation }) {
                     <Warning title={i18n.t('tank.warning.title')} subtitle={i18n.t('tank.warning.subtitle')}
                       left={() => <MaterialCommunityIcons name="alert-circle-outline" size={40} color={theme.colors.background} /> }
                     />
-                } 
-                <FlatList
+                }
+                <ScrollView
                   style={styles.flatList}
                   contentContainerStyle={styles.flatListContainer}
-                  showsHorizontalScrollIndicator={false}
-                  data={editedTank.species}
-                  keyExtractor={species => species._id}
-                  renderItem={({item}) => (
+                > 
+                  {
+                    editedTank.species.map((item) =>
                       <EditSpeciesCard
                         species={item.species}
                         quantity={item.quantity}
@@ -370,9 +369,9 @@ export default function EditTank({ route, navigation }) {
                         removeSpecies={removeSpecies}
                         handleSpecies={handleSpecies}
                       />
-                  )}
-                  ListFooterComponent={ isLoading && <Spinner /> }
-                />
+                    )
+                  }
+                </ScrollView>
               </View>
             }
             <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>

@@ -4,25 +4,38 @@ import React, { memo } from 'react';
 import {
   ImageBackground,
   StyleSheet,
-  KeyboardAvoidingView,
+  View,
   ScrollView
 } from 'react-native';
 import { theme } from '../theme';
 
-const Background = ({ justify, style, children }) => (
 
-  <ScrollView
-    style={styles.background}
-    contentContainerStyle={[
-      styles.container,
-      justify == 'top' ? styles.containerTop : styles.containerCenter,
-      style
-    ]}
-  >
-    {children}
-  </ScrollView>
 
-);
+const Background = ({ justify, style, dynamic = true, children }) => {
+
+  const contentContainerStyle = [
+    styles.container,
+    justify == 'top' ? styles.containerTop : styles.containerCenter,
+    style
+  ];
+
+  return (
+    dynamic ?
+        <ScrollView
+          style={styles.background}
+          contentContainerStyle={contentContainerStyle}
+        >
+          {children}
+        </ScrollView>
+      :
+        <View
+          style={[styles.background, contentContainerStyle, {paddingBottom: 0}]}
+          contentContainerStyle={contentContainerStyle}
+        >
+          {children}
+        </View>
+  );
+};
 
 const styles = StyleSheet.create({
   background: {

@@ -228,7 +228,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
   return (
     <>
-      <Background justify="top">
+      <Background justify="top" dynamic={false} >
 
         <View style={styles.container}>
           <Header>
@@ -311,6 +311,7 @@ export default function SpeciesSearch({ route, navigation }) {
                 <Paragraph style={{paddingVertical: 20}}>{i18n.t('speciesSearch.noMore')}</Paragraph> 
           }
           ListFooterComponentStyle={styles.listFootStyle}
+          removeClippedSubviews={true}
         />
       </Background>
       
