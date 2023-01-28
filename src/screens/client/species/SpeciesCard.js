@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   gridCard: {
     flex: 1,
     justifyContent: 'flex-start',
-    marginBottom: theme.container.padding * 4,
+    marginBottom: theme.container.padding * 6,
   },
   gridActions: {
     flex: 1,
