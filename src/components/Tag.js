@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginRight: theme.container.padding / 4,
   },
   chipTextStyle: {
-    lineHeight: 10,
+    // lineHeight: 10,
   }
 });
 

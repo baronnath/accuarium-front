@@ -276,12 +276,11 @@ export default function SpeciesSearch({ route, navigation }) {
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          style={styles.tagContainer}
-          showsHorizontalScrollIndicator={true}
+          style={styles.searchOptions}
           persistentScrollbar={true}
           // pagingEnabled={true}
         >
-          <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
+          <TouchableOpacity onPress={() => { setModalVisible(key) }}>
             <MaterialCommunityIcons
               name={grid ? "view-list-outline" : "view-grid-outline"}
               size={24}
@@ -290,7 +289,7 @@ export default function SpeciesSearch({ route, navigation }) {
               style={styles.horizontalIcons}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
+          <TouchableOpacity onPress={() => { setModalVisible(key) }}>
             <MaterialCommunityIcons
               name="filter-outline"
               size={24}
@@ -299,7 +298,8 @@ export default function SpeciesSearch({ route, navigation }) {
               style={styles.horizontalIcons}
             />
           </TouchableOpacity>
-
+  
+          <View style={styles.tagContainer}>
           { filters && !isEmpty(filters) &&
             Object.entries(filters).map(([key, filter]) => {
               if(tagFilters.includes(key) && filter.value !== false){
@@ -312,6 +312,7 @@ export default function SpeciesSearch({ route, navigation }) {
               }
             })
           }
+          </View>
         </ScrollView>
 
         <FlatList
@@ -356,6 +357,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  tagContainer: {
+    flexDirection: 'row',
+    height: 32,
+  },
   subheader: {
     lineHeight: 18,
     marginBottom: 20,
@@ -370,9 +375,9 @@ const styles = StyleSheet.create({
   horizontalIcons: { 
     marginRight: theme.container.padding / 2
   },
-  tagContainer: {
+  searchOptions: {
     width: '100%',
-    // height: 'auto',
+    height: 50,
     // marginBottom: theme.container.padding,
   },
   tag: {
