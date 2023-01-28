@@ -5,14 +5,15 @@ import { StyleSheet } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { theme } from '../theme';
 
-const Tag = ({callback, onClose, style, children, ...props}) => {
+const Tag = ({callback, onClose, style, textStyle, children, ...props}) => {
   if(!callback)
     callback = () => {};
 
   if(onClose){
     return (
       <Chip
-       style={[style, styles.chip]}
+        style={[styles.chip, style]}
+        textStyle={[styles.chipTextStyle, textStyle]}
         mode="outlined"
         onClose={() => onClose()} 
         onPress={() => callback()}
@@ -24,7 +25,9 @@ const Tag = ({callback, onClose, style, children, ...props}) => {
   }else{
     return (
       <Chip
-       style={[style, styles.chip]}
+        style={[styles.chip, style]}
+        textStyle={[styles.chipTextStyle, textStyle]}
+        mode="outlined"
         mode="outlined"
         onPress={() => callback()}
         {...props}
@@ -37,8 +40,11 @@ const Tag = ({callback, onClose, style, children, ...props}) => {
 
 const styles = StyleSheet.create({
   chip: {
-    marginRight: 2,
+    marginRight: theme.container.padding / 4,
   },
+  chipTextStyle: {
+    lineHeight: 10,
+  }
 });
 
 export default memo(Tag);
