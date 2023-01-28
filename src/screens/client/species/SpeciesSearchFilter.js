@@ -16,6 +16,7 @@ import Modal from '../../../components/Modal';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
 import Spinner from '../../../components/Spinner';
+import Surface from '../../../components/Surface';
 import translator from '../../../translator/translator';
 import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
@@ -208,7 +209,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
       }
     }
 
-
     return <>
       <Paragraph style={styles.modalTitle}>{i18n.t(`speciesSearchFilter.${key}ModalTitle`)}</Paragraph>
       <Paragraph style={styles.modalParagraph}>{i18n.t(`speciesSearchFilter.${key}ModalParagraph`)}</Paragraph>
@@ -272,6 +272,12 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
     </>
   }
 
+  function switchParamFilterSwitch() {
+    setParamFilterSwitch(!paramFilterSwitch);
+    if(paramFilterSwitch) 
+      removeFilter('tank'); 
+  }
+
   return (
     <>
       <Dialog
@@ -282,39 +288,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         actions={getActions(setVisible, true)}
         scrollable={true}
       >
-        
-        { paramFilterSwitch ?
-          <>
-            <Subheader style={styles.header}>{i18n.t('general.parameter.other')}</Subheader>
-
-            <Subheader style={styles.subheader}>{i18n.t('general.temperature')} {getParamUnit('temperature')}</Subheader>
-            { getParamInput('Temp', ['thermometer-low','thermometer-high'], 'temperature') }
-
-            <Subheader style={styles.subheader}>{i18n.t('general.ph')}</Subheader>
-            { getParamInput('Ph', ['water-outline','water']) }
-            
-            <Subheader style={styles.subheader}>{i18n.t('general.gh')} {getParamUnit('hardness')}</Subheader>
-            { getParamInput('Gh', ['crop-free','focus-field'], 'hardness') }
-
-            <Subheader style={styles.subheader}>{i18n.t('general.kh')} {getParamUnit('hardness')}</Subheader>
-            { getParamInput('Kh', ['crop-free','focus-field-horizontal'], 'hardness') }
-              
-          </>
-        :
-          <>
-            <Subheader style={styles.header}>{i18n.t('general.tank.one')}</Subheader>
-
-            { getRegularInput('tank') }
-          </>
-        }
-
-        <TouchableOpacity onPress={() => {
-            setParamFilterSwitch(!paramFilterSwitch);
-            if(paramFilterSwitch) removeFilter('tank'); 
-          }}
-        >
-          <Text style={styles.link}>{ i18n.t(paramFilterSwitch ? 'speciesSearchFilter.chooseCompTank' : 'speciesSearchFilter.chooseParams')}</Text>
-        </TouchableOpacity>
 
         <Subheader style={styles.header}>{i18n.t('general.classification')}</Subheader>
         <>
@@ -353,15 +326,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
           { getRegularInput('color', 'checkbox') }
         </>
 
-        <Subheader style={styles.header}>{i18n.t('general.measures')}</Subheader>
-        <>
-          <Subheader style={styles.subheader}>{i18n.t('general.size')} {getParamUnit('length')}</Subheader>
-          { getParamInput('Length', ['ruler','ruler'], 'length') }
-          
-          <Subheader style={styles.subheader}>{i18n.t('general.minTank')} {getParamUnit('volume')}</Subheader>
-          { getParamInput('MinTank', ['cube-outline','cube'], 'volume') }
-        </>
-
         <Subheader style={styles.header}>{i18n.t('general.property.other')}</Subheader>
         <>          
           <View style={styles.row}>
@@ -395,6 +359,68 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
             />
           </View> */}
         </>
+
+        <Subheader style={styles.header}>{i18n.t('general.measures')}</Subheader>
+        <>
+          <Subheader style={styles.subheader}>{i18n.t('general.speciesSize')} {getParamUnit('length')}</Subheader>
+          { getParamInput('Length', ['ruler','ruler'], 'length') }
+          
+          <Subheader style={styles.subheader}>{i18n.t('general.minTank')} {getParamUnit('volume')}</Subheader>
+          { getParamInput('MinTank', ['cube-outline','cube'], 'volume') }
+        </>
+        
+        <Surface style={styles.paramsSurface}>
+          <View style={styles.paramsButtons}>
+            <Button
+              onPress={() => switchParamFilterSwitch() }
+              style={styles.inlineButton}
+              labelStyle={styles.paramsButtonLabel}
+              disabled={!!!paramFilterSwitch}
+              compact={true}
+            >
+              by params {/*{i18n.t('general.byParams')}*/}
+            </Button>
+            <Button
+              onPress={() => switchParamFilterSwitch() }
+              style={styles.inlineButton}
+              labelStyle={styles.paramsButtonLabel}
+              disabled={!!paramFilterSwitch}
+              compact={true}
+            >
+              by tank compat.{/*{i18n.t('general.byTankCompatibility')}*/}
+            </Button>
+          </View>
+
+          { paramFilterSwitch ?
+            <>
+              {/*<Subheader style={styles.header}>{i18n.t('general.parameter.other')}</Subheader>*/}
+
+              <Subheader style={styles.subheader}>{i18n.t('general.temperature')} {getParamUnit('temperature')}</Subheader>
+              { getParamInput('Temp', ['thermometer-low','thermometer-high'], 'temperature') }
+
+              <Subheader style={styles.subheader}>{i18n.t('general.ph')}</Subheader>
+              { getParamInput('Ph', ['water-outline','water']) }
+              
+              <Subheader style={styles.subheader}>{i18n.t('general.gh')} {getParamUnit('hardness')}</Subheader>
+              { getParamInput('Gh', ['crop-free','focus-field'], 'hardness') }
+
+              <Subheader style={styles.subheader}>{i18n.t('general.kh')} {getParamUnit('hardness')}</Subheader>
+              { getParamInput('Kh', ['crop-free','focus-field-horizontal'], 'hardness') }
+                
+            </>
+          :
+            <>
+              <Subheader style={styles.subheader}>{i18n.t('general.tank.one')}</Subheader>
+
+              { getRegularInput('tank') }
+            </>
+          }
+
+          <TouchableOpacity onPress={() => switchParamFilterSwitch() }
+          >
+            <Text style={styles.link}>{ i18n.t(paramFilterSwitch ? 'speciesSearchFilter.chooseCompTank' : 'speciesSearchFilter.chooseParams')}</Text>
+          </TouchableOpacity>
+        </Surface>
 
       </Dialog>
 
@@ -535,5 +561,16 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderColor: theme.colors.lightText,
     borderWidth: 2,
+  },
+  paramsSurface: {
+    marginHorizontal: 0,
+  },
+  paramsButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  paramsButtonLabel: {
+    fontSize: 10,
   }
 });

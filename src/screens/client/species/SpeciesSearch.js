@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
-import { View, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
@@ -223,7 +223,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
   function getTag(key, label, id = null) {
     // return <Tag onClose={() => removeFilter(key, id)}>{label}</Tag>;
-    return <Tag style={styles.tag}>{label}</Tag>;
+    return <Tag style={styles.tag} key={`${key}-${label}`}>{label}</Tag>;
   }
 
   return (
@@ -245,7 +245,7 @@ export default function SpeciesSearch({ route, navigation }) {
               <Menu.Item
                 icon="filter-outline"
                 onPress={ () => {
-                  setMenuVisible(false),
+                  setMenuVisible(false)
                   setFiltersVisible(true)
                 }}
                 title={i18n.t('general.filter.other')}
@@ -253,7 +253,7 @@ export default function SpeciesSearch({ route, navigation }) {
               <Menu.Item
                 icon={grid ? "view-list-outline" : "view-grid-outline"}
                 onPress={ () => {
-                  setMenuVisible(false),
+                  setMenuVisible(false)
                   switchGrid()
                 }}
                 title={i18n.t(grid ? 'general.listView' : 'general.gridView')}
@@ -272,24 +272,47 @@ export default function SpeciesSearch({ route, navigation }) {
           value={query}
         />
        
-        { filters && !isEmpty(filters) &&
-          <View style={styles.tagContainer}>
-            {
-                Object.entries(filters).map(([key, filter]) => {
-                  if(tagFilters.includes(key) && filter.value !== false){
-                    if(Array.isArray(filter.displayValue))
-                      return filter.displayValue.map((f) => {
-                        return getTag(key, f, filter.value)
-                      })
-                    else
-                      return getTag(key, filter.displayValue)
-                  }
-                })
-                  
+        
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.tagContainer}
+          showsHorizontalScrollIndicator={true}
+          persistentScrollbar={true}
+          // pagingEnabled={true}
+        >
+          <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
+            <MaterialCommunityIcons
+              name={grid ? "view-list-outline" : "view-grid-outline"}
+              size={24}
+              color={theme.colors.text}
+              onPress={ () => switchGrid() }
+              style={styles.horizontalIcons}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.row} onPress={() => { setModalVisible(key) }}>
+            <MaterialCommunityIcons
+              name="filter-outline"
+              size={24}
+              color={theme.colors.text}
+              onPress={ () => setFiltersVisible(true) }
+              style={styles.horizontalIcons}
+            />
+          </TouchableOpacity>
 
-            }
-          </View>
-        } 
+          { filters && !isEmpty(filters) &&
+            Object.entries(filters).map(([key, filter]) => {
+              if(tagFilters.includes(key) && filter.value !== false){
+                if(Array.isArray(filter.displayValue))
+                  return filter.displayValue.map((f) => {
+                    return getTag(key, f, filter.value)
+                  })
+                else
+                  return getTag(key, filter.displayValue)
+              }
+            })
+          }
+        </ScrollView>
 
         <FlatList
           style={styles.flatList}
@@ -306,7 +329,8 @@ export default function SpeciesSearch({ route, navigation }) {
           onEndReachedThreshold={0.2}
           ListFooterComponent={
             isLoading
-              ? <Spinner />
+              ? 
+                <Spinner />
               : isFinalPage &&
                 <Paragraph style={{paddingVertical: 20}}>{i18n.t('speciesSearch.noMore')}</Paragraph> 
           }
@@ -343,26 +367,26 @@ const styles = StyleSheet.create({
   wrapperAlert: {
     marginBottom: 20,
   },
+  horizontalIcons: { 
+    marginRight: theme.container.padding / 2
+  },
   tagContainer: {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
     width: '100%',
-    justifyContent: 'center',
-    marginBottom: theme.container.padding,
+    // height: 'auto',
+    // marginBottom: theme.container.padding,
   },
   tag: {
-    flex: 0,
     marginRight: theme.container.padding / 2,
   },
   flatList:{
     width: '100%',
+    // height: 'auto',
   },
   flatListContainer: {
     flexDirection: 'column',
     width: '100%',
   },
   listFootStyle: {
-    paddingBottom: Dimensions.get('window').height / 5,
+    paddingVertical: Dimensions.get('window').height / 5,
   },
 });

@@ -31,7 +31,7 @@ const es = {
         delete: 'Eliminar',
         apply: 'Aplicar',
         clear: 'Limpiar',
-        ok: 'Vale',
+        ok: 'Aceptar',
         share: 'Compartir',
         parameter: {
           one: 'Parámetro',
@@ -59,6 +59,7 @@ const es = {
         maxLength: 'Tamaño máx',
         hardness: 'Dureza',
         size: 'Tamaño',
+        speciesSize: 'Tamaño de la especie',
         minTank: 'Volumen mín. de tanque',
         minMinTank: 'Volumen mín. de tanque mín.',
         maxMinTank: 'Volumen mín. de tanque máx.',

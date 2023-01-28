@@ -59,6 +59,7 @@ const en = {
         maxLength: 'Max. length',
         hardness: 'Hardness',
         size: 'Size',
+        speciesSize: 'Species size',
         minTank: 'Min. tank volume',
         minMinTank: 'Min. mín. tank volume',
         maxMinTank: 'Max. mín. tank volume',
