@@ -39,8 +39,8 @@ export const theme = {
   colors: {
     ...DarkTheme.colors,
     primary: '#45a29e',
-    accent: '#66fcf1',
-    secondary: '#66fcf1',
+    accent: '#49B8B0',
+    secondary: '#49B8B0',
     terciary: '#c5c6c7',
     quaternary: color('#45a29e').alpha(0.32).rgb().string(),
     error: '#fc6b3f',
