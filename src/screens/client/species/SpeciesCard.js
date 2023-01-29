@@ -30,20 +30,27 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const dispatch = useDispatch();
 
 
-  const [tankId, setTankId] = useState(defaultTank());
+  const [tankId, setTankId] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
 
+  useEffect(()=>{
+    defaultTank();
+  },[]);
+
+  useEffect(()=>{
+    defaultTank();
+  },[main]);
+
   function defaultTank() {
-    let tankId = null;
+    let id = null;
     if(main)
-      tankId = main;
+      id = main;
     else if(tanks.length == 1)
-      tankId = tanks[0]._id;
+      id = tanks[0]._id;
 
-    return tankId; 
-
+    setTankId(id); 
   }
   
   function addSpeciesToTank() {
@@ -161,6 +168,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             <View style={{flex: 2, justifyContent: 'center'}}>
               <Button
                 onPress={() => {
+                  console.log('onPres',tankId)
                   tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
                 }}
                 mode="text"

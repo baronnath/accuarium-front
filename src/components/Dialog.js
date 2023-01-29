@@ -8,16 +8,16 @@ import Button from './Button';
 import { theme } from '../theme';
 import translator from '../translator/translator';
 
-const Dialog = ({ isVisible, setVisible, title, actions, scrollable = false, children, ...props }) => {
+const Dialog = ({ isVisible, setVisible, title, actions, scrollable = false, style, mode = 'surface', children, ...props }) => {
 
     const user = useSelector(state => state.user.data);
     const i18n = translator(user.locale);
 
     return (
       <Portal>
-        <PaperDialog visible={isVisible} onDismiss={() => setVisible(false)} theme={theme} style={styles.container}>
+        <PaperDialog visible={isVisible} onDismiss={() => setVisible(false)} theme={theme} style={[styles.container, styles[mode], style]}>
           { title && 
-            <PaperDialog.Title>{title}</PaperDialog.Title>
+            <PaperDialog.Title style={styles[mode]}>{title}</PaperDialog.Title>
           }
           { scrollable ?
             <PaperDialog.ScrollArea>
@@ -34,7 +34,9 @@ const Dialog = ({ isVisible, setVisible, title, actions, scrollable = false, chi
             { actions ?
                 actions
                 :
-                <Button onPress={() => setVisible(false)} mode="outlined">{i18n.t('general.cancel')}</Button>
+                <Button onPress={() => setVisible(false)} mode={mode = 'info' ? 'text' : 'outlined'}>
+                  {i18n.t('general.cancel')}
+                </Button>
             }
           </PaperDialog.Actions>
         </PaperDialog>
@@ -52,4 +54,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     // maxHeight: '80%',
   },
+  surface: {
+
+  },
+  info : {
+    backgroundColor: theme.colors.secondary,
+    color: theme.colors.surface,
+  }
 });

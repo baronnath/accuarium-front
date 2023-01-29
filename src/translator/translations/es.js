@@ -11,6 +11,7 @@ const es = {
         mainSpecies: {
             one: 'Especie principal',
             other: 'Especies principales', 
+            info: 'La especie principal es la especie más importante del tanque. Marca los parametros sobre los que se evalua la compatibilidad del resto de especies en el tanque.\n\nSi tu tanque no tiene una especie principal te perderás mucha información sobre tu tanque.',
         },
         email: 'Correo electrónico',
         password: 'Contraseña',
@@ -207,6 +208,7 @@ const es = {
         title: 'Especies',
         tankSubtitle: 'para añadirlas a %{tankName}',
         noMore: 'No hay más especies',
+        addMainSpecies: 'Añade la especie principal a tu tanque %{tankName}',
     },
     profile: {
         selectLanguage: 'Selecciona un idioma',

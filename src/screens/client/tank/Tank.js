@@ -198,6 +198,23 @@ export default function Tank({ route, navigation }) {
     }
   }
 
+  function noMainSpeciesRoute() {
+    let nav = 'SpeciesNav';
+    let params;
+
+    if(!!mainSpecies)
+      params = { screen: 'Species', params: { speciesId : mainSpecies.species._id } };
+    if(tank.species.length){
+      nav = 'TankNav';
+      params = { screen: 'EditTank', params: { tankId: tank._id } };
+    }
+    else {
+      params = { screen: 'SpeciesSearch', params: { setMainSpeciesTank: tank } };
+    }
+
+    navigation.navigate(nav, params);
+  }
+
   return (
       <Background justify="top">
         { isLoading ?
@@ -239,9 +256,7 @@ export default function Tank({ route, navigation }) {
                       </Paragraph>
                     </Surface>
                     {/* Main species */}
-                    <TouchableOpacity
-                      onPress={() => { !!mainSpecies && navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : mainSpecies.species._id } }) } }
-                    >
+                    <TouchableOpacity onPress={() => noMainSpeciesRoute() }>
                       <Surface
                         elevation={12}
                         style={styles.surface}
@@ -260,8 +275,8 @@ export default function Tank({ route, navigation }) {
                               </Paragraph>
                             </>
                           :
-                              <Paragraph>
-                                <MaterialCommunityIcons name="alert-circle-outline" size={18} color={theme.colors.background} /> {i18n.t('tank.warning.subtitle')}
+                              <Paragraph style={styles.warningSurface} fontWeight="bold">
+                                <MaterialCommunityIcons name="star-circle" size={18} color={theme.colors.background} /> {i18n.t('tank.warning.subtitle')}
                               </Paragraph>
 
                         }
@@ -415,6 +430,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginBottom: 0,
   },
+  warningSurface: {
+    fontSize: 18,
+    lineHeight: 20,
+    color: theme.colors.surface,
+  },
   tankName: {
     fontSize: 14,
     // color: theme.colors.text,
@@ -481,6 +501,7 @@ const styles = StyleSheet.create({
     resizeMode: "stretch",
     aspectRatio: 1.25,
     marginBottom: theme.container.padding / 2,
+    borderRadius: theme.roundness,
   },
   waterParam: {
     textAlign: 'left',

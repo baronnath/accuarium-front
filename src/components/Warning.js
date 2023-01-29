@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
       borderRadius: theme.roundness,
   },
   title: {
-    color: theme.colors.text,
+    color: theme.colors.surface,
   },
 });
 

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.error,
   },
   warning: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.warning,
   },
   wrapper: {
     maxWidth: theme.container.maxWidth,

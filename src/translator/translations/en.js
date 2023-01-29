@@ -10,7 +10,8 @@ const en = {
         },
         mainSpecies: {
             one: 'Main species',
-            other: 'Main species', 
+            other: 'Main species',
+            info: 'The main species is the most important species in your tank. It sets the parameters to figure out the compatibility with the other species in the tank.\n\nIf your tank has no main species you\'ll miis a lot of information about your tank.',
         },
         email: 'Email',
         password: 'Password',
@@ -207,6 +208,7 @@ const en = {
         title: 'Species',
         tankSubtitle: 'to be added to %{tankName}',
         noMore: 'No more species',
+        addMainSpecies: 'Add the main species to your tank %{tankName}',
     },
     profile: {
         selectLanguage: 'Select a language',

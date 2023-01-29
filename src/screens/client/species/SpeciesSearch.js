@@ -12,12 +12,14 @@ import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
 import Paragraph from '../../../components/Paragraph';
+import Button from '../../../components/Button';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Searchbar from '../../../components/Searchbar';
 import FixedAlert from '../../../components/FixedAlert';
 import SpeciesSearchFilter from './SpeciesSearchFilter';
 import Tag from '../../../components/Tag';
 import SpeciesCard from './SpeciesCard';
+import Dialog from '../../../components/Dialog';
 import Spinner from '../../../components/Spinner';
 import { actions as tankActions } from '../../../ducks/tank';
 import { ucFirst, isEmpty } from '../../../helpers/helpers';
@@ -46,6 +48,7 @@ export default function SpeciesSearch({ route, navigation }) {
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [filters, setFilters] = useState({});
   const [areFiltersVisible, setFiltersVisible] = useState(false);
+  const [isMainInfoVisible, setMainInfoVisible] = useState(false);
   const dispatch = useDispatch();
 
   const tagFilters = [
@@ -104,6 +107,7 @@ export default function SpeciesSearch({ route, navigation }) {
 
   useEffect(()=>{
     if(main){
+      setMainInfoVisible(true);
       // changeFilter('tank', {id: tank._id, name: tank.name});
     }
   },[main]);
@@ -263,7 +267,9 @@ export default function SpeciesSearch({ route, navigation }) {
         </View>
 
         { main && 
-         <FixedAlert visible={true} onClose={() => setMain(null)} type="warning" wrapperStyle={styles.wrapperAlert}>Add main species to your new tank {main.name}</FixedAlert>
+          <FixedAlert visible={true} onClose={() => setMain(null)} type="warning" wrapperStyle={styles.wrapperAlert}>
+            <Paragraph fontWeight="bold" style={styles.alertText}>{i18n.t('speciesSearch.addMainSpecies', { tankName: main.name })}</Paragraph>
+          </FixedAlert>
         }
         
         <Searchbar
@@ -341,6 +347,27 @@ export default function SpeciesSearch({ route, navigation }) {
       </Background>
       
       <SpeciesSearchFilter visible={areFiltersVisible} setVisible={setFiltersVisible} filters={filters} changeFilter={changeFilter} removeFilter={removeFilter} clearFilter={clearFilter} resetSearch={resetSearch}/>
+
+      <Dialog
+        isVisible={!!isMainInfoVisible}
+        setVisible={() => setMainInfoVisible()}
+        title="Add the main species"
+        mode="info"
+        actions={
+          <Button
+            onPress={() => setMainInfoVisible(false)}
+            mode="text"
+            labelStyle={{ color: theme.colors.surface }}
+          >
+            {i18n.t('general.ok')}
+          </Button>
+        }
+        style={styles.dialogContent}
+      >
+        <MaterialCommunityIcons name="star-circle" size={50} style={styles.dialogIcon}/> 
+        <Paragraph fontWeight="bold" style={[styles.dialogText, styles.dialogTitle]}>{ucFirst(i18n.t('general.mainSpecies.one'))}</Paragraph>
+        <Paragraph style={styles.dialogText}>{ucFirst(i18n.t('general.mainSpecies.info'))}</Paragraph>
+      </Dialog>
     </>
   );
 }
@@ -372,6 +399,11 @@ const styles = StyleSheet.create({
   wrapperAlert: {
     marginBottom: 20,
   },
+  alertText: {
+    color: theme.colors.surface,
+    fontSize: 18,
+    lineHeight: 20,
+  },
   horizontalIcons: { 
     marginRight: theme.container.padding / 2
   },
@@ -386,6 +418,21 @@ const styles = StyleSheet.create({
   flatList:{
     width: '100%',
     // height: 'auto',
+  },
+  dialogContent: {
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  dialogIcon: {
+    alignSelf: 'center',
+    marginBottom: theme.container.padding / 2,
+  },
+  dialogTitle: {
+    fontSize: 20,
+    lineHeight: 22,
+  },
+  dialogText: {
+    color: theme.colors.surface,
   },
   flatListContainer: {
     flexDirection: 'column',
