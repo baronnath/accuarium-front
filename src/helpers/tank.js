@@ -72,7 +72,7 @@ export function isCompatible(compatibility){
   Object.keys(compatibility.species).map(function(speciesIdA) {
     isSpeciesCompat[speciesIdA] = true
     Object.keys(compatibility.species[speciesIdA]).map(function(speciesIdB) {
-      if(compatibility.species[speciesIdA][speciesIdB].compatibility != 1){
+      if(compatibility.species[speciesIdA][speciesIdB].compatibility != 2){
         isCompat = false;
         isSpeciesCompat[speciesIdA] = false;
       }

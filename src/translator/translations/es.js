@@ -258,7 +258,7 @@ const es = {
         },
         notCompatibleParameters: 'Los parámetros no son compatibles',
         notCompatibleSpecies: 'Las especies no son compatibles',
-        notCompatibleCoexistence: 'No se recimienda este modod de coexistencia',
+        notCompatibleCoexistence: 'No se recimienda este modo de coexistencia',
         coexistence: {
           one: 'No se recomienda mantener un solo espécimen. Verifica el apartado de coexistencia',
           other: 'No se recomienda mantener %{quantity} espécimenes. Verifica el apartado de coexistencia',
