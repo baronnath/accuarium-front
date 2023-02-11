@@ -17,10 +17,9 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { handleAlert } from '../../../helpers/global';
 import unitConverter from '../../../helpers/unitConverter';
-import { calculateVolume } from '../../../helpers/tank';
+import { calculateVolume, pickImage } from '../../../helpers/tank';
 import { theme } from '../../../theme';
-import * as ImagePicker from 'expo-image-picker';
-import validator, { isValidImage } from '../../../validators/tank';
+import validator from '../../../validators/tank';
 import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
@@ -71,7 +70,7 @@ export default function AddTank({ navigation }) {
             </>
 
         }
-        <Button onPress={() => pickImage()} >{i18n.t('addTank.slide2.button')}</Button>
+        <Button onPress={() => pickImage(handleChange)} >{i18n.t('addTank.slide2.button')}</Button>
       </>,
       <>
         <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
@@ -174,21 +173,6 @@ export default function AddTank({ navigation }) {
         calculateLiters();
     }
   }
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    const validImage = await isValidImage(result);
-    if (!result.cancelled && validImage){
-      handleChange('image', result);
-    }
-  };
 
   function calculateLiters() {
     const dimensions = {

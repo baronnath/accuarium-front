@@ -25,10 +25,10 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
 import { handleAlert } from '../../../helpers/global';
-import { findMainSpecies, calculateVolume } from '../../../helpers/tank';
+import { findMainSpecies, calculateVolume, pickImage } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import * as ImagePicker from 'expo-image-picker';
-import validator, { isValidImage } from '../../../validators/tank';
+import validator from '../../../validators/tank';
 import translator from '../../../translator/translator';
 
 export default function EditTank({ route, navigation }) {
@@ -76,7 +76,7 @@ export default function EditTank({ route, navigation }) {
       if(!helpers.isEmpty(tank)){
         setEditedTank(helpers.clone(tank));
         setMainSpecies(findMainSpecies(tank.species));
-        setImage(`${backend.imagesUrl}tank/${tank._id}.jpeg`);
+        setImage({ uri:`${backend.imagesUrl}tank/${tank._id}.jpeg` });
       }
     // }
   }, [tank]);
@@ -107,23 +107,6 @@ export default function EditTank({ route, navigation }) {
       }
     }));
   }
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    const image = result.assets[0];
-
-    const isValid = await isValidImage(image);
-    if (!result.canceled && isValid){
-      handleChange('image', image);
-    }
-  };
 
   function calculateLiters() {
     const dimensions = {
@@ -263,7 +246,7 @@ export default function EditTank({ route, navigation }) {
                 size={32}
                 style={styles.imageButton}
                 color={theme.colors.surface}
-                onPress={() => pickImage()}
+                onPress={() => pickImage(handleChange)}
               />
             </View>
 

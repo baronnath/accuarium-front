@@ -1,6 +1,8 @@
 // src/helpers/tank.js
 
 import { commaToPeriod } from './helpers';
+import * as ImagePicker from 'expo-image-picker';
+import { isValidImage } from '../validators/tank';
 
 export function calculateVolume(dimensions) {
     let { width, height, length } = dimensions;
@@ -19,6 +21,23 @@ export function calculateVolume(dimensions) {
     	resolve(liters);
     });
 }
+
+export async function pickImage (callback) {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+    base64: true,
+  });
+
+  const image = result.assets[0];
+
+  const isValid = await isValidImage(image);
+  if (!result.canceled && isValid){
+    callback('image', image);
+  }
+};
 
 export function findMainSpecies(species) {
   let main = null;
