@@ -94,7 +94,7 @@ export default function EditTank({ route, navigation }) {
     }));
 
     if(field == 'image'){
-      setImage(value.uri);
+      setImage(value);
     }
   }
 
@@ -117,9 +117,11 @@ export default function EditTank({ route, navigation }) {
       base64: true,
     });
 
-    const validImage = await isValidImage(result);
-    if (!result.cancelled && validImage){
-      handleChange('image', result);
+    const image = result.assets[0];
+
+    const isValid = await isValidImage(image);
+    if (!result.canceled && isValid){
+      handleChange('image', image);
     }
   };
 
@@ -212,7 +214,7 @@ export default function EditTank({ route, navigation }) {
     tankData.height = tankData.measures.height;
     tankData.length = tankData.measures.length;
     const validation = validator(tankData);
-    console.log(validation, errors)
+    // console.log(validation, errors);
 
     if (validation !== false) {
       setErrors({
@@ -253,7 +255,7 @@ export default function EditTank({ route, navigation }) {
 
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: image + '?' + new Date() }} // Date is added to avoid image to cache
+                source={{ uri: image.uri + '?' + new Date() }} // Date is added to avoid image to cache
                 style={styles.image}
               />
               <IconButton
