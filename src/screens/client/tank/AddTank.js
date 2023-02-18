@@ -1,6 +1,6 @@
 // src/screens/client/tank/AddTank.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { axios }from '../../../helpers/axios';
 import { backend } from '../../../../app.json';
@@ -41,149 +41,32 @@ export default function AddTank({ navigation }) {
   }
   const [tank, setTank] = useState(defaultTank);
 
-  const sliderItems = [
-      <>
-        <MaterialCommunityIcons name="fishbowl-outline" size={150} color={theme.colors.accent} />
-        <Paragraph>{i18n.t('addTank.slide1.title')}</Paragraph>
-        <TextInput
-          label={i18n.t('addTank.slide1.label')}
-          name="name"
-          returnKeyType="next"
-          onChangeText={(name) => handleChange('name', name)}
-          value={tank.name}
-          error={!!errors.name}
-          errorText={errors.name}
-          autoCapitalize="none"
-          textContentType="none"
-          keyboardType="default"
-          autofill="name"
-        />
-      </>,
-      <>
-        {
-          tank.image ?
-            <Image source={{ uri: tank.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} />
-            :
-            <>
-              <MaterialCommunityIcons name="camera-plus" size={100} color={theme.colors.accent} onPress={() => pickImage()} />
-              <Paragraph>{i18n.t('addTank.slide2.title')}</Paragraph>
-            </>
+  useEffect(() => {
+    // Automatic volume calculation if measures are filled
+    if(tank.height && tank.width && tank.length)
+      calculateTankVolume();
+  }, [tank.height, tank.width, tank.length]);
 
-        }
-        <Button onPress={() => pickImage(handleChange)} >{i18n.t('addTank.slide2.button')}</Button>
-      </>,
-      <>
-        <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
-        <Paragraph>{i18n.t('addTank.slide3.title')}</Paragraph>
-        <View style={styles.inputRow}>
-          <View style={styles.inputWrap}>
-            <TextInput
-              style={styles.inputLeft}
-              label={i18n.t('general.width')}
-              name="width"
-              returnKeyType="next"
-              value={tank.width}
-              onChangeText={(width) => handleChange('width', width)}
-              error={!!errors.width}
-              errorText={errors.width}
-              textContentType="none"
-              keyboardType="numeric"
-          />
-          </View>
-          <View style={styles.inputWrap}>
-            <TextInput
-              style={styles.inputLeft}
-              label={i18n.t('general.height')}
-              name="height"
-              returnKeyType="next"
-              value={tank.height}
-              onChangeText={(height) => handleChange('height', height)}
-              error={!!errors.height}
-              errorText={errors.height}
-              textContentType="none"
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.inputWrap}>
-            <TextInput
-              style={styles.inputRight}
-              label={i18n.t('general.length')}
-              name="length"
-              returnKeyType="next"
-              value={tank.length}
-              onChangeText={(length) => handleChange('length', length)}
-              error={!!errors.length}
-              errorText={errors.length}
-              textContentType="none"
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-        <TouchableOpacity style={{flex:0.3}}>
-          <Paragraph style={styles.link} fontWeight="bold">
-            {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
-          </Paragraph>
-          <Paragraph style={styles.link} fontWeight="light">
-            {i18n.t('addTank.warning.subtitle')}
-          </Paragraph>
-        </TouchableOpacity>
-        <View style={styles.inputRow}>
-          <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
-            <Button
-              style={styles.inputRight,{height: 58, marginTop: 6}}
-              onPress={() => calculateLiters()}
-            >
-              <MaterialCommunityIcons
-                name="calculator-variant"
-                size={28}
-              />
-            </Button>
-          </View>
-          <View style={styles.inputWrap, {flex: 8}}>
-            <TextInput
-              label={i18n.t('general.liters')}
-              name="liters"
-              returnKeyType="next"
-              onChangeText={(liters) => handleChange('liters', liters)}
-              value={tank.liters}
-              error={!!errors.liters}
-              errorText={errors.liters}
-              autoCapitalize="none"
-              autofill="liters"
-              style={styles.inputLeft}
-              textContentType="none"
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-        <Paragraph fontWeight="light">{i18n.t('addTank.slide4.title')}</Paragraph>
-        <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
-      </>,
-  ];
+  async function handleChange(field, value, measure = null) {
+    if(measure)
+      value = unitConverter(value, measure, user.units[measure]);
 
-  async function handleChange(field, value) {
     setTank(prevTank => ({
       ...prevTank,
       [field]: value
     }));
-
-    // Automatic volume calculation if measures are filled
-    if(field == 'height' || field == 'width' || field == 'length') {
-      if(tank.height && tank.width && tank.length)
-        calculateLiters();
-    }
   }
 
-  function calculateLiters() {
+  function calculateTankVolume() {
     const dimensions = {
       width: tank.width,
       height: tank.height,
       length: tank.length,
     }
-    calculateVolume(dimensions)
+    calculateVolume(dimensions, user.units.length)
       .then((liters) => {
         handleChange('liters', String(liters));
-        dispatch(alertActions.success('tank.litersSuccess', { liters: liters }));
+        dispatch(alertActions.success('tank.litersSuccess', { 'liters': unitConverter(liters, 'volume', 'base', user.units.volume) }));
       })
       .catch((err) => {
         dispatch(alertActions.error(err));
@@ -210,18 +93,18 @@ export default function AddTank({ navigation }) {
       return;
     }
 
-    // Convert to base lenght measure units
-    try{
-      if(tank.width)
-        tank.width = unitConverter(tank.width, 'length', user.units.length);
-      if(tank.height)
-        tank.height = unitConverter(tank.height, 'length', user.units.length);
-      if(tank.length)
-        tank.length = unitConverter(tank.length, 'length', user.units.length);
-    }catch(err){
-      dispatch(alertActions.error(err.message));
-      return;
-    }
+    // // Convert to base lenght measure units
+    // try{
+    //   if(tank.width)
+    //     tank.width = unitConverter(tank.width, 'length', user.units.length);
+    //   if(tank.height)
+    //     tank.height = unitConverter(tank.height, 'length', user.units.length);
+    //   if(tank.length)
+    //     tank.length = unitConverter(tank.length, 'length', user.units.length);
+    // }catch(err){
+    //   dispatch(alertActions.error(err.message));
+    //   return;
+    // }
     
     axios.post(backend.url + '/tank', tank)
     .then(res => {
@@ -235,6 +118,126 @@ export default function AddTank({ navigation }) {
       handleAlert(err);
     });
   }
+
+  const sliderItems = [
+    <>
+      <MaterialCommunityIcons name="fishbowl-outline" size={150} color={theme.colors.accent} />
+      <Paragraph>{i18n.t('addTank.slide1.title')}</Paragraph>
+      <TextInput
+        label={i18n.t('addTank.slide1.label')}
+        name="name"
+        returnKeyType="next"
+        onChangeText={(name) => handleChange('name', name)}
+        value={tank.name}
+        error={!!errors.name}
+        errorText={errors.name}
+        autoCapitalize="none"
+        textContentType="none"
+        keyboardType="default"
+        autofill="name"
+      />
+    </>,
+    <>
+      {
+        tank.image ?
+          <Image source={{ uri: tank.image.uri }} style={{ marginTop: 5, width: '100%', height: 200 }} />
+          :
+          <>
+            <MaterialCommunityIcons name="camera-plus" size={100} color={theme.colors.accent} onPress={() => pickImage()} />
+            <Paragraph>{i18n.t('addTank.slide2.title')}</Paragraph>
+          </>
+
+      }
+      <Button onPress={() => pickImage(handleChange)} >{i18n.t('addTank.slide2.button')}</Button>
+    </>,
+    <>
+      <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
+      <Paragraph>{i18n.t('addTank.slide3.title')}</Paragraph>
+      <View style={styles.inputRow}>
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={styles.inputLeft}
+            label={i18n.t('general.width')}
+            name="width"
+            returnKeyType="next"
+            value={unitConverter(tank.width, 'length', 'base', user.units.length).toString()}
+            onChangeText={(width) => handleChange('width', width, 'length')}
+            error={!!errors.width}
+            errorText={errors.width}
+            textContentType="none"
+            keyboardType="numeric"
+        />
+        </View>
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={styles.inputLeft}
+            label={i18n.t('general.height')}
+            name="height"
+            returnKeyType="next"
+            value={unitConverter(tank.height, 'length', 'base', user.units.length).toString()}
+            onChangeText={(height) => handleChange('height', height, 'length')}
+            error={!!errors.height}
+            errorText={errors.height}
+            textContentType="none"
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={styles.inputRight}
+            label={i18n.t('general.length')}
+            name="length"
+            returnKeyType="next"
+            value={unitConverter(tank.length, 'length', 'base', user.units.length).toString()}
+            onChangeText={(length) => handleChange('length', length, 'length')}
+            error={!!errors.length}
+            errorText={errors.length}
+            textContentType="none"
+            keyboardType="numeric"
+          />
+        </View>
+      </View>
+      <TouchableOpacity style={{flex:0.3}}>
+        <Paragraph style={styles.link} fontWeight="bold">
+          {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
+        </Paragraph>
+        <Paragraph style={styles.link} fontWeight="light">
+          {i18n.t('addTank.warning.subtitle')}
+        </Paragraph>
+      </TouchableOpacity>
+      <View style={styles.inputRow}>
+        <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
+          <Button
+            style={styles.inputRight,{height: 58, marginTop: 6}}
+            onPress={() => calculateTankVolume()}
+          >
+            <MaterialCommunityIcons
+              name="calculator-variant"
+              size={28}
+            />
+          </Button>
+        </View>
+        <View style={styles.inputWrap, {flex: 8}}>
+          <TextInput
+            label={i18n.t('measures.' + user.units.volume + 'Abbr')}
+            name="liters"
+            returnKeyType="next"
+            onChangeText={(liters) => handleChange('liters', liters, 'volume')}
+            value={unitConverter(tank.liters, 'volume', 'base', user.units.volume).toString()}
+            error={!!errors.liters}
+            errorText={errors.liters}
+            autoCapitalize="none"
+            autofill="liters"
+            style={styles.inputLeft}
+            textContentType="none"
+            keyboardType="numeric"
+          />
+        </View>
+      </View>
+      <Paragraph fontWeight="light">{i18n.t('addTank.slide4.title')}</Paragraph>
+      <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
+    </>,
+  ];
 
   return (
     <Background>

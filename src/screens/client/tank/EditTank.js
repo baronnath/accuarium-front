@@ -24,6 +24,7 @@ import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { Api }from '../../../helpers/axios';
 import helpers from '../../../helpers/helpers';
+import unitConverter from '../../../helpers/unitConverter';
 import { handleAlert } from '../../../helpers/global';
 import { findMainSpecies, calculateVolume, pickImage } from '../../../helpers/tank';
 import { theme } from '../../../theme';
@@ -87,6 +88,13 @@ export default function EditTank({ route, navigation }) {
     }
   }, [editedTank]);
 
+  useEffect(() => {
+    // Automatic volume calculation if measures are filled
+    if(editedTank.measures)
+      if(editedTank.measures.height && editedTank.measures.width && editedTank.measures.length)
+        calculateTankVolume();
+  }, [editedTank.measures]);
+
   async function handleChange(field, value) {
     setEditedTank(prevTank => ({
       ...prevTank,
@@ -99,6 +107,7 @@ export default function EditTank({ route, navigation }) {
   }
 
   async function handleMeasure(field, value) {
+    value = unitConverter(value, 'length', user.units.length);
     setEditedTank(prevTank => ({
       ...prevTank,
       measures: {
@@ -108,16 +117,16 @@ export default function EditTank({ route, navigation }) {
     }));
   }
 
-  function calculateLiters() {
+  function calculateTankVolume() {
     const dimensions = {
       width: editedTank.measures.width,
       height: editedTank.measures.height,
       length: editedTank.measures.length,
     }
-    calculateVolume(dimensions)
+    calculateVolume(dimensions, user.units.length)
       .then((liters) => {
         handleChange('liters', liters);
-        dispatch(alertActions.success('tank.litersSuccess', { 'liters': liters }));
+        dispatch(alertActions.success('tank.litersSuccess', { 'liters': unitConverter(liters, 'volume', 'base', user.units['volume']) }));
       })
       .catch((err) => {
         dispatch(alertActions.error(err));
@@ -261,7 +270,7 @@ export default function EditTank({ route, navigation }) {
                   label={i18n.t('general.width')}
                   name="width"
                   returnKeyType="next"
-                  value={editedTank.measures.width && editedTank.measures.width.toString()}
+                  value={editedTank.measures.width && unitConverter(editedTank.measures.width, 'length', 'base', user.units.length).toString()}
                   onChangeText={(width) => handleMeasure('width', width)}
                   error={!!errors.width}
                   errorText={errors.width}
@@ -275,7 +284,7 @@ export default function EditTank({ route, navigation }) {
                   label={i18n.t('general.height')}
                   name="height"
                   returnKeyType="next"
-                  value={editedTank.measures.height && editedTank.measures.height.toString()}
+                  value={editedTank.measures.height && unitConverter(editedTank.measures.height, 'length', 'base', user.units.length).toString()}
                   onChangeText={(height) => handleMeasure('height', height)}
                   error={!!errors.height}
                   errorText={errors.height}
@@ -289,7 +298,7 @@ export default function EditTank({ route, navigation }) {
                   label={i18n.t('general.length')}
                   name="length"
                   returnKeyType="next"
-                  value={editedTank.measures.length && editedTank.measures.length.toString()}
+                  value={editedTank.measures.length && unitConverter(editedTank.measures.length, 'length', 'base', user.units.length).toString()}
                   onChangeText={(length) => handleMeasure('length', length)}
                   error={!!errors.length}
                   errorText={errors.length}
@@ -302,7 +311,7 @@ export default function EditTank({ route, navigation }) {
               <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
                 <Button
                   style={styles.inputRight,{height: 58, marginTop: 6}}
-                  onPress={() => calculateLiters()}
+                  onPress={() => calculateTankVolume()}
                 >
                   <MaterialCommunityIcons
                     name="calculator-variant"
@@ -312,11 +321,11 @@ export default function EditTank({ route, navigation }) {
               </View>
               <View style={styles.inputWrap, {flex: 8}}>
                 <TextInput
-                  label={i18n.t('general.liters')}
+                  label={i18n.t('measures.' + user.units.volume)}
                   name="liters"
                   returnKeyType="next"
                   onChangeText={(liters) => handleChange('liters', liters)}
-                  value={editedTank.liters && editedTank.liters.toString()}
+                  value={editedTank.liters && unitConverter(editedTank.liters, 'volume', 'base', user.units.volume).toString()}
                   error={!!errors.liters}
                   errorText={errors.liters}
                   autoCapitalize="none"

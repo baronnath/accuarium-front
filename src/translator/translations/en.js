@@ -138,7 +138,7 @@ const en = {
         literAbbr: 'L',
         m3: 'Square meters',
         m3Abbr: 'm³',
-        gallon: 'Gallon',
+        gallon: 'Gallons',
         gallonAbbr: 'gal',
         ounce: 'Ounces',
         ounceAbbr: 'oz',
@@ -249,7 +249,7 @@ const en = {
       colorModalParagraph: 'Filter by one or more colors',
     },
     tank: {
-        litersSuccess: 'Your tank is %{liters} liters',
+        litersSuccess: 'Your tank volume is %{liters}',
         alias: 'Tank alias',
         clickFormula: 'Click on the formula to calculate your tank volume',
         warning: {

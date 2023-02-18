@@ -1,11 +1,21 @@
 // src/helpers/tank.js
 
-import { commaToPeriod } from './helpers';
+import { commaToPeriod, round } from './helpers';
+import unitConverter from './unitConverter';
 import * as ImagePicker from 'expo-image-picker';
 import { isValidImage } from '../validators/tank';
 
-export function calculateVolume(dimensions) {
+/* Input: dimensions and the measure units
+*  Output: volume in liters (base unit)
+*/
+export function calculateVolume(dimensions, units = 'cm') {
     let { width, height, length } = dimensions;
+
+    if(units != 'cm'){
+      width = unitConverter(width, 'length', 'base', units);
+      height = unitConverter(height, 'length', 'base', units);
+      length = unitConverter(length, 'length', 'base', units);
+    }
 
     return new Promise((resolve, reject) => {
     	if(!width || !height || !length)
@@ -18,7 +28,7 @@ export function calculateVolume(dimensions) {
       length = commaToPeriod(length.toString());
 
     	const liters = width * height * length / 1000;
-    	resolve(liters);
+    	resolve(round.round(liters, 2));
     });
 }
 

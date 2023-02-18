@@ -71,21 +71,6 @@ export default function Tank({ route, navigation }) {
         setMainSpecies(findMainSpecies(tank.species));
       }
 
-      // Convert to user unit measure
-      try{
-        if(tank.measures.width)
-          tank.measures.width = unitConverter(tank.measures.width, 'length', 'base', user.units.length);
-        if(tank.measures.height)
-          tank.measures.height = unitConverter(tank.measures.height, 'length', 'base', user.units.length);
-        if(tank.measures.length)
-          tank.measures.length = unitConverter(tank.measures.length, 'length', 'base', user.units.length);
-        if(tank.liters)
-          tank.liters = unitConverter(tank.liters, 'volume', 'base', user.units.volume);
-      }catch(err){
-        dispatch(alertActions.error(err.message));
-        return;
-      }
-
       if(!!tank.liters){
         calculateDetails();
       }
@@ -138,7 +123,7 @@ export default function Tank({ route, navigation }) {
       <View style={styles.measure}>
         <Paragraph fontWeight='bold'>
           { tank.measures[measure] ?
-              `${tank.measures[measure]} ${user.units.length}`
+              `${unitConverter(tank.measures[measure], 'length', 'base', user.units.length)} ${user.units.length}`
             :
               '?'
           }
