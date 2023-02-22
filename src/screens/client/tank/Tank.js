@@ -41,7 +41,6 @@ export default function Tank({ route, navigation }) {
   const isLoading = useSelector(state => state.tanks.isLoading);
   const dispatch = useDispatch();
 
-  const [id, setId] = useState(false);
   const [mainSpecies, setMainSpecies] = useState(null);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -53,19 +52,15 @@ export default function Tank({ route, navigation }) {
   
   useFocusEffect(
     React.useCallback(() => {
-      setId(tankId);
+      if(tankId){
+        dispatch(tankActions.getTank(tankId));
+        getImage(`${backend.imagesUrl}tank/${tankId}.jpeg`);
+      }
     }, [])
   );
 
   useEffect(() => {
-    if(id){
-      dispatch(tankActions.getTank(id));
-      getImage(`${backend.imagesUrl}tank/${id}.jpeg`);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if(!isEmpty(tank) && tank._id.toString() == id){ // Cheack that tank data in redux has been updated with last id received
+    if(!isEmpty(tank) && tank._id.toString() == tankId){ // Check that tank data in redux has been updated with last id received
 
       if(tank.species.length){
         setMainSpecies(findMainSpecies(tank.species));
@@ -74,7 +69,6 @@ export default function Tank({ route, navigation }) {
       if(!!tank.liters){
         calculateDetails();
       }
-
     }
     
   }, [tank]);
@@ -183,19 +177,18 @@ export default function Tank({ route, navigation }) {
     }
   }
 
-  function noMainSpeciesRoute() {
+  function mainSpeciesRoute() {
     let nav = 'SpeciesNav';
     let params;
 
     if(!!mainSpecies)
       params = { screen: 'Species', params: { speciesId : mainSpecies.species._id } };
-    if(tank.species.length){
+    else if(tank.species.length){
       nav = 'TankNav';
       params = { screen: 'EditTank', params: { tankId: tank._id } };
     }
-    else {
+    else 
       params = { screen: 'SpeciesSearch', params: { setMainSpeciesTank: tank } };
-    }
 
     navigation.navigate(nav, params);
   }
@@ -241,7 +234,7 @@ export default function Tank({ route, navigation }) {
                       </Paragraph>
                     </Surface>
                     {/* Main species */}
-                    <TouchableOpacity onPress={() => noMainSpeciesRoute() }>
+                    <TouchableOpacity onPress={() => mainSpeciesRoute() }>
                       <Surface
                         elevation={12}
                         style={styles.surface}
@@ -280,17 +273,21 @@ export default function Tank({ route, navigation }) {
                 { image && image }
 
                 {/* Params */}
-                <Subheader>{i18n.t('general.waterChemistry')}</Subheader>
-                <View style={styles.row}>
-                  {/* Temperature */}
-                  { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={18} style={{marginLeft:'-10%'}} />) }
-                  {/* pH */}
-                  { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
-                  {/* gh */}
-                  { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
-                  {/* kh */}
-                  { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
-                </View>
+                { !!mainSpecies &&
+                  <>
+                    <Subheader>{i18n.t('general.waterChemistry')}</Subheader>
+                    <View style={styles.row}>
+                      {/* Temperature */}
+                      { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={18} style={{marginLeft:'-10%'}} />) }
+                      {/* pH */}
+                      { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
+                      {/* gh */}
+                      { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
+                      {/* kh */}
+                      { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={18} style={{marginLeft:'-3%'}} />) }
+                    </View>
+                  </>
+               }
 
                 
                 {/* Graphic tank with species split by swimming area */}
