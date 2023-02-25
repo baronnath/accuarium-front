@@ -23,6 +23,7 @@ const es = {
         verify: 'Verificar',
         code: 'Código',
         search: 'Buscar',
+        searchByName: 'Buscar por nombre',
         language: 'Idioma',
         save: 'Guardar',
         cancel: 'Cancelar',

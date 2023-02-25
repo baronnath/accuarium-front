@@ -41,7 +41,7 @@ export default function Species({ route, navigation }) {
   const [id, setId] = useState(false);
   const [species, setSpecies] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
+  const [modalContent, setModalContent] = useState({});
 
   useFocusEffect(
     React.useCallback(() => {
@@ -121,7 +121,11 @@ export default function Species({ route, navigation }) {
       activeOpacity={0.8}
       onPress={() => {
         setModalVisible(true);
-        setModalContent(`behavior.${toCamelCase(caption)}.description`);
+        setModalContent({
+          icon: icon,
+          description: `behavior.${toCamelCase(caption)}.description`,
+          color: color
+        });
       }}
     >
       <Surface
@@ -389,8 +393,8 @@ export default function Species({ route, navigation }) {
       }
 
       <Modal isVisible={isModalVisible} setVisible={setModalVisible}>
-        <MaterialCommunityIcons name="information-outline" size={60} color={theme.colors.primary} />
-        <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent)}</Paragraph>
+        <MaterialCommunityIcons name={modalContent.icon} size={60} color={modalContent.color ? modalContent.color : theme.colors.primary} />
+        <Paragraph style={styles.modalParagraph}>{i18n.t(modalContent.description)}</Paragraph>
       </Modal>
     </Background>
   );

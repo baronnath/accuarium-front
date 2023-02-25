@@ -23,6 +23,7 @@ const en = {
         verify: 'Verify',
         code: 'Code',
         search: 'Search',
+        searchByName: 'Search by name',
         language: 'Language',
         save: 'Save',
         cancel: 'Cancel',

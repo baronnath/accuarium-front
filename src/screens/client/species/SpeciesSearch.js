@@ -273,7 +273,7 @@ export default function SpeciesSearch({ route, navigation }) {
         }
         
         <Searchbar
-          placeholder={i18n.t('general.search')}
+          placeholder={i18n.t('general.searchByName')}
           onChangeText={searchKey => setQuery(searchKey)}
           value={query}
         />
