@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import Bugsnag from '@bugsnag/expo';
 import React, { useCallback, useState, useEffect } from 'react';
 import { NavigationContainer, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { DarkTheme as PaperDarkTheme, Provider as PaperProvider } from 'react-native-paper';
@@ -24,7 +25,6 @@ import Navigator from './src/navigator';
 import Alert from './src/components/Alert';
 import { theme } from './src/theme';
 
-
 const CombinedDarkTheme = {
   ...PaperDarkTheme,
   ...NavigationDarkTheme,
@@ -33,7 +33,10 @@ const CombinedDarkTheme = {
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Main() {
+// Crash reporting init.
+Bugsnag.start({});
+
+export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -93,4 +96,4 @@ export default function Main() {
   );
 }
 
-AppRegistry.registerComponent(appName, () => Main);
+AppRegistry.registerComponent(appName, () => App);

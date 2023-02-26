@@ -27,7 +27,6 @@
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [
-        // use fully qualified names
         "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA"
       ]
@@ -38,18 +37,29 @@
         {
           "photosPermission": "The app accesses your photos to let you upload your tank image."
         }
-      ]
+      ],
+      "@bugsnag/plugin-expo-eas-sourcemaps"
     ],
     "extra": {
       "eas": {
         "projectId": "a797ef60-1223-457f-8463-2be933c5b9e4"
+      },
+      "bugsnag": {
+        "apiKey": "127fcae2955014ec8ada91271c28bd0b"
       }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "@bugsnag/expo/hooks/post-publish.js"
+        }
+      ]
     },
     "owner": "nathanlosabe"
   },
   "backend": {
-    "url": "http://192.168.68.109:8080",
-    "imagesUrl": "http://192.168.68.109:8080/images/"
+    "url": "http://192.168.0.19:8080",
+    "imagesUrl": "http://192.168.0.19:8080/images/"
   },
   "preferences": {
     "pagination": 10
