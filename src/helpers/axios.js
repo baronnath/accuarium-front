@@ -56,6 +56,23 @@ export class Api {
 		return axios.get(backend.url + '/species', {params: params});
 	}
 
+	// data is a FormData instaca.
+	//
+	// Example:
+	//
+	// let data = new FormData();
+	// data.append('file', file);
+	uploadSpeciesFile(data) {
+		return axios.post(backend.url + '/species/uploadFile', data);
+	}
+
+
+	// Compatibilities
+
+	uploadCompatibilityFile(data) {
+		return axios.post(backend.url + '/compatibility/uploadFile', data)
+	}
+
 
 	// Locale
 
@@ -63,4 +80,21 @@ export class Api {
 		return axios.get(backend.url + '/locales');
 	}
 
+
+	// Permissions
+
+	getPermissions(params) {
+		return axios.get(backend.url + '/permissions');
+	}
+
+	updatePermission(params) {
+		return axios.put(backend.url + '/permission', params);
+	}
+
+
+	// Leads
+
+  static createLead(params) {
+    return axios.post(backend.url + '/lead', params);
+  }
 }
