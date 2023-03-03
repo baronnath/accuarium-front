@@ -124,10 +124,8 @@ function login(user, from) {
                 // navigator.navigate('Home');
             })
             .catch(err => {
-                err.response
-                    ? dispatch(alertActions.error(err.response.data.message, false))
-                    : dispatch(alertActions.error('server.connectionError'));
                 dispatch(error());
+                handleAlert(err);
             });
     };
 
@@ -175,11 +173,8 @@ function logout(user) {
                 navigator.navigate('Home');
             })
             .catch(err => {
-                let message;
-                err.response
-                    ? dispatch(alertActions.error(err.response.data.message, false))
-                    : dispatch(alertActions.error('server.connectionError'));
                 dispatch(error());
+                handleAlert(err);
             });
     };
     
@@ -201,11 +196,8 @@ function register(user) {
                 }
             ).catch(
                 err => {
-                    let message;
-                    err.response
-                        ? dispatch(alertActions.error(err.response.data.message, false))
-                        : dispatch(alertActions.error('server.connectionError'));
                     dispatch(error());
+                    handleAlert(err);
                 }
             );
     };
@@ -228,11 +220,8 @@ function verify(user) {
                 }
             ).catch(
                 err => {
-                    let message;
-                    err.response
-                        ? dispatch(alertActions.error(err.response.data.message, false))
-                        : dispatch(alertActions.error('server.connectionError'));
                     dispatch(error());
+                    handleAlert(err);
                 }
             );
     };
@@ -283,7 +272,7 @@ function _getUser(params){
             ).catch(
                 err => {
                     dispatch(error());
-                        handleAlert(err);
+                    handleAlert(err);
                 }
             );
     };

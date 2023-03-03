@@ -181,7 +181,7 @@ function updateTank(tank){
                 res => {
                     // navigator.navigate('Tanks');
                     dispatch(success(res.data));
-                    dispatch(alertActions.success(res.data.message));
+                    dispatch(alertActions.success(res.data.message, false));
                 }
             ).catch(
                 err => {
@@ -204,7 +204,7 @@ function addSpecies(params){
             .then(
                 res => { 
                     dispatch(success(res.data));
-                		dispatch(alertActions.success(res.data.message));
+                		dispatch(alertActions.success(res.data.message, false));
                 }
             ).catch(
                 err => {
@@ -230,7 +230,7 @@ function _delete(tankId) {
             if(route.name == 'Tank')
               navigator.navigate('Tanks');
             dispatch(success(res.data));
-        		dispatch(alertActions.success(res.data.message));
+        		dispatch(alertActions.success(res.data.message, false));
           }
         ).catch(
           err => {

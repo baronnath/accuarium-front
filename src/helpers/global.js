@@ -5,14 +5,19 @@ import { actions as alertActions } from '../ducks/alert';
 import { commaToPeriod } from './helpers';
 import { theme } from '../theme';
 import Bugsnag from '@bugsnag/expo';
+import translator from '../translator/translator';
 
 export function handleAlert(err){
+  const i18n = translator();
+
   let message;
   err.response
       ? message = err.response.data.message
-      : message = 'server.connectionError'
-  store.dispatch(alertActions.error(message));
-  Bugsnag.notify(err);
+      : message = i18n.t('server.connectionError');
+  store.dispatch(alertActions.error(message, false));
+
+  if(err.response.data.error.statusCode >= 500) // Only critical errors
+    Bugsnag.notify(err);  
 }
 
 // Check if ScrollView has been scrolled till the end

@@ -35,7 +35,7 @@ export default function TankDeleteModal({ tankId, isVisible, setVisible, ...prop
           onPress={() => deleteTank()}
           style={[styles.modalButton,styles.cancelButton]}
         >
-          Remove
+          {i18n.t('general.delete')}
         </Button>
         <Button
           onPress={() => setVisible(false)}
