@@ -196,7 +196,7 @@ export default function GraphicTankSpecies({ species }) {
   } 
 
   return (
-    <>
+    <View key={species.species._id}>
       <TouchableOpacity style={styles.rowContainer}>
         <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
         <GroupIcon name={species.species.group.icon} size={30} style={styles.icons} color={theme.colors.primary}/>
@@ -223,7 +223,7 @@ export default function GraphicTankSpecies({ species }) {
         </View>
         <Separator style={styles.separator}/>
       </View>
-    </>
+    </View>
   );
 }
 
