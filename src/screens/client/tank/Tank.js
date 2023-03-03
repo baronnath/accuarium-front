@@ -137,11 +137,12 @@ export default function Tank({ route, navigation }) {
             <Image
               source={{ uri: uri + '?' + new Date()}} // Date is added to avoid image to cache
               style={styles.image}
-              defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
+              // defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
             />
           );
         }
-      });
+      })
+      .catch((err) => {});
   }
 
   function getParam(param, measure, icon) {
