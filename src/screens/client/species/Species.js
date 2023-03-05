@@ -54,11 +54,11 @@ export default function Species({ route, navigation }) {
     // Get species data
     Api.getSpeciesById(speciesId)
       .then(res => {
-          setSpecies(res.data.species);
-          console.log(res.data.species.scientificNameSynonyms.length )
+        setSpecies(res.data.species);
+        console.log(res.data.species.scientificNameSynonyms.length )
       })
       .catch(err => {
-          handleAlert(err);          
+        handleAlert(err);          
       });
 
   }, [speciesId]);
@@ -301,8 +301,12 @@ export default function Species({ route, navigation }) {
           
           {/* Family and group */}
           <View style={[styles.row,{ marginBottom: theme.container.padding * 2 }]}>
-           <Paragraph style={styles.classification}>{ucFirst(species.family.name[locale])}</Paragraph> 
-           <Paragraph style={[styles.classification,{ borderLeftWidth: 1, borderLeftColor: theme.colors.lightText }]}>{ucFirst(species.group.name[locale])}</Paragraph> 
+            { species.family && 
+              <Paragraph style={styles.classification}>{ucFirst(species.family.name[locale])}</Paragraph>
+            }
+            { species.group &&
+              <Paragraph style={[styles.classification,{ borderLeftWidth: 1, borderLeftColor: theme.colors.lightText }]}>{ucFirst(species.group.name[locale])}</Paragraph>
+            } 
           </View>
 
           {/* Sizes, feed (diet) and swimming area */}
