@@ -10,14 +10,17 @@ import translator from '../translator/translator';
 export function handleAlert(err){
   const i18n = translator();
 
-  let message;
-  err.response
-      ? message = err.response.data.message
-      : message = i18n.t('server.connectionError');
-  store.dispatch(alertActions.error(message, false));
+  let message = i18n.t('server.connectionError');
+  if(err.response != undefined){ // Errors with response comes from the api response
+    message = err.response.data.message
+    if(err.response.data.error.statusCode >= 500) // Only critical errors
+      Bugsnag.notify(err); 
+  }
+  else{
+    Bugsnag.notify(err);
+  }
 
-  if(err.response.data.error.statusCode >= 500) // Only critical errors
-    Bugsnag.notify(err);  
+  store.dispatch(alertActions.error(message, false));
 }
 
 // Check if ScrollView has been scrolled till the end
