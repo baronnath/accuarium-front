@@ -55,7 +55,6 @@ export default function Species({ route, navigation }) {
     Api.getSpeciesById(speciesId)
       .then(res => {
         setSpecies(res.data.species);
-        console.log(res.data.species.scientificNameSynonyms.length )
       })
       .catch(err => {
         handleAlert(err);          
@@ -118,6 +117,7 @@ export default function Species({ route, navigation }) {
   function getBehaviour(icon, caption, color) {
     let icons = iconToArray(icon);
     return <TouchableOpacity
+      key={caption}
       activeOpacity={0.8}
       onPress={() => {
         setModalVisible(true);
@@ -135,7 +135,9 @@ export default function Species({ route, navigation }) {
         {
           icons.map(ic => {
             return (
-              <MaterialCommunityIcons style={styles.listIcon}
+              <MaterialCommunityIcons
+                key={ic}
+                style={styles.listIcon}
                 name={ic} 
                 color={color ? color : theme.colors.text}
                 size={28}
@@ -235,7 +237,6 @@ export default function Species({ route, navigation }) {
   }
 
   function getImageDescription(img) {
-    console.log(`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`);
     const imgDescriptions = ['male', 'female', 'alevin'];
     let description = img.split('.').shift().split('-').pop(); // Delete the extension and grab the last word
     let found = imgDescriptions.find(desc => desc == description)

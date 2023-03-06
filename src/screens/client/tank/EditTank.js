@@ -357,6 +357,7 @@ export default function EditTank({ route, navigation }) {
                   {
                     editedTank.species.map((item) =>
                       <EditSpeciesCard
+                        key={item.species._id}
                         species={item.species}
                         quantity={item.quantity}
                         main={item.main}
