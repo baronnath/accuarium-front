@@ -5,8 +5,8 @@ import { View, StyleSheet } from 'react-native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { theme } from '../theme';
 
-const Spinner = () => (
-  	<ActivityIndicator animating={true} style={styles.spinner} theme={theme} />
+const Spinner = ({ animating = true, ...props}) => (
+  	<ActivityIndicator animating={animating} style={styles.spinner} theme={theme} />
 );
 
 const styles = StyleSheet.create({

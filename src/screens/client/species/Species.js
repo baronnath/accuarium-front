@@ -67,9 +67,11 @@ export default function Species({ route, navigation }) {
     return <>
       <View style={{ flexDirection: 'row' }}>
         {
-          icons.map(ic => {
+          icons.map((ic, i) => {
             return (
-              <MaterialCommunityIcons style={styles.listIcon}
+              <MaterialCommunityIcons
+                key={i}
+                style={styles.listIcon}
                 name={ic} 
                 color={color ? color : theme.colors.text}
                 size={size}
@@ -133,10 +135,10 @@ export default function Species({ route, navigation }) {
         style={[styles.surface, styles.widthSurface, styles.row]}
       >
         {
-          icons.map(ic => {
+          icons.map((ic, i) => {
             return (
               <MaterialCommunityIcons
-                key={ic}
+                key={i}
                 style={styles.listIcon}
                 name={ic} 
                 color={color ? color : theme.colors.text}
@@ -225,7 +227,7 @@ export default function Species({ route, navigation }) {
     // })
     return species.images.map(img => {
       
-      return <View style={{paddingHorizontal: theme.container.padding}}>
+      return <View key={img} style={{paddingHorizontal: theme.container.padding}}>
         <Image
           source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${img}` }}
           style={styles.image}
