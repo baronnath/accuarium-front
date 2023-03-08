@@ -170,7 +170,7 @@ function logout(user) {
                 dispatch(success());
                 await AsyncStorage.removeItem('user', JSON.stringify(res.data.user));
                 dispatch(alertActions.success(res.data.message, false));
-                navigator.navigate('Home');
+                navigator.navigate('Login');
             })
             .catch(err => {
                 dispatch(error());

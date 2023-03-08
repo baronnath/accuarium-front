@@ -4,14 +4,17 @@ import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { StyleSheet, ScrollView } from 'react-native';
 import { Portal, Dialog as PaperDialog } from 'react-native-paper';
+import * as Localization from 'expo-localization';
 import Button from './Button';
 import { theme } from '../theme';
+import { isObject } from '../helpers/helpers';
 import translator from '../translator/translator';
 
 const Dialog = ({ isVisible, setVisible, title, actions, scrollable = false, style, mode = 'surface', children, ...props }) => {
 
     const user = useSelector(state => state.user.data);
-    const i18n = translator(user.locale);
+    const locale = isObject(user) ? user.locale : Localization.locale;
+    const i18n = translator(locale);
 
     return (
       <Portal>
