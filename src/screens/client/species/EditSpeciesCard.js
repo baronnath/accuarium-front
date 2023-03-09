@@ -15,6 +15,7 @@ import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
+import { ucFirst } from '../../../helpers/helpers';
 import translator from '../../../translator/translator';
 
 
@@ -73,8 +74,8 @@ const EditSpeciesCard = ({ species, quantity, main, handleSpecies, removeSpecies
     >
       <Card.Title
         style={styles.cardContainer}
-        title={species.name[locale]}
-        subtitle={species.scientificName}
+        title={ucFirst(species.name[locale])}
+        subtitle={ucFirst(species.scientificName)}
         titleStyle={styles.title}
         subtitleStyle={[styles.title, styles.subtitle]}
         left={(props) => 
@@ -167,6 +168,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 10,
     color: theme.colors.placeholder,
+    textTransform: 'capitalize',
   },
   rightStyle: {
     justifyContent: 'center',

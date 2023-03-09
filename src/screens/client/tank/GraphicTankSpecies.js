@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Paragraph from '../../../components/Paragraph';
 import Separator from '../../../components/Separator';
 import GroupIcon from '../../../components/GroupIcon';
-import { isEmpty } from '../../../helpers/helpers';
+import { isEmpty, ucFirst } from '../../../helpers/helpers';
 import { isCompatible } from '../../../helpers/tank';
 import unitConverter from '../../../helpers/unitConverter';
 import { theme } from '../../../theme';
@@ -178,7 +178,7 @@ export default function GraphicTankSpecies({ species }) {
       onPress={() => { navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : species.species._id } }) } }
     >
       <Paragraph style={styles.name}>
-        { species.species.name[locale] ? species.species.name[locale] : '' }
+        { species.species.name[locale] ? ucFirst(species.species.name[locale]) : '' }
       </Paragraph>
       <Paragraph style={styles.scientificName} fontStyle="italic">
         { species.species.name[locale] ? species.species.name[locale] : '' }
@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
   scientificName: {
     color: theme.colors.lightText,
     lineHeight: 14,
+    textTransform: 'capitalize',
   },
   icons: {
     width: 40,

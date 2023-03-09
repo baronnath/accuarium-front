@@ -203,9 +203,17 @@ export default function Tank({ route, navigation }) {
 
             !isEmpty(tank) &&
               <View style={styles.container} showsVerticalScrollIndicator={false}>
-                <Header style={styles.topLeft}>
-                  <MaterialCommunityIcons name="fishbowl-outline" size={36} color={theme.colors.lightText} /> {tank.name}
-                </Header>
+                <View style={styles.headerContainer}>
+                  <MaterialCommunityIcons
+                    name="fishbowl-outline"
+                    size={36}
+                    color={theme.colors.lightText}
+                    style={{marginTop: theme.container.padding}}
+                  />
+                  <Header style={styles.header}>
+                    {tank.name}
+                  </Header>
+                </View>
                 
                 <OptionsMenu>
                   <TankMenu tankId={tank._id}  deleteTank={setDeleteModalVisible}/>
@@ -374,9 +382,14 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     paddingBottom: theme.container.padding * 2,
   },
-  topLeft: {
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  header: {
     alignSelf: 'stretch',
-    justifyContent: 'flex-start',
+    paddingLeft: theme.container.padding,
+    paddingRight: theme.container.padding * 2,
     fontSize: 22,
     color: theme.colors.lightText,
   },

@@ -94,7 +94,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
               <View style={{flex:5}}>
                 {/* Species name and other names */}
                 <Toggler
-                  title={species.name[locale]}
+                  title={ucFirst(species.name[locale])}
                   description={i18n.t('species.otherNames')}
                   list={species.otherNames[locale]}
                   size="big"
@@ -107,7 +107,8 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   description={i18n.t('species.scientificNameSynonyms')}
                   list={species.scientificNameSynonyms}
                   size="small"
-                  listStyle={{textAlign: 'left'}}
+                  titleStyle={{textTransform: 'capitalize'}}
+                  listStyle={{textAlign: 'left', textTransform: 'capitalize'}}
                 />
               </View>
 
