@@ -33,6 +33,12 @@ export const types = {
     LOGOUT_REQUEST: 'LOGOUT_REQUEST',
     LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
 	LOGOUT_ERROR: 'LOGOUT_ERROR',
+    SENDRESETEMAIL_REQUEST: 'SENDRESETEMAIL_REQUEST',
+    SENDRESETEMAIL_SUCCESS: 'SENDRESETEMAIL_SUCCESS',
+    SENDRESETEMAIL_ERROR: 'SENDRESETEMAIL_ERROR',
+    RESET_REQUEST: 'RESET_REQUEST',
+    RESET_SUCCESS: 'RESET_SUCCESS',
+    RESET_ERROR: 'RESET_ERROR',
 }
 
 // Reducers
@@ -46,6 +52,8 @@ export default (state = defaultState, action) => {
         case types.LOGIN_REQUEST:
         case types.AUTOLOGIN_REQUEST:
         case types.LOGOUT_REQUEST:
+        case types.SENDRESETEMAIL_REQUEST:
+        case types.RESET_REQUEST:
             return { 
                 ...state,
                 isLoading: true,
@@ -58,6 +66,8 @@ export default (state = defaultState, action) => {
         case types.LOGIN_ERROR:
         case types.AUTOLOGIN_ERROR:
         case types.LOGOUT_ERROR:
+        case types.SENDRESETEMAIL_ERROR:
+        case types.RESET_ERROR:
             return {
                 ...state,
                 isLoading: false,
@@ -69,6 +79,8 @@ export default (state = defaultState, action) => {
         case types.VERIFY_SUCCESS:
         case types.LOGIN_SUCCESS:
         case types.AUTOLOGIN_SUCCESS:
+        case types.SENDRESETEMAIL_SUCCESS:
+        case types.RESET_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
@@ -106,6 +118,8 @@ export const actions = {
     getUser,
     getUserByEmail,
     updateUser,
+    sendResetPasswordEmail,
+    resetPassword,
     delete: _delete
 };
 
@@ -285,33 +299,81 @@ function _getUser(params){
 
 function updateUser(user){
     return dispatch => {
-          dispatch(request());
+        dispatch(request());
   
-          const params = {
+        const params = {
             userId: user._id,
             name: user.name,
             locale: user.locale,
             units: user.units,
-          }
+        }
   
-          axios.put(backend.url + '/user', params)
-              .then(
-                  res => {
-                      dispatch(success(res.data));
-                      dispatch(alertActions.success(res.data.message, false));
-                  }
-              ).catch(
-                  err => {
-                      dispatch(error());
-                      handleAlert(err);
-                  }
-              );
-      };
-  
-      function request() { return { type: types.UPDATEUSER_REQUEST } }
-      function success(data) { return { type: types.UPDATEUSER_SUCCESS, payload: data } }
-      function error() { return { type: types.UPDATEUSER_ERROR } }
-  }
+        axios.put(backend.url + '/user', params)
+            .then(
+              res => {
+                  dispatch(success(res.data));
+                  dispatch(alertActions.success(res.data.message, false));
+              }
+            ).catch(
+              err => {
+                  dispatch(error());
+                  handleAlert(err);
+              }
+            );
+    }
+
+    function request() { return { type: types.UPDATEUSER_REQUEST } }
+    function success(data) { return { type: types.UPDATEUSER_SUCCESS, payload: data } }
+    function error() { return { type: types.UPDATEUSER_ERROR } }
+}
+
+function sendResetPasswordEmail(user) {
+    return dispatch => {
+        dispatch(request(user));
+
+        axios.post(backend.url + '/user/sendresetpasswordemail', user)
+            .then(
+                res => { 
+                    dispatch(success(res.data));
+                    dispatch(alertActions.success(res.data.message, false));
+                    navigator.navigate('ResetPassword', { code: true });
+                }
+            ).catch(
+                err => {
+                    dispatch(error());
+                    handleAlert(err);
+                }
+            );
+    };
+
+    function request(data) { return { type: types.SENDRESETEMAIL_REQUEST, payload: data } }
+    function success(data) { return { type: types.SENDRESETEMAIL_SUCCESS, payload: data } }
+    function error() { return { type: types.SENDRESETEMAIL_ERROR } }
+}
+
+function resetPassword(user) {
+    return dispatch => {
+        dispatch(request(user));
+
+        axios.patch(backend.url + '/user/resetpassword', user)
+            .then(
+                res => { 
+                    dispatch(success(res.data));
+                    dispatch(alertActions.success(res.data.message, false));
+                    navigator.navigate('Login');
+                }
+            ).catch(
+                err => {
+                    dispatch(error());
+                    handleAlert(err);
+                }
+            );
+    };
+
+    function request(data) { return { type: types.RESET_REQUEST, payload: data } }
+    function success(data) { return { type: types.RESET_SUCCESS, payload: data } }
+    function error() { return { type: types.RESET_ERROR } }
+}
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {

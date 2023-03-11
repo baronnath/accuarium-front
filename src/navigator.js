@@ -13,6 +13,7 @@ import { theme } from './theme';
 import Register from './screens/Register';
 import Verify from './screens/Verify';
 import Login from './screens/Login';
+import ResetPassword from './screens/ResetPassword';
 
 import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
@@ -152,6 +153,7 @@ export default function Navigator() {
           <AppStack.Screen name="Login" component={Login} />
           <AppStack.Screen name="Register" component={Register} />
           <AppStack.Screen name="Verify" component={Verify} />
+          <AppStack.Screen name="ResetPassword" component={ResetPassword} />
         </>
       )}
     </AppStack.Navigator>

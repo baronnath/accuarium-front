@@ -98,7 +98,7 @@ const Login = ({ navigation }) => {
 
       <View style={styles.forgotPassword}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPasswordScreen')}
+          onPress={() => navigation.navigate('ResetPassword')}
         >
           <Paragraph style={styles.label}>{i18n.t('login.forgotPassword')}</Paragraph>
         </TouchableOpacity>
