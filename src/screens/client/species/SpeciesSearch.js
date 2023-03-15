@@ -44,7 +44,6 @@ export default function SpeciesSearch({ route, navigation }) {
   const [main, setMain] = useState(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const [totalResults, setTotalResults] = useState(0);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [filters, setFilters] = useState({});
   const [areFiltersVisible, setFiltersVisible] = useState(false);
@@ -152,7 +151,6 @@ export default function SpeciesSearch({ route, navigation }) {
           else {
             setFinalPage(true);
           }
-          setTotalResults(res.data.total);
           setLoading(false);
       })
       .catch(err => {
