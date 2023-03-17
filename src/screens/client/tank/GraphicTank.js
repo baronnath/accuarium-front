@@ -34,7 +34,7 @@ export default function GraphicTank() {
 
   function getSpeciesDepth(depth) {
     return speciesByDepth[depth].map(species => {
-      return <GraphicTankSpecies species={species} />
+      return <GraphicTankSpecies key={species._id} species={species} />
     });
   }
 

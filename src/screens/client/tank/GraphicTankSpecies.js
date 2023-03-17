@@ -132,7 +132,7 @@ export default function GraphicTankSpecies({ species }) {
         let species = tank.species.find(species => species.species._id == speciesId);
 
         if(speciesCompat[speciesId].compatibility != 2){
-          return <View style={styles.rowContainer}>
+          return <View style={styles.rowContainer} key={'spCompat'+species.species.group._id}>
             <GroupIcon
               name={species.species.group.icon}
               size={24}
