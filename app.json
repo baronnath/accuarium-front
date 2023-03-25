@@ -31,6 +31,9 @@
         "android.permission.CAMERA"
       ]
     },
+    "androidStatusBar": {
+      "translucent": true
+    },
     "plugins": [
       [
         "expo-image-picker",
@@ -58,8 +61,8 @@
     "owner": "nathanlosabe"
   },
   "backend": {
-    "url": "http://192.168.0.19:8080",
-    "imagesUrl": "http://192.168.0.19:8080/images/"
+    "url": "https://api.accuarium.app",
+    "imagesUrl": "https://api.accuarium.app/images/"
   },
   "preferences": {
     "pagination": 10
