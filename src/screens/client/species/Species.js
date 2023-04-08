@@ -89,7 +89,7 @@ export default function Species({ route, navigation }) {
         <Surface elevation={9} style={styles.surface}>
           <View>
             { icon }
-            <View style={[styles.row,{marginTop: theme.container.padding * 3}]}>
+            <View style={[styles.row,{marginTop: theme.container.padding }]}>
               { param != 'ph' ?
                   <>
                     <Subheader style={styles.waterParam}>
@@ -349,13 +349,13 @@ export default function Species({ route, navigation }) {
             // pagingEnabled={true}
           >
             {/* Temperature */}
-            { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={50} style={{marginLeft:'-10%'}} />) }
+            { getParam('temperature', 'temperature', <MaterialCommunityIcons name="thermometer-low" color={theme.colors.text} size={35} style={{marginLeft:'-7%'}} />) }
             {/* pH */}
-            { getParam('ph', 'ph', <Subheader style={styles.waterParam}>pH</Subheader>) }
+            { getParam('ph', 'ph', <Subheader style={ [styles.waterParam, styles.phParam] }>pH</Subheader>) }
             {/* gh */}
-            { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
+            { getParam('gh', 'hardness', <MaterialCommunityIcons name="focus-field" color={theme.colors.text} size={35} style={{marginLeft:'-2%'}} />) }
             {/* kh */}
-            { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={50} style={{marginLeft:'-3%'}} />) }
+            { getParam('kh', 'hardness', <MaterialCommunityIcons name="focus-field-horizontal" color={theme.colors.text} size={35} style={{marginLeft:'-2%'}} />) }
           </ScrollView>
 
           {/* Behavior */}
@@ -498,12 +498,15 @@ const styles = StyleSheet.create({
   },
   waterParam: {
     textAlign: 'left',
-    fontSize: 50,
-    lineHeight: 50,
+    fontSize: 25,
+    lineHeight: 25,
   },
   waterParamUnit: {
     textAlign: 'left',
     marginLeft: 8,
+  },
+  phParam: {
+    marginTop: -9
   },
   classification: {
     flex: 1,
