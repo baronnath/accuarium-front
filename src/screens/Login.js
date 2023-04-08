@@ -107,7 +107,8 @@ const Login = ({ navigation }) => {
       <Button
         mode="contained"
         onPress={handleSubmit}
-        style={styles.button}>
+        style={styles.button}
+      >
           {i18n.t('general.login')}
       </Button>
 

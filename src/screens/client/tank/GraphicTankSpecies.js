@@ -132,7 +132,7 @@ export default function GraphicTankSpecies({ species }) {
         let species = tank.species.find(species => species.species._id == speciesId);
 
         if(speciesCompat[speciesId].compatibility != 2){
-          return <View style={styles.rowContainer} key={'spCompat'+species.species.group._id}>
+          return <View style={styles.rowContainer} key={'spCompat'+species.species._id}>
             <GroupIcon
               name={species.species.group.icon}
               size={24}
@@ -175,7 +175,7 @@ export default function GraphicTankSpecies({ species }) {
   function speciesRow(species) {
     return <TouchableOpacity
       style={styles.namesContainer}
-      onPress={() => { navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : species.species._id } }) } }
+      onPress={() => { navigateToSpecies(species.species._id) } }
     >
       <Paragraph style={styles.name}>
         { species.species.name[locale] ? ucFirst(species.species.name[locale]) : '' }
@@ -195,16 +195,30 @@ export default function GraphicTankSpecies({ species }) {
     setCompExpanded({ expanded: !compExpanded.expanded });
   } 
 
+  function navigateToSpecies(speciesId) {
+    navigation.navigate('SpeciesNav', { screen: 'Species', params: { speciesId : speciesId } })
+  }
+
   return (
     <View key={species.species._id}>
-      <TouchableOpacity style={styles.rowContainer}>
-        <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
-        <GroupIcon name={species.species.group.icon} size={30} style={styles.icons} color={theme.colors.primary}/>
-        { speciesRow(species) }
+      <View style={styles.rowContainer}>
+        <TouchableOpacity
+          style={styles.rowContainer}
+          onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
+        >
+          <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.rowContainer}
+          onPress={() => { navigateToSpecies(species.species._id) } }
+        >
+          <GroupIcon name={species.species.group.icon} size={30} style={styles.icons} color={theme.colors.primary}/>
+          { speciesRow(species) }
+        </TouchableOpacity>
         { isComp &&
           compatibilityButton()
         }
-      </TouchableOpacity>
+      </View>
       <View style={{ height: compExpanded.expanded ? null : 0, overflow: 'hidden', maringVertical: 15 }}>
         <View style={styles.compatibilityContainer}>
           { isComp && isComp.isParameterCompatible[species.species._id] === false &&

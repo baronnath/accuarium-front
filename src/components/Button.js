@@ -6,6 +6,7 @@ import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../theme';
 import color from 'color';
 
+// mode: contained or outlined or text
 const Button = ({ mode, style, labelStyle, icon, disabled = false, compact = false, children, ...props }) => {
   let surface = false;
   if(mode === 'outlined' || mode === 'text')

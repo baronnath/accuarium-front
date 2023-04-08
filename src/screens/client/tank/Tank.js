@@ -300,7 +300,14 @@ export default function Tank({ route, navigation }) {
 
                 
                 {/* Graphic tank with species split by swimming area */}
-                <Subheader>{i18n.t('general.graphicTank')}</Subheader>
+                <View style={ [styles.rowContainer, { justifyContent: 'space-between' }] }>
+                  <Subheader>{i18n.t('general.graphicTank')}</Subheader>
+                  <TouchableOpacity style={{ marginTop: 8}}
+                    onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
+                  >
+                    <MaterialCommunityIcons name="playlist-edit" size={28} color={theme.colors.text} />
+                  </TouchableOpacity>
+                </View>
                 { tank.species &&
                   <GraphicTank style={{marginTop: 5}}/>
                 }
@@ -449,7 +456,7 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection:'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   box: {
     flex:1,
