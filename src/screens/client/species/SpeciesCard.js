@@ -13,7 +13,9 @@ import Paragraph from '../../../components/Paragraph';
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
 import Toggler from '../../../components/Toggler';
+import SpeciesImage from '../../../components/SpeciesImage';
 import { ucFirst } from '../../../helpers/helpers';
+import { getSpeciesImageUri } from '../../../helpers/tank';
 import { theme } from '../../../theme';
 import { handleAlert } from '../../../helpers/global';
 import translator from '../../../translator/translator';
@@ -70,6 +72,11 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     if(main) setMain(null); // Only first species added is main species, deactivate for next species
   }
 
+  if(!species.images)
+    species.images = [null];
+
+  console.log(species.scientificName,species.images)
+
   return( 
     <>
       {
@@ -82,9 +89,11 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
           >
             { species.images && species.images.length &&
               <View style={styles.gridImageContainer}>
-                <Image
+                <SpeciesImage
+                  img={species.images[0]}
+                  scientificName={species.scientificName}
                   style={styles.gridImage}
-                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${species.images[0]}` }}
+                  description={false}
                 />
               </View>
             }
@@ -140,9 +149,11 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             
             <View style={[styles.listImageContainer,{flex:3}]}>
               { species.images && species.images.length &&
-                <Image
+                <SpeciesImage
+                  img={species.images[0]}
+                  scientificName={species.scientificName}
                   style={styles.listImage}
-                  source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${species.images[0]}` }}
+                  description={false}
                 />
               }
             </View>

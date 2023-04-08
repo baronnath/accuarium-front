@@ -22,11 +22,13 @@ import Slider from '../../../components/Slider';
 import Spinner from '../../../components/Spinner';
 import Modal from '../../../components/Modal';
 import Toggler from '../../../components/Toggler';
+import SpeciesImage from '../../../components/SpeciesImage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { actions as alertActions } from '../../../ducks/alert';
 import unitConverter from '../../../helpers/unitConverter';
 import { handleAlert } from '../../../helpers/global';
 import helpers from '../../../helpers/helpers';
+import { getSpeciesImageUri } from '../../../helpers/tank';
 import { Api }from '../../../helpers/axios';
 import { theme } from '../../../theme';
 import translator from '../../../translator/translator';
@@ -222,27 +224,23 @@ export default function Species({ route, navigation }) {
   }
 
   function getSliderImages() {
-    // species.images.map(img => {
-    //       console.log('HEY',`${backend.imagesUrl}species/${species.scientificName.replace(' ', '-')}/${img}`)
-    // })
-    return species.images.map(img => {
-      
-      return <View key={img} style={{paddingHorizontal: theme.container.padding}}>
-        <Image
-          source={{ uri: `${backend.imagesUrl}species/${species.scientificName.replace(' ', '-').toLowerCase()}/${img}` }}
-          style={styles.image}
-          defaultSource={{ uri: 'https://www.animalespeligroextincion.org/wp-content/uploads/2019/03/pez-betta.jpg' }} // TO BE FIXED: imageDefault not working in Android for debug built. Image default to be changed
-        />
-        <Paragraph style={styles.imageDescription}>{getImageDescription(img)}</Paragraph>
-      </View>
-    })
-  }
 
-  function getImageDescription(img) {
-    const imgDescriptions = ['male', 'female', 'alevin'];
-    let description = img.split('.').shift().split('-').pop(); // Delete the extension and grab the last word
-    let found = imgDescriptions.find(desc => desc == description)
-    return found && i18n.t(`general.${description}`);
+    if(!species.images)
+      species.images = [null];
+
+    return species.images.map(img => {
+      return(
+        <View key={img} style={{paddingHorizontal: theme.container.padding}}>
+          <SpeciesImage
+            img={img}
+            scientificName={species.scientificName}
+            style={styles.image}
+            description={true}
+            descriptionStyle={styles.imageDescription}
+          />
+        </View>
+      );
+    });
   }
 
   function getFeedIcon(feed) {
@@ -298,7 +296,7 @@ export default function Species({ route, navigation }) {
           </Svg>
           */}
 
-          { species.images &&
+          { 
             <Slider items={getSliderImages()} height={Dimensions.get('window').width} />
           }
           
@@ -433,6 +431,7 @@ const styles = StyleSheet.create({
     width: '100%',
     resizeMode: "contain",
     aspectRatio: 1.25,
+    borderRadius: theme.roundness,
   },
   imageDescription: {
     color: theme.colors.lightText,

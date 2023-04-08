@@ -18,12 +18,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nathanlosabe.accuarium",
+      "buildNumber": "1.1" //increase it for iOS
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "android": {
+      "versionCode": 2,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [
@@ -62,7 +65,8 @@
   },
   "backend": {
     "url": "https://api.accuarium.app",
-    "imagesUrl": "https://api.accuarium.app/images/"
+    "imagesUrl": "https://api.accuarium.app/images/",
+    "imageDefaultUrl": "https://dummyimage.com/1000x1000/000000/ffffff.jpg&text="
   },
   "preferences": {
     "pagination": 10
