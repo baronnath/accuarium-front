@@ -20,13 +20,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nathanlosabe.accuarium",
-      "buildNumber": "1.1" //increase it for iOS
+      "buildNumber": "1.3" //increase it for iOS
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "versionCode": 2,
+      "versionCode": 3,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [
