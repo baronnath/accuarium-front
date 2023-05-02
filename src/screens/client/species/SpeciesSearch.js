@@ -284,21 +284,19 @@ export default function SpeciesSearch({ route, navigation }) {
           persistentScrollbar={true}
           // pagingEnabled={true}
         >
-          <TouchableOpacity onPress={() => { setModalVisible(key) }}>
+          <TouchableOpacity onPress={ () => switchGrid() }>
             <MaterialCommunityIcons
               name={grid ? "view-list-outline" : "view-grid-outline"}
               size={24}
               color={theme.colors.text}
-              onPress={ () => switchGrid() }
               style={styles.horizontalIcons}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setModalVisible(key) }}>
+          <TouchableOpacity onPress={ () => setFiltersVisible(true) }>
             <MaterialCommunityIcons
               name="filter-outline"
               size={24}
               color={theme.colors.text}
-              onPress={ () => setFiltersVisible(true) }
               style={styles.horizontalIcons}
             />
           </TouchableOpacity>
