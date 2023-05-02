@@ -8,7 +8,7 @@ const ax = require('axios');
 // const https = require('https');
 
 export const axios = ax.default.create({
-	timeout: 100, // 0.1sec
+	timeout: 600, // 0.1sec
 
 	// Keep alive pools and reuses TCP connections so it's faster
 	// httpAgget: new http.Agent({ keepAlive: true}),
