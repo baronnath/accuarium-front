@@ -7,17 +7,20 @@ import * as Linking from 'expo-linking';
 const prefix = Linking.createURL('/');
 
 export const linkingRef = {
-    prefixes: [prefix],
+    prefixes: [
+        prefix,
+        'accua://'
+    ],
     config: {
         screens: {
             Home: {
                 screens: {
-                    Tanks: {
+                    TankNav: {
                         screens: {
                             Tank: "tank/:tankId",
                         }
                     },
-                    Species: {
+                    SpeciesNav: {
                         screens: {
                           Species: "species/:speciesId",
                         }
