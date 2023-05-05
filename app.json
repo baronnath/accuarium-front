@@ -26,7 +26,7 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [
