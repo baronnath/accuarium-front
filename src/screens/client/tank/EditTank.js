@@ -90,10 +90,14 @@ export default function EditTank({ route, navigation }) {
 
   useEffect(() => {
     // Automatic volume calculation if measures are filled
-    if(editedTank.measures)
+    if(editedTank.measures && areMeasuresChanged())
       if(editedTank.measures.height && editedTank.measures.width && editedTank.measures.length)
         calculateTankVolume();
   }, [editedTank.measures]);
+
+  function areMeasuresChanged() {
+    return editedTank.measures.height != tank.measures.height || editedTank.measures.width != tank.measures.width || editedTank.measures.length != tank.measures.length;
+  }
 
   async function handleChange(field, value) {
     setEditedTank(prevTank => ({
@@ -315,7 +319,7 @@ export default function EditTank({ route, navigation }) {
                 >
                   <MaterialCommunityIcons
                     name="calculator-variant"
-                    size={28}
+                    size={26}
                   />
                 </Button>
               </View>
