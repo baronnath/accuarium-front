@@ -64,20 +64,7 @@ export default function SpeciesSearch({ route, navigation }) {
     'color',
   ];
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
-
-    // const onChangeSort = field => {
-  //   let newDirection;
-  //   if(sort.direction == 'ascending')
-  //     newDirection = 'descending';
-  //   else
-  //     newDirection = 'ascending';
-
-  //   setSort({
-  //       field: field,
-  //       direction: newDirection
-  //   });
-  // }
+  const menuButton = <MaterialCommunityIcons style={styles.menuButton} size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
 
   useEffect(() => {
     clearFilter(); // Initial filters
@@ -401,7 +388,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   horizontalIcons: { 
-    marginRight: theme.container.padding / 2
+    marginRight: theme.container.padding / 2,
+    padding: 3,
   },
   searchOptions: {
     width: '100%',
@@ -436,5 +424,9 @@ const styles = StyleSheet.create({
   },
   listFootStyle: {
     paddingVertical: Dimensions.get('window').height / 5,
+  },
+  menuButton: {
+    paddingVertical: 5,
+    paddingBottom: 5,
   },
 });

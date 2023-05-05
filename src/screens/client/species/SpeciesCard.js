@@ -75,8 +75,6 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   if(!species.images)
     species.images = [null];
 
-  console.log(species.scientificName,species.images)
-
   return( 
     <>
       {
@@ -184,6 +182,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
                 }}
                 mode="text"
+                compact={ true }
               >
                 <MaterialCommunityIcons
                   name="tray-plus"

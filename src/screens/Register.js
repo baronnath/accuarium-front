@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   }, 
   label: {
     color: theme.colors.secondary,
+    padding: 10,
   },
   button: {
     marginTop: 24,
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
+    paddingVertical: 10,
   },
   container: {
     flex: 1,

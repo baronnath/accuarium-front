@@ -21,7 +21,7 @@ export default function TankMenu({ tankId, deleteTank }) {
 
   const [isMenuVisible, setMenuVisible] = useState(false);
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" style={styles.menuButton} color={theme.colors.text} onPress={() => {openMenu()}} />;
 
   function openMenu () { setMenuVisible(true); }
   function closeMenu () { setMenuVisible(false); }
@@ -74,5 +74,8 @@ export default function TankMenu({ tankId, deleteTank }) {
 };
 
 const styles = StyleSheet.create({
-
+  menuButton: {
+    paddingLeft: 10,
+    paddingBottom: 0,
+  },
 });

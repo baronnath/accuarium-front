@@ -136,11 +136,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   label: {
-    // color: theme.colors.secondary,
+    padding: 10,
   },
   link: {
     fontWeight: 'bold',
     color: theme.colors.accent,
+    paddingVertical: 10,
   },
   container: {
     flex: 1,

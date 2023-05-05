@@ -302,10 +302,10 @@ export default function Tank({ route, navigation }) {
                 {/* Graphic tank with species split by swimming area */}
                 <View style={ [styles.rowContainer, { justifyContent: 'space-between' }] }>
                   <Subheader>{i18n.t('general.graphicTank')}</Subheader>
-                  <TouchableOpacity style={{ marginTop: 8}}
+                  <TouchableOpacity style={{ marginTop: 2, padding: 10 }}
                     onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
                   >
-                    <MaterialCommunityIcons name="playlist-edit" size={28} color={theme.colors.text} />
+                    <MaterialCommunityIcons name="playlist-edit" size={30} color={theme.colors.text} />
                   </TouchableOpacity>
                 </View>
                 { tank.species &&

@@ -30,7 +30,7 @@ export default function SpeciesMenu({ species }) {
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
 
-  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" color={theme.colors.text} onPress={() => {openMenu()}} />;
+  const menuButton = <MaterialCommunityIcons size={24} name="dots-vertical" style={styles.menuButton} color={theme.colors.text} onPress={() => {openMenu()}} />;
 
   function openMenu () { setMenuVisible(true); }
   function closeMenu () { setMenuVisible(false); }
@@ -112,5 +112,8 @@ export default function SpeciesMenu({ species }) {
 };
 
 const styles = StyleSheet.create({
-
+  menuButton: {
+    paddingLeft: 5,
+    paddingBottom: 5,
+  },
 });
