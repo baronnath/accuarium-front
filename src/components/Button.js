@@ -45,7 +45,7 @@ const Button = ({ mode, style, labelStyle, icon, disabled = false, compact = fal
       mode={mode}
       icon={icon} 
       theme={theme}
-      // disabled={disabled}
+      disabled={disabled}
       compact={compact}
       {...props}
     >
