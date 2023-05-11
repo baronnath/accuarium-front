@@ -13,6 +13,9 @@ export const types = {
 	GETTANK_SUCCESS: 'GETTANK_SUCCESS',
 	GETTANKS_SUCCESS: 'GETTANKS_SUCCESS',
 	GETTANK_ERROR: 'GETTANK_ERROR',
+  CREATETANK_REQUEST: 'CREATETANK_REQUEST',
+  CREATETANK_SUCCESS: 'CREATETANK_SUCCESS',
+  CREATETANK_ERROR: 'CREATETANK_ERROR',
   UPDATETANK_REQUEST: 'UPDDATETANK_REQUEST',
   UPDATETANK_SUCCESS: 'UPDATETANK_SUCCESS',
   UPDATETANK_ERROR: 'UPDATETANK_ERROR',
@@ -36,6 +39,7 @@ export default (state = defaultState, action) => {
     // Request
     case types.GETTANK_REQUEST:
     case types.GETTANKS_REQUEST:
+    case types.CREATETANK_REQUEST:
 		case types.UPDATETANK_REQUEST:
 		case types.ADDSPECIES_REQUEST:
 		case types.DELETE_REQUEST:
@@ -47,6 +51,7 @@ export default (state = defaultState, action) => {
     // Error
     case types.GETTANK_ERROR:
     case types.UPDATETANK_ERROR:
+    case types.CREATETANK_ERROR:
     case types.ADDSPECIES_ERROR:
     case types.DELETE_ERROR:
     case types.GETCOMPATIBILITY_ERROR:
@@ -56,6 +61,7 @@ export default (state = defaultState, action) => {
       };
     // Success
     case types.GETTANK_SUCCESS:
+    case types.CREATETANK_SUCCESS:
     case types.UPDATETANK_SUCCESS:
       return {
           ...state,
@@ -119,6 +125,7 @@ export const actions = {
     getTank,
     getTankByUser,
     getTanksByUser: getTankByUser,
+    createTank,
     updateTank,
     addSpecies,
     delete: _delete,
@@ -159,6 +166,31 @@ function _getTank(params){
     function successGetTank(data) { return { type: types.GETTANK_SUCCESS, payload: data } }
     function succesGetTanksByUser(data) { return { type: types.GETTANKS_SUCCESS, payload: data } }
     function error() { return { type: types.GETTANK_ERROR } }
+}
+
+function createTank(tank){
+  return dispatch => {
+        dispatch(request());
+
+        axios.post(backend.url + '/tank', tank)
+            .then(
+                res => { 
+                    dispatch(alertActions.success(res.data.message, false));
+                    navigator.navigate('Tanks'); // Reset tank stack navigator to main screen
+                    navigator.navigate('SpeciesNav', { screen: 'SpeciesSearch', params: { setMainSpeciesTank: res.data.tanks } });
+                    dispatch(success(res.data));
+                }
+            ).catch(
+                err => {
+                    dispatch(error());
+                    handleAlert(err);
+                }
+            );
+    };
+
+    function request() { return { type: types.CREATETANK_REQUEST } }
+    function success(data) { return { type: types.CREATETANK_SUCCESS, payload: data } }
+    function error() { return { type: types.CREATETANK_ERROR } }
 }
 
 function updateTank(tank){

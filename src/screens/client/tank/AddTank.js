@@ -25,6 +25,7 @@ import translator from '../../../translator/translator';
 
 export default function AddTank({ navigation }) {
   const user = useSelector(state => state.user.data);
+  const newTank = useSelector(state => state.tanks.tank);
   const locale = user.locale;
   const i18n = translator(locale);
   const dispatch = useDispatch();
@@ -76,6 +77,9 @@ export default function AddTank({ navigation }) {
   }
 
   async function onSubmit(){
+    if (isLoading)
+      return;
+
     setErrors({});
     const validation = validator(tank);
 
@@ -95,30 +99,8 @@ export default function AddTank({ navigation }) {
       return;
     }
 
-    // // Convert to base lenght measure units
-    // try{
-    //   if(tank.width)
-    //     tank.width = unitConverter(tank.width, 'length', user.units.length);
-    //   if(tank.height)
-    //     tank.height = unitConverter(tank.height, 'length', user.units.length);
-    //   if(tank.length)
-    //     tank.length = unitConverter(tank.length, 'length', user.units.length);
-    // }catch(err){
-    //   dispatch(alertActions.error(err.message));
-    //   return;
-    // }
-    
-    axios.post(backend.url + '/tank', tank)
-    .then(res => {
-      dispatch(alertActions.success('addTank.addSpecies'));
-      dispatch(tankActions.getTankByUser(user._id));
-      setTank(defaultTank); // Clean inputs after creation success
-      navigation.navigate('Tanks'); // Reset tank stack navigator to main screen
-      navigation.navigate('SpeciesNav', { screen: 'SpeciesSearch', params: { setMainSpeciesTank: res.data.tank } });
-    })
-    .catch(err => {
-      handleAlert(err);
-    });
+    await dispatch(tankActions.createTank(tank));
+    setTank(defaultTank); // Clean inputs after creation success
   }
 
   const sliderItems = [
@@ -154,96 +136,97 @@ export default function AddTank({ navigation }) {
     </>,
     <>
       {
-        isLoading ?
-          <Spinner/>
-        : 
-          <>
-            <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
-            <Paragraph>{i18n.t('addTank.slide3.title')}</Paragraph>
-            <View style={styles.inputRow}>
-              <View style={styles.inputWrap}>
-                <TextInput
-                  style={styles.inputLeft}
-                  label={i18n.t('general.width')}
-                  name="width"
-                  returnKeyType="next"
-                  value={unitConverter(tank.width, 'length', 'base', user.units.length).toString()}
-                  onChangeText={(width) => handleChange('width', width, 'length')}
-                  error={!!errors.width}
-                  errorText={errors.width}
-                  textContentType="none"
-                  keyboardType="numeric"
+        <>
+          <MaterialCommunityIcons name="cube-scan" size={100} color={theme.colors.accent} />
+          <Paragraph>{i18n.t('addTank.slide3.title')}</Paragraph>
+          <View style={styles.inputRow}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                style={styles.inputLeft}
+                label={i18n.t('general.width')}
+                name="width"
+                returnKeyType="next"
+                value={unitConverter(tank.width, 'length', 'base', user.units.length).toString()}
+                onChangeText={(width) => handleChange('width', width, 'length')}
+                error={!!errors.width}
+                errorText={errors.width}
+                textContentType="none"
+                keyboardType="numeric"
+            />
+            </View>
+            <View style={styles.inputWrap}>
+              <TextInput
+                style={styles.inputLeft}
+                label={i18n.t('general.height')}
+                name="height"
+                returnKeyType="next"
+                value={unitConverter(tank.height, 'length', 'base', user.units.length).toString()}
+                onChangeText={(height) => handleChange('height', height, 'length')}
+                error={!!errors.height}
+                errorText={errors.height}
+                textContentType="none"
+                keyboardType="numeric"
               />
-              </View>
-              <View style={styles.inputWrap}>
-                <TextInput
-                  style={styles.inputLeft}
-                  label={i18n.t('general.height')}
-                  name="height"
-                  returnKeyType="next"
-                  value={unitConverter(tank.height, 'length', 'base', user.units.length).toString()}
-                  onChangeText={(height) => handleChange('height', height, 'length')}
-                  error={!!errors.height}
-                  errorText={errors.height}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-              </View>
-              <View style={styles.inputWrap}>
-                <TextInput
-                  style={styles.inputRight}
-                  label={i18n.t('general.length')}
-                  name="length"
-                  returnKeyType="next"
-                  value={unitConverter(tank.length, 'length', 'base', user.units.length).toString()}
-                  onChangeText={(length) => handleChange('length', length, 'length')}
-                  error={!!errors.length}
-                  errorText={errors.length}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-              </View>
             </View>
-            <TouchableOpacity style={{flex:0.3}}>
-              <Paragraph style={styles.link} fontWeight="bold">
-                {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
-              </Paragraph>
-              <Paragraph style={styles.link} fontWeight="light">
-                {i18n.t('addTank.warning.subtitle')}
-              </Paragraph>
-            </TouchableOpacity>
-            <View style={styles.inputRow}>
-              <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
-                <Button
-                  style={styles.inputRight,{height: 58, marginTop: 6}}
-                  onPress={() => calculateTankVolume()}
-                >
-                  <MaterialCommunityIcons
-                    name="calculator-variant"
-                    size={28}
-                  />
-                </Button>
-              </View>
-              <View style={styles.inputWrap, {flex: 8}}>
-                <TextInput
-                  label={i18n.t('measures.' + user.units.volume + 'Abbr')}
-                  name="liters"
-                  returnKeyType="next"
-                  onChangeText={(liters) => handleChange('liters', liters, 'volume')}
-                  value={unitConverter(tank.liters, 'volume', 'base', user.units.volume).toString()}
-                  error={!!errors.liters}
-                  errorText={errors.liters}
-                  autoCapitalize="none"
-                  autofill="liters"
-                  style={styles.inputLeft}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-              </View>
+            <View style={styles.inputWrap}>
+              <TextInput
+                style={styles.inputRight}
+                label={i18n.t('general.length')}
+                name="length"
+                returnKeyType="next"
+                value={unitConverter(tank.length, 'length', 'base', user.units.length).toString()}
+                onChangeText={(length) => handleChange('length', length, 'length')}
+                error={!!errors.length}
+                errorText={errors.length}
+                textContentType="none"
+                keyboardType="numeric"
+              />
             </View>
-            <Paragraph fontWeight="light">{i18n.t('addTank.slide4.title')}</Paragraph>
-            <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
-          </>
+          </View>
+          <TouchableOpacity style={{flex:0.3}}>
+            <Paragraph style={styles.link} fontWeight="bold">
+              {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
+            </Paragraph>
+            <Paragraph style={styles.link} fontWeight="light">
+              {i18n.t('addTank.warning.subtitle')}
+            </Paragraph>
+          </TouchableOpacity>
+          <View style={styles.inputRow}>
+            <View style={styles.inputWrap, {flex: 2,paddingRight: 12}}>
+              <Button
+                style={styles.inputRight,{height: 58, marginTop: 6}}
+                onPress={() => calculateTankVolume()}
+              >
+                <MaterialCommunityIcons
+                  name="calculator-variant"
+                  size={28}
+                />
+              </Button>
+            </View>
+            <View style={styles.inputWrap, {flex: 8}}>
+              <TextInput
+                label={i18n.t('measures.' + user.units.volume + 'Abbr')}
+                name="liters"
+                returnKeyType="next"
+                onChangeText={(liters) => handleChange('liters', liters, 'volume')}
+                value={unitConverter(tank.liters, 'volume', 'base', user.units.volume).toString()}
+                error={!!errors.liters}
+                errorText={errors.liters}
+                autoCapitalize="none"
+                autofill="liters"
+                style={styles.inputLeft}
+                textContentType="none"
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+          <Paragraph fontWeight="light">{i18n.t('addTank.slide4.title')}</Paragraph>
+          { isLoading ?
+            <Spinner style={{flex: 0.3}}/>
+            :
+            <Button onPress={onSubmit} disabled={isLoading}>{i18n.t('general.save')}</Button>
+          }
+        </>
       }
     </>,
   ];
