@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Snackbar as PaperSnackbar } from 'react-native-paper';
 import { theme } from '../theme';
 
-const Snackbar = ({ type, visible, style, wrapperStyle, children, ...props }) => (
+const Snackbar = ({ type, visible, duration = 3000, style, wrapperStyle, children, ...props }) => (
   <PaperSnackbar
     visible={visible}
     style={[
@@ -15,6 +15,7 @@ const Snackbar = ({ type, visible, style, wrapperStyle, children, ...props }) =>
     ]}
     wrapperStyle={[styles.wrapper, wrapperStyle]}
     theme={theme}
+    duration={duration}
     {...props}
   >
     {children}
