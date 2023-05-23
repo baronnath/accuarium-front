@@ -26,7 +26,7 @@ const SpeciesImage = ({ img = 'notFound', scientificName = 'accuarium', descript
         style={[styles.speciesImage, style]}
       />
       { 
-        description && 
+        img && description &&
         <Paragraph style={descriptionStyle}>{getImageDescription(img)}</Paragraph>
       }
     </>

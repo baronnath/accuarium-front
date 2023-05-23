@@ -230,7 +230,7 @@ export default function Species({ route, navigation }) {
 
     return species.images.map(img => {
       return(
-        <View key={img} style={{paddingHorizontal: theme.container.padding}}>
+        <View key={!img ? species.scientificName + 'no-image' : img} style={{paddingHorizontal: theme.container.padding}}>
           <SpeciesImage
             img={img}
             scientificName={species.scientificName}
