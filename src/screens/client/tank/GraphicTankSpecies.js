@@ -139,7 +139,7 @@ export default function GraphicTankSpecies({ species }) {
               style={[styles.icons, styles.iconsComp]}
               color={theme.colors[speciesCompat[speciesId].compatibility ? 'warning' : 'error']}
             />
-            { speciesRow(species) }
+            { speciesRow(species, speciesCompat[speciesId].compatibility) }
           </View>
         }
       });
@@ -172,7 +172,7 @@ export default function GraphicTankSpecies({ species }) {
     </>
   }
 
-  function speciesRow(species) {
+  function speciesRow(species, compat = null) {
     return <TouchableOpacity
       style={styles.namesContainer}
       onPress={() => { navigateToSpecies(species.species._id) } }
@@ -180,9 +180,15 @@ export default function GraphicTankSpecies({ species }) {
       <Paragraph style={styles.name}>
         { species.species.name[locale] ? ucFirst(species.species.name[locale]) : '' }
       </Paragraph>
-      <Paragraph style={styles.scientificName} fontStyle="italic">
-        { species.species.name[locale] ? species.species.name[locale] : '' }
-      </Paragraph>
+      { compat === null ?
+          <Paragraph style={styles.scientificName} fontStyle="italic">
+            { species.species.scientificName }
+          </Paragraph>
+        :
+          <Paragraph style={[styles.compatText, !compat ? styles.noCompatibility : styles.notFullCompatibility]}>   
+            { i18n.t(compat ? 'species.notFullCompatibility' : 'species.notFullCompatibility') }
+          </Paragraph>
+      }
     </TouchableOpacity>
   }
 
@@ -306,5 +312,14 @@ const styles = StyleSheet.create({
   compatDescription: {
     flex: 9,
     textAlign: 'left',
+  },
+  compatText: {
+
+  },
+  notFullCompatibility: {
+    color: theme.colors.warning,
+  },
+  noCompatibility: {
+    color: theme.colors.error,
   },
 });

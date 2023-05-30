@@ -225,6 +225,8 @@ const es = {
           title: 'Echa un vistazo a esta especie',
           message: 'Me gustaría que vieras la especie %{name} en el enlace\n %{url}',
         },
+        fullCompatibility: 'Compatibilidad total',
+        notFullCompatibility: 'Semi compatible',
     },
     speciesCard: {
         modal1Title: '¿A qué tanque',

@@ -225,6 +225,8 @@ const en = {
           title: 'Check out this species',
           message: 'Please take a look to the species %{name} in this link\n %{url}',
         },
+        fullCompatibility: 'Full compatibility',
+        notFullCompatibility: 'Partial compatibility',
     },
     speciesCard: {
         modal1Title: 'Which tank',

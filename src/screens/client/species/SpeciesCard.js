@@ -36,6 +36,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
+  const [isFullCompatibility, setFullCompatibility] = useState(true);
 
   useEffect(()=>{
     defaultTank();
@@ -52,7 +53,9 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     else if(tanks.length == 1)
       id = tanks[0]._id;
 
-    setTankId(id); 
+    setTankId(id);
+
+    checkFullCompatibility();
   }
   
   function addSpeciesToTank() {
@@ -72,8 +75,101 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     if(main) setMain(null); // Only first species added is main species, deactivate for next species
   }
 
+  function checkFullCompatibility() {
+    if(species.compatibility) {
+      species.compatibility.map((comp) => {
+        console.log(species.scientificName, comp.compatibility)
+        if(comp.compatibility != 2)
+          setFullCompatibility(false);
+      });
+    }
+  }
+
   if(!species.images)
     species.images = [null];
+
+  const styles = StyleSheet.create({
+    gridCard: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      marginBottom: theme.container.padding * 6,
+    },
+    gridActions: {
+      flex: 1,
+      flexDirection: 'row',
+    },
+    rightStyle: {
+      paddingRight: 15,
+    },
+    gridImageContainer: {
+      flexDirection: 'row',
+    },
+    gridImage: {
+      resizeMode: 'contain',
+      flex: 1,
+      aspectRatio: 1.75,
+      borderRadius: theme.roundness,
+    },
+    listCard: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      marginBottom: theme.container.padding / 2,
+      flexDirection: 'row',
+    },
+    listImageContainer: {
+      justifyContent: 'center'
+    },
+    listImage: {
+      width: '80%',
+      height: 70,
+      borderRadius: theme.roundness,
+      resizeMode: 'contain',
+    },
+    modalTitle: {
+      fontSize: 30,
+      lineHeight: 32,
+      marginVertical: 15,
+      marginBottom: 0,
+    },
+    modalParagraph: {
+      marginTop: 0,
+      color: theme.colors.lightText,
+    },
+    listContainer: {
+      width: '100%',
+      maxHeight: '70%',
+    },
+    quantityContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    quantity:{
+      fontSize: 80,
+      lineHeight: 90,
+      fontWeight: 'bold',
+      marginBottom: 0,
+      marginHorizontal: 15,
+    },
+    quantityModifier: {
+      width: 50,
+      color: theme.colors.primary,
+    },
+    disabled: {
+      color: theme.colors.disabled,
+    },
+    submitButton: {
+      backgroundColor: theme.colors.accent,
+    },
+    compatText: {
+      textAlign:'left'
+    },
+    compat: {
+      color: theme.colors.primary,
+    },
+    notCompat: {
+      color: theme.colors.warning,
+    }
+  });
 
   return( 
     <>
@@ -114,9 +210,14 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   description={i18n.t('species.scientificNameSynonyms')}
                   list={species.scientificNameSynonyms}
                   size="small"
-                  titleStyle={{textTransform: 'capitalize'}}
+                  titleStyle={{textTransform: 'capitalize', marginBottom: 2}}
                   listStyle={{textAlign: 'left', textTransform: 'capitalize'}}
                 />
+                <Paragraph
+                  style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
+                >
+                  { i18n.t(isFullCompatibility ? 'species.fullCompatibility' : 'species.notFullCompatibility') }
+                </Paragraph>    
               </View>
 
               <View style={{flex: 2, justifyContent: 'center'}}>
@@ -129,7 +230,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   <MaterialCommunityIcons
                     name="tray-plus"
                     size={30}
-                    // color={theme.colors.accent}
+                    color={isFullCompatibility ? theme.colors.accent : theme.colors.warning}
                   />
                 </Button>
               </View>
@@ -144,7 +245,6 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
             onPress={() => navigation.navigate('Species', { speciesId : species._id }) }
             key={species._id}
           >
-            
             <View style={[styles.listImageContainer,{flex:3}]}>
               { species.images && species.images.length &&
                 <SpeciesImage
@@ -171,14 +271,19 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                 description={i18n.t('species.scientificNameSynonyms')}
                 list={species.scientificNameSynonyms}
                 size="small"
+                titleStyle={{textTransform: 'capitalize', marginBottom: 2}}
                 listStyle={{textAlign: 'left'}}
               />
+              <Paragraph
+                style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
+              >
+                { i18n.t(isFullCompatibility ? 'speciesCard.fullCompatibility' : 'speciesCard.notFullCompatibility') }
+              </Paragraph> 
             </View>
 
             <View style={{flex: 2, justifyContent: 'center'}}>
               <Button
                 onPress={() => {
-                  console.log('onPres',tankId)
                   tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
                 }}
                 mode="text"
@@ -187,7 +292,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                 <MaterialCommunityIcons
                   name="tray-plus"
                   size={30}
-                  // color={theme.colors.accent}
+                  color={isFullCompatibility ? theme.colors.accent : theme.colors.warning}
                 />
               </Button>
             </View>
@@ -214,79 +319,5 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     </>
   )
 };
-
-const styles = StyleSheet.create({
-  gridCard: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    marginBottom: theme.container.padding * 6,
-  },
-  gridActions: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  rightStyle: {
-    paddingRight: 15,
-  },
-  gridImageContainer: {
-    flexDirection: 'row',
-  },
-  gridImage: {
-    resizeMode: 'contain',
-    flex: 1,
-    aspectRatio: 1.75,
-    borderRadius: theme.roundness,
-  },
-  listCard: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    marginBottom: theme.container.padding / 2,
-    flexDirection: 'row',
-  },
-  listImageContainer: {
-    justifyContent: 'center'
-  },
-  listImage: {
-    width: '80%',
-    height: 70,
-    borderRadius: theme.roundness,
-    resizeMode: 'contain',
-  },
-  modalTitle: {
-    fontSize: 30,
-    lineHeight: 32,
-    marginVertical: 15,
-    marginBottom: 0,
-  },
-  modalParagraph: {
-    marginTop: 0,
-    color: theme.colors.lightText,
-  },
-  listContainer: {
-    width: '100%',
-    maxHeight: '70%',
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  quantity:{
-    fontSize: 80,
-    lineHeight: 90,
-    fontWeight: 'bold',
-    marginBottom: 0,
-    marginHorizontal: 15,
-  },
-  quantityModifier: {
-    width: 50,
-    color: theme.colors.primary,
-  },
-  disabled: {
-    color: theme.colors.disabled,
-  },
-  submitButton: {
-    backgroundColor: theme.colors.accent,
-  }
-});
 
 export default memo(SpeciesCard);
