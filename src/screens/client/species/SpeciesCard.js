@@ -36,7 +36,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
   const [quantity, setQuantity] = useState(1);
   const [isTankModalVisible, setTankModalVisible] = useState(false);
   const [isQuantityModalVisible, setQuantityModalVisible] = useState(false);
-  const [isFullCompatibility, setFullCompatibility] = useState(true);
+  const [isFullCompatibility, setFullCompatibility] = useState(null);
 
   useEffect(()=>{
     defaultTank();
@@ -56,6 +56,12 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
     setTankId(id);
 
     checkFullCompatibility();
+  }
+
+  function checkAnyTankExists() {
+    if (!tanks.length)
+      dispatch(alertActions.error('tank.noTank'));
+    return !!tanks.length;
   }
   
   function addSpeciesToTank() {
@@ -77,8 +83,8 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
 
   function checkFullCompatibility() {
     if(species.compatibility) {
+      setFullCompatibility(true);
       species.compatibility.map((comp) => {
-        console.log(species.scientificName, comp.compatibility)
         if(comp.compatibility != 2)
           setFullCompatibility(false);
       });
@@ -213,24 +219,27 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   titleStyle={{textTransform: 'capitalize', marginBottom: 2}}
                   listStyle={{textAlign: 'left', textTransform: 'capitalize'}}
                 />
-                <Paragraph
-                  style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
-                >
-                  { i18n.t(isFullCompatibility ? 'species.fullCompatibility' : 'species.notFullCompatibility') }
-                </Paragraph>    
+                { isFullCompatibility != null &&
+                  <Paragraph
+                    style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
+                  >
+                    { i18n.t(isFullCompatibility ? 'species.fullCompatibility' : 'species.notFullCompatibility') }
+                  </Paragraph>
+                } 
               </View>
 
               <View style={{flex: 2, justifyContent: 'center'}}>
                 <Button
                   onPress={() => {
-                    tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
+                    if(!checkAnyTankExists()) return;
+                    tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true);
                   }}
                   mode="text"
                 >
                   <MaterialCommunityIcons
                     name="tray-plus"
                     size={30}
-                    color={isFullCompatibility ? theme.colors.accent : theme.colors.warning}
+                    color={isFullCompatibility === false ? theme.colors.warning : theme.colors.accent}
                   />
                 </Button>
               </View>
@@ -274,16 +283,19 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                 titleStyle={{textTransform: 'capitalize', marginBottom: 2}}
                 listStyle={{textAlign: 'left'}}
               />
-              <Paragraph
-                style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
-              >
-                { i18n.t(isFullCompatibility ? 'speciesCard.fullCompatibility' : 'speciesCard.notFullCompatibility') }
-              </Paragraph> 
+              { isFullCompatibility != null &&
+                <Paragraph
+                  style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
+                >
+                  { i18n.t(isFullCompatibility ? 'speciesCard.fullCompatibility' : 'speciesCard.notFullCompatibility') }
+                </Paragraph> 
+              }
             </View>
 
             <View style={{flex: 2, justifyContent: 'center'}}>
               <Button
                 onPress={() => {
+                  if(!checkAnyTankExists()) return;
                   tankId != null ? setQuantityModalVisible(true) : setTankModalVisible(true)
                 }}
                 mode="text"
@@ -292,7 +304,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                 <MaterialCommunityIcons
                   name="tray-plus"
                   size={30}
-                  color={isFullCompatibility ? theme.colors.accent : theme.colors.warning}
+                  color={isFullCompatibility === false ? theme.colors.warning : theme.colors.accent}
                 />
               </Button>
             </View>
