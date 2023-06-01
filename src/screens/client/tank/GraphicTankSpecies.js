@@ -186,7 +186,7 @@ export default function GraphicTankSpecies({ species }) {
           </Paragraph>
         :
           <Paragraph style={[styles.compatText, !compat ? styles.noCompatibility : styles.notFullCompatibility]}>   
-            { i18n.t(compat ? 'species.notFullCompatibility' : 'species.notFullCompatibility') }
+            { i18n.t(compat ? 'species.notFullCompatibility' : 'species.noCompatibility') }
           </Paragraph>
       }
     </TouchableOpacity>

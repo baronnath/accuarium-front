@@ -227,6 +227,7 @@ const en = {
         },
         fullCompatibility: 'Full compatibility',
         notFullCompatibility: 'Partial compatibility',
+        noCompatibility: 'Not compatible',
     },
     speciesCard: {
         modal1Title: 'Which tank',

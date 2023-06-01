@@ -227,6 +227,7 @@ const es = {
         },
         fullCompatibility: 'Compatibilidad total',
         notFullCompatibility: 'Semi compatible',
+        noCompatibility: 'No compatible',
     },
     speciesCard: {
         modal1Title: '¿A qué tanque',
