@@ -301,6 +301,20 @@ export default function SpeciesSearch({ route, navigation }) {
               }
             })
           }
+          { filters && !isEmpty(filters) &&
+            <Tag
+              callback={() => {
+                resetSearch();
+                clearFilter();
+              }}
+              onClose={() => {
+                resetSearch();
+                clearFilter();
+              }}
+            >
+              {i18n.t('general.clear')}
+            </Tag>
+          }
           </View>
         </ScrollView>
 
