@@ -210,7 +210,10 @@ export default function GraphicTankSpecies({ species }) {
       <View style={styles.rowContainer}>
         <TouchableOpacity
           style={styles.rowContainer}
-          onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
+          onPress={() => { 
+            if(tank.user._id == user._id)
+              navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })
+          }}
         >
           <Paragraph style={styles.number} fontWeight="bold">{species.quantity} x</Paragraph>
         </TouchableOpacity>

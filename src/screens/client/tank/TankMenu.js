@@ -11,7 +11,7 @@ import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
 import translator from '../../../translator/translator';
 
-export default function TankMenu({ tankId, deleteTank }) {
+export default function TankMenu({ tank, deleteTank }) {
 
   const user = useSelector(state => state.user.data);
   const locale = user.locale;
@@ -29,8 +29,8 @@ export default function TankMenu({ tankId, deleteTank }) {
   async function shareTank() {
     try {
       await Share.share({
-        message: i18n.t('tank.shareButton.message', { url: Linking.createURL(`tank/${tankId}`) }),
-        url: Linking.createURL(`tank/${tankId}`),
+        message: i18n.t('tank.shareButton.message', { url: Linking.createURL(`tank/${tank._id}`) }),
+        url: Linking.createURL(`tank/${tank._id}`),
         title: i18n.t('tank.shareButton.title'),
       });
     }
@@ -53,22 +53,26 @@ export default function TankMenu({ tankId, deleteTank }) {
           }}
           title={i18n.t('general.share')}
         />
-        <Menu.Item
-          icon="square-edit-outline"
-          onPress={ () => {
-            setMenuVisible(false),
-            navigation.navigate('EditTank', { tankId : tankId })
-          }}
-          title={i18n.t('general.edit')}
-        />
-        <Menu.Item
-          icon="delete-forever-outline"
-          onPress={ () => {
-            setMenuVisible(false),
-            deleteTank(true)
-          }}
-          title={i18n.t('general.delete')}
-        />
+        { tank.user._id == user._id &&
+          <>
+            <Menu.Item
+              icon="square-edit-outline"
+              onPress={ () => {
+                setMenuVisible(false),
+                navigation.navigate('EditTank', { tankId : tank._id })
+              }}
+              title={i18n.t('general.edit')}
+            />
+            <Menu.Item
+              icon="delete-forever-outline"
+              onPress={ () => {
+                setMenuVisible(false),
+                deleteTank(true)
+              }}
+              title={i18n.t('general.delete')}
+            />
+          </>
+        }
       </Menu>
   )
 };

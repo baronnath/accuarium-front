@@ -216,7 +216,7 @@ export default function Tank({ route, navigation }) {
                 </View>
                 
                 <OptionsMenu>
-                  <TankMenu tankId={tank._id}  deleteTank={setDeleteModalVisible}/>
+                  <TankMenu tank={tank}  deleteTank={setDeleteModalVisible}/>
                 </OptionsMenu>
 
                 {/* Volumen, measures and main species */}
@@ -302,11 +302,13 @@ export default function Tank({ route, navigation }) {
                 {/* Graphic tank with species split by swimming area */}
                 <View style={ [styles.rowContainer, { justifyContent: 'space-between' }] }>
                   <Subheader>{i18n.t('general.graphicTank')}</Subheader>
-                  <TouchableOpacity style={{ marginTop: 2, padding: 10 }}
-                    onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
-                  >
-                    <MaterialCommunityIcons name="playlist-edit" size={30} color={theme.colors.text} />
-                  </TouchableOpacity>
+                  { tank.user._id == user._id &&
+                    <TouchableOpacity style={{ marginTop: 2, padding: 10 }}
+                      onPress={() => { navigation.navigate('TankNav', { screen: 'EditTank', params: { tankId : tank._id } })  } }
+                    >
+                      <MaterialCommunityIcons name="playlist-edit" size={30} color={theme.colors.text} />
+                    </TouchableOpacity>
+                  }  
                 </View>
                 { tank.species &&
                   <GraphicTank style={{marginTop: 5}}/>

@@ -77,7 +77,7 @@ const TankCard = ({ tank, ...props }) => {
           }
         </View>
         <View style={styles.menuContainer}>
-          <TankMenu tankId={tank._id} deleteTank={setDeleteModalVisible} />
+          <TankMenu tank={tank} deleteTank={setDeleteModalVisible} />
         </View>
         {/* <Card.Title
           title={tank.name}
