@@ -2,12 +2,13 @@
 
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Localization from 'expo-localization';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
+import Paragraph from '../components/Paragraph';
 import TextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../theme';
@@ -17,6 +18,7 @@ import { actions as userActions } from '../ducks/user';
 
 function Register ({ navigation }) {
   const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.user.isLoading);
 
   const locale = Localization.locale
   const i18n = translator(locale);
@@ -105,20 +107,23 @@ function Register ({ navigation }) {
         error={!!user.errors.password}
         errorText={user.errors.password}
         secureTextEntry
+        onSubmitEditing={handleSubmit}
       />
         
 
       <Button
         mode="contained"
         onPress={handleSubmit}
-        style={styles.button}>
+        style={styles.button}
+        disabled={isLoading}
+      >
           {i18n.t('general.signUp')}
       </Button>
 
       <View style={styles.row}>
-        <Text style={styles.label}>{i18n.t('register.haveAccount')} </Text>
+        <Paragraph style={styles.label}>{i18n.t('register.haveAccount')} </Paragraph>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.link}>{i18n.t('general.login')}</Text>
+          <Paragraph style={styles.link}>{i18n.t('general.login')}</Paragraph>
         </TouchableOpacity>
       </View>
     </Background>
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
   }, 
   label: {
-    color: theme.colors.secondary,
+    color: theme.colors.text,
     padding: 10,
   },
   button: {

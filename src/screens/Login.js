@@ -17,6 +17,7 @@ import { actions as userActions } from '../ducks/user';
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.user.isLoading);
   
   const locale = Localization.locale
   const i18n = translator(locale);
@@ -94,13 +95,14 @@ const Login = ({ navigation }) => {
         error={!!user.errors.password}
         errorText={user.errors.password}
         secureTextEntry
+        onSubmitEditing={handleSubmit}
       />
 
       <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPassword')}
         >
-          <Paragraph style={styles.label}>{i18n.t('login.forgotPassword')}</Paragraph>
+          <Paragraph style={styles.link}>{i18n.t('login.forgotPassword')}</Paragraph>
         </TouchableOpacity>
       </View>
 
@@ -108,6 +110,7 @@ const Login = ({ navigation }) => {
         mode="contained"
         onPress={handleSubmit}
         style={styles.button}
+        disabled={isLoading}
       >
           {i18n.t('general.login')}
       </Button>

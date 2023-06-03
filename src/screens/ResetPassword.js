@@ -18,7 +18,8 @@ import { actions as userActions } from '../ducks/user';
 
 const ResetPassword = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  
+  const isLoading = useSelector(state => state.user.isLoading);
+
   const locale = Localization.locale
   const i18n = translator(locale);
 
@@ -106,6 +107,7 @@ const ResetPassword = ({ route, navigation }) => {
               error={!!user.errors.password}
               errorText={user.errors.password}
               secureTextEntry
+              onSubmitEditing={handleSubmit}
             />
           </>
         :
@@ -121,6 +123,7 @@ const ResetPassword = ({ route, navigation }) => {
             autofill="email"
             textContentType="emailAddress"
             keyboardType="email-address"
+            onSubmitEditing={handleSubmit}
           />
       }
 
@@ -128,7 +131,9 @@ const ResetPassword = ({ route, navigation }) => {
       <Button
         mode="contained"
         onPress={handleSubmit}
-        style={styles.button}>
+        style={styles.button}
+        disabled={isLoading}
+      >
           {i18n.t('general.reset')}
       </Button>
 
