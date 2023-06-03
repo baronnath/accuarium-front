@@ -287,7 +287,7 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                 <Paragraph
                   style={[styles.compatText, isFullCompatibility ? styles.compat : styles.notCompat]}
                 >
-                  { i18n.t(isFullCompatibility ? 'speciesCard.fullCompatibility' : 'speciesCard.notFullCompatibility') }
+                  { i18n.t(isFullCompatibility ? 'species.fullCompatibility' : 'species.notFullCompatibility') }
                 </Paragraph> 
               }
             </View>
