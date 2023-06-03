@@ -254,6 +254,8 @@ const en = {
       behaviorModalParagraph: 'Filter by one or more behaviors',
       colorModalTitle: 'Select color',
       colorModalParagraph: 'Filter by one or more colors',
+      byTankCompatibility: 'by tank compat.',
+      byParams: 'by params',
     },
     tank: {
         litersSuccess: 'Your tank volume is %{liters}',

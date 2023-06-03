@@ -30,7 +30,7 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
   const tanks = useSelector(state => state.tanks.tanks);
   const locale = user.locale;
 
-  const [paramFilterSwitch, setParamFilterSwitch] = useState(true);
+  const [paramFilterSwitch, setParamFilterSwitch] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [types, setTypes] = useState(null);
   const [families, setFamilies] = useState(null);
@@ -103,8 +103,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         returnKeyType="next"
         value={filters[`min${keyAbbr}`] ? filters[`min${keyAbbr}`].value : ''}
         onChangeText={(value) => changeFilter(`min${keyAbbr}`, { displayValue: getDisplay(`min${keyAbbr}`, value), value: value}) }
-        // error={!!user.errors.email}
-        // errorText={user.errors.email}
         autoCapitalize="none"
         textContentType="none"
         keyboardType="numeric"
@@ -118,8 +116,6 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         returnKeyType="next"
         value={filters[`max${keyAbbr}`] ? filters[`max${keyAbbr}`].value : ''}
         onChangeText={(value) => changeFilter(`max${keyAbbr}`, { displayValue: getDisplay(`max${keyAbbr}`, value), value: value}) }
-        // error={!!user.errors.email}
-        // errorText={user.errors.email}
         autoCapitalize="none"
         textContentType="none"
         keyboardType="numeric"
@@ -278,6 +274,152 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
       removeFilter('tank'); 
   }
 
+  const styles = StyleSheet.create({
+    background: {
+    },
+    row: {
+      flexDirection: 'row',
+    },
+    header: {
+      marginTop: 15,
+      fontSize: 15,
+      lineHeight: 15,
+    },
+    subheader: {
+      marginTop: 15,
+      // color: theme.colors.lightText,
+      fontSize: 12,
+      lineHeight: 10,
+    },
+    inlineButton: {
+      width: 'auto',
+    },
+    inlineInput: {
+      flex: 1,
+      marginVertical: 0,
+    },
+    leftInput: {
+      marginRight: 5,
+    },
+    rightInput: {
+      marginLeft: 5,
+    },
+    leftSide: {
+      flex: 5,
+      textAlign: 'left',
+      lineHeight: 15,
+      alignSelf: 'center',
+    },
+    centerSide: {
+      flex: 7,
+      textAlign: 'left',
+      marginTop: 15,
+    },
+    rightSide: {
+      flex: 1,
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      // textAlign: 'right',
+    },
+    leftSwitch: {
+      flex: 1,
+      // color: theme.colors.lightText,
+      textAlign: 'left',
+      alignSelf: 'center',
+    },
+    centerSwitch: {
+      flex: 7,
+      textAlign: 'left',
+      marginTop: 15,
+    },
+    rightSwitch: {
+      flex: 1,
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      // textAlign: 'right',
+    },
+    checkboxContainer: {
+    },
+    leftCheckbox: {
+      flex: 2,
+      // color: theme.colors.lightText,
+      textAlign: 'left',
+      alignSelf: 'center',
+    },
+    centerCheckbox: {
+      flex: 7,
+      textAlign: 'left',
+      lineHeight: 12,
+      alignSelf: 'center',
+    },
+    rightCheckbox: {
+      flex: 1,
+      alignItems: 'flex-end',
+    },
+    link: {
+      alignSelf: 'flex-end',
+      color: theme.colors.secondary,
+      marginVertical: 10,
+    },
+    listContainer: {
+      width: '100%',
+      // maxHeight: '70%',
+    },
+    list:{
+      paddingVertical: 10,
+    },
+    listRight: {
+      alignSelf: 'center',
+    },
+    toggleContainer: {
+      flex: 1,
+      justifyContent: 'space-around',
+    },
+    toggleButton: {
+      height:50,
+      width:50,
+
+    },
+    modalTitle: {
+      fontSize: 30,
+      lineHeight: 32,
+      marginVertical: 15,
+      marginBottom: 0,
+    },
+    modalParagraph: {
+      marginTop: 0,
+      color: theme.colors.lightText,
+    },
+    circle: {
+      alignSelf: 'center',
+      width: 25,
+      height: 25,
+      borderRadius: 25/2,
+      marginRight: 10,
+      borderColor: theme.colors.lightText,
+      borderWidth: 2,
+    },
+    paramsSurface: {
+      marginTop: 0,
+      marginHorizontal: 0,
+    },
+    paramsButtons: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+    },
+    paramsButton: {
+      opacity: !paramFilterSwitch ? 0.3 : 1,
+    },
+    tankButton: {
+      opacity: paramFilterSwitch ? 0.3 : 1,
+    },
+    paramsButtonLabel: {
+      fontSize: 10,
+      opacity: 1,
+    },
+  });
+
   return (
     <>
       <Dialog
@@ -288,106 +430,21 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
         actions={getActions(setVisible, true)}
         scrollable={true}
       >
-
-        <Subheader style={styles.header}>{i18n.t('general.classification')}</Subheader>
-        <>
-          <View style={[styles.row, styles.toggleContainer]}>
-            { !types ?
-                <Spinner />
-              :
-                types.map(type => {
-                  if(!excludingTypes.includes(type.name['en'])){ 
-                    return (
-                      <ToggleButton
-                        icon={type.icon}
-                        value={type._id}
-                        onPress={() => {
-                          removeFilter('family');
-                          removeFilter('group');
-                          changeFilter('type', { displayValue: helpers.ucFirst(type.name[locale]), value: type._id });
-                        }}
-                        status={filters.type && filters.type.value == type._id ? 'checked' : 'unchecked'}
-                        style={styles.toggleButton}
-                        theme={theme}
-                        color={filters.type && filters.type.value == type._id ? theme.colors.primary : theme.colors.lightText}
-                        size={30}
-                        key={type._id}
-                      />
-                    )
-                  }
-                })
-            }
-          </View>
-          { getRegularInput('family') }
-          { getRegularInput('group') }
-          { getRegularInput('depth') }
-          { getRegularInput('feed') }
-          { getRegularInput('behavior', 'checkbox') }
-          { getRegularInput('color', 'checkbox') }
-        </>
-
-        <Subheader style={styles.header}>{i18n.t('general.property.other')}</Subheader>
-        <>          
-          <View style={styles.row}>
-            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="spray-bottle"/>
-            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.cleanupCrew')}</Subheader>
-            <Switch style={styles.rightSwitch}
-              value={filters.cleaning ? filters.cleaning.value : false}
-              onValueChange={useCallback(() => { 
-                changeFilter('cleaning', { displayValue: i18n.t('general.cleanupCrew'), value: filters.cleaning ? !filters.cleaning.value : true })
-              })}
-            />
-          </View>
-          <View style={styles.row}>
-            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="paw"/>
-            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.wild')}</Subheader>
-            <Switch style={styles.rightSwitch}
-              value={filters.wild ? filters.wild.value : false}
-              onValueChange={useCallback(() => { 
-                changeFilter('wild', { displayValue: i18n.t('general.wild'), value: filters.wild ? !filters.wild.value : true })
-              })}
-            />
-          </View>
-          {/* <View style={styles.row}>
-            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="shaker"/>
-            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.salt')}</Subheader>
-            <Switch style={styles.rightSwitch}
-              value={filters.salt ? filters.salt.value : false}
-              onValueChange={useCallback(() => { 
-                changeFilter('salt', { displayValue: i18n.t('general.salt'), value: filters.salt ? !filters.salt.value : true })
-              })}
-            />
-          </View> */}
-        </>
-
-        <Subheader style={styles.header}>{i18n.t('general.measures')}</Subheader>
-        <>
-          <Subheader style={styles.subheader}>{i18n.t('general.speciesSize')} {getParamUnit('length')}</Subheader>
-          { getParamInput('Length', ['ruler','ruler'], 'length') }
-          
-          <Subheader style={styles.subheader}>{i18n.t('general.minTank')} {getParamUnit('volume')}</Subheader>
-          { getParamInput('MinTank', ['cube-outline','cube'], 'volume') }
-        </>
-        
         <Surface style={styles.paramsSurface}>
           <View style={styles.paramsButtons}>
             <Button
               onPress={() => switchParamFilterSwitch() }
-              style={styles.inlineButton}
+              style={[styles.inlineButton, styles.tankButton]}
               labelStyle={styles.paramsButtonLabel}
-              disabled={!!!paramFilterSwitch}
-              compact={true}
             >
-              by params {/*{i18n.t('general.byParams')}*/}
+              {i18n.t('speciesSearchFilter.byTankCompatibility')}
             </Button>
             <Button
               onPress={() => switchParamFilterSwitch() }
-              style={styles.inlineButton}
+              style={[styles.inlineButton, styles.paramsButton]}
               labelStyle={styles.paramsButtonLabel}
-              disabled={!!paramFilterSwitch}
-              compact={true}
             >
-              by tank compat.{/*{i18n.t('general.byTankCompatibility')}*/}
+              {i18n.t('speciesSearchFilter.byParams')}
             </Button>
           </View>
 
@@ -421,6 +478,80 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
             <Text style={styles.link}>{ i18n.t(paramFilterSwitch ? 'speciesSearchFilter.chooseCompTank' : 'speciesSearchFilter.chooseParams')}</Text>
           </TouchableOpacity>
         </Surface>
+        
+        <Subheader style={styles.header}>{i18n.t('general.classification')}</Subheader>
+          <View style={[styles.row, styles.toggleContainer]}>
+            { !types ?
+                <Spinner />
+              :
+                types.map(type => {
+                  if(!excludingTypes.includes(type.name['en'])){ 
+                    return (
+                      <ToggleButton
+                        icon={type.icon}
+                        value={type._id}
+                        onPress={() => {
+                          removeFilter('family');
+                          removeFilter('group');
+                          changeFilter('type', { displayValue: helpers.ucFirst(type.name[locale]), value: type._id });
+                        }}
+                        status={filters.type && filters.type.value == type._id ? 'checked' : 'unchecked'}
+                        style={styles.toggleButton}
+                        theme={theme}
+                        color={filters.type && filters.type.value == type._id ? theme.colors.primary : theme.colors.lightText}
+                        size={30}
+                        key={type._id}
+                      />
+                    )
+                  }
+                })
+            }
+          </View>
+          { getRegularInput('family') }
+          { getRegularInput('group') }
+          { getRegularInput('depth') }
+          { getRegularInput('feed') }
+          { getRegularInput('behavior', 'checkbox') }
+          { getRegularInput('color', 'checkbox') }
+
+        <Subheader style={styles.header}>{i18n.t('general.property.other')}</Subheader>
+          <View style={styles.row}>
+            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="spray-bottle"/>
+            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.cleanupCrew')}</Subheader>
+            <Switch style={styles.rightSwitch}
+              value={filters.cleaning ? filters.cleaning.value : false}
+              onValueChange={useCallback(() => { 
+                changeFilter('cleaning', { displayValue: i18n.t('general.cleanupCrew'), value: filters.cleaning ? !filters.cleaning.value : true })
+              })}
+            />
+          </View>
+          <View style={styles.row}>
+            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="paw"/>
+            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.wild')}</Subheader>
+            <Switch style={styles.rightSwitch}
+              value={filters.wild ? filters.wild.value : false}
+              onValueChange={useCallback(() => { 
+                changeFilter('wild', { displayValue: i18n.t('general.wild'), value: filters.wild ? !filters.wild.value : true })
+              })}
+            />
+          </View>
+          {/* <View style={styles.row}>
+            <MaterialCommunityIcons size={24} style={styles.leftSwitch} name="shaker"/>
+            <Subheader style={[styles.subheader, styles.centerSwitch]}>{i18n.t('general.salt')}</Subheader>
+            <Switch style={styles.rightSwitch}
+              value={filters.salt ? filters.salt.value : false}
+              onValueChange={useCallback(() => { 
+                changeFilter('salt', { displayValue: i18n.t('general.salt'), value: filters.salt ? !filters.salt.value : true })
+              })}
+            />
+          </View> */}
+
+        <Subheader style={styles.header}>{i18n.t('general.measures')}</Subheader>
+          <Subheader style={styles.subheader}>{i18n.t('general.speciesSize')} {getParamUnit('length')}</Subheader>
+          { getParamInput('Length', ['ruler','ruler'], 'length') }
+          
+          <Subheader style={styles.subheader}>{i18n.t('general.minTank')} {getParamUnit('volume')}</Subheader>
+          { getParamInput('MinTank', ['cube-outline','cube'], 'volume') }
 
       </Dialog>
 
@@ -436,141 +567,3 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  header: {
-    marginTop: 15,
-    fontSize: 15,
-    lineHeight: 15,
-  },
-  subheader: {
-    marginTop: 15,
-    // color: theme.colors.lightText,
-    fontSize: 12,
-    lineHeight: 10,
-  },
-  inlineButton: {
-    width: 'auto',
-  },
-  inlineInput: {
-    flex: 1,
-    marginVertical: 0,
-  },
-  leftInput: {
-    marginRight: 5,
-  },
-  rightInput: {
-    marginLeft: 5,
-  },
-  leftSide: {
-    flex: 4,
-    textAlign: 'left',
-    lineHeight: 15,
-    alignSelf: 'center',
-  },
-  centerSide: {
-    flex: 8,
-    textAlign: 'left',
-    marginTop: 15,
-  },
-  rightSide: {
-    flex: 1,
-    alignItems: 'flex-end',
-    alignSelf: 'center',
-    // textAlign: 'right',
-  },
-  leftSwitch: {
-    flex: 1,
-    // color: theme.colors.lightText,
-    textAlign: 'left',
-    alignSelf: 'center',
-  },
-  centerSwitch: {
-    flex: 7,
-    textAlign: 'left',
-    marginTop: 15,
-  },
-  rightSwitch: {
-    flex: 1,
-    alignItems: 'flex-end',
-    alignSelf: 'center',
-    // textAlign: 'right',
-  },
-  checkboxContainer: {
-  },
-  leftCheckbox: {
-    flex: 2,
-    // color: theme.colors.lightText,
-    textAlign: 'left',
-    alignSelf: 'center',
-  },
-  centerCheckbox: {
-    flex: 7,
-    textAlign: 'left',
-    lineHeight: 12,
-    alignSelf: 'center',
-  },
-  rightCheckbox: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  link: {
-    alignSelf: 'flex-end',
-    color: theme.colors.secondary,
-    marginVertical: 10,
-  },
-  listContainer: {
-    width: '100%',
-    // maxHeight: '70%',
-  },
-  list:{
-    paddingVertical: 10,
-  },
-  listRight: {
-    alignSelf: 'center',
-  },
-  toggleContainer: {
-    flex: 1,
-    justifyContent: 'space-around',
-  },
-  toggleButton: {
-    height:50,
-    width:50,
-
-  },
-  modalTitle: {
-    fontSize: 30,
-    lineHeight: 32,
-    marginVertical: 15,
-    marginBottom: 0,
-  },
-  modalParagraph: {
-    marginTop: 0,
-    color: theme.colors.lightText,
-  },
-  circle: {
-    alignSelf: 'center',
-    width: 25,
-    height: 25,
-    borderRadius: 25/2,
-    marginRight: 10,
-    borderColor: theme.colors.lightText,
-    borderWidth: 2,
-  },
-  paramsSurface: {
-    marginHorizontal: 0,
-  },
-  paramsButtons: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  paramsButtonLabel: {
-    fontSize: 10,
-  }
-});

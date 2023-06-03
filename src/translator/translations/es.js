@@ -254,6 +254,8 @@ const es = {
       behaviorModalParagraph: 'Filtra por uno o más comportamientos',
       colorModalTitle: 'Elige color',
       colorModalParagraph: 'Filtra por uno o más colores',
+      byTankCompatibility: 'compat. de tanque',
+      byParams: 'párams.',
     },
     tank: {
         litersSuccess: 'El volumen del tanque es %{liters}',
