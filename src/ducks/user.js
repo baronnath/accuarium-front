@@ -88,7 +88,9 @@ export default (state = defaultState, action) => {
             }
         // Logout
         case types.LOGOUT_SUCCESS:
-            return {};
+            return {
+                isLoading: false,
+            };
 		default:
 			return state
 	}
@@ -169,6 +171,7 @@ function autoLogin(user) {
                 navigator.navigate('Login');
             }
         }
+        dispatch(error());
     };
 
     function request(data) { return { type: types.AUTOLOGIN_REQUEST, payload: data } }
@@ -183,8 +186,8 @@ function logout(user) {
         axios.post(backend.url + '/user/logout', user)
             .then(async(res) => {
                 dispatch(success());
-                await AsyncStorage.removeItem('user', JSON.stringify(res.data.user));
                 dispatch(alertActions.success(res.data.message, false));
+                await AsyncStorage.removeItem('user');
                 navigator.navigate('Login');
             })
             .catch(err => {

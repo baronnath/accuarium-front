@@ -135,19 +135,7 @@ export default function Navigator() {
     <AppStack.Navigator
       screenOptions={screenOptions}
     >
-      { !isLoading && user.data != undefined && user.data.role.name.en == "admin" &&
-        <>
-          <AppStack.Screen name="Dashboard" component={Dashboard} />
-          <AppStack.Screen name="AddSpecies" component={AddSpecies} />
-          <AppStack.Screen name="Species" component={DashboardSpecies} />
-          <AppStack.Screen name="Livestock" component={Livestock} />
-          <AppStack.Screen name="Tanks" component={DashboardTanks} />
-          <AppStack.Screen name="AddTank" component={DashboardAddTank} />
-          <AppStack.Screen name="Tank" component={DashboardTank} />
-          <AppStack.Screen name="AddCompatibility" component={AddCompatibility} />
-        </>
-      }
-      { !isLoading && user.data != undefined && user.data.accessToken ? (
+      { user.data != undefined && user.data.accessToken ? (
         <>
           <AppStack.Screen name="Home" component={BottomNav} />
         </>
