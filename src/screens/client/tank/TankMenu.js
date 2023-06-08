@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Menu } from 'react-native-paper';
 import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
+import { web } from '../../../../app.json';
 import translator from '../../../translator/translator';
 
 export default function TankMenu({ tank, deleteTank }) {
@@ -27,10 +28,11 @@ export default function TankMenu({ tank, deleteTank }) {
   function closeMenu () { setMenuVisible(false); }
 
   async function shareTank() {
+    const url = `${web}/app/tank/${tank._id}`;
     try {
       await Share.share({
-        message: i18n.t('tank.shareButton.message', { url: Linking.createURL(`tank/${tank._id}`) }),
-        url: Linking.createURL(`tank/${tank._id}`),
+        message: i18n.t('tank.shareButton.message', { name: tank.name }) + '\n\n' + url,
+        url: url,
         title: i18n.t('tank.shareButton.title'),
       });
     }

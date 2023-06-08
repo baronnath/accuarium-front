@@ -12,6 +12,7 @@ import AddSpeciesQuantityModal from './AddSpeciesQuantityModal';
 import { actions as tankActions } from '../../../ducks/tank';
 import { actions as alertActions } from '../../../ducks/alert';
 import { theme } from '../../../theme';
+import { web } from '../../../../app.json';
 import translator from '../../../translator/translator';
 
 export default function SpeciesMenu({ species }) {
@@ -52,10 +53,11 @@ export default function SpeciesMenu({ species }) {
   }
 
   async function shareSpecies() {
+    const url = `${web}/app/species/${species._id}`;
     try {
       await Share.share({
-        message: i18n.t('species.shareButton.message', { name: species.scientificName, url: Linking.createURL(`species/${species._id}`) }),
-        url: Linking.createURL(`species/${species._id}`),
+        message: i18n.t('species.shareButton.message', { name: species.scientificName }) + '\n\n' + url,
+        url: url,
         title: i18n.t('species.shareButton.title'),
       });
     }

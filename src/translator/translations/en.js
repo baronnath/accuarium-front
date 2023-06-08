@@ -222,8 +222,8 @@ const en = {
         otherNames: 'Other names',
         scientificNameSynonyms: 'Scientific name synonyms',
         shareButton: {
-          title: 'Check out this species',
-          message: 'Please take a look to the species %{name} in this link\n %{url}',
+          title: 'accuarium',
+          message: '%{name} species in accuarium',
         },
         fullCompatibility: 'Full compatibility',
         notFullCompatibility: 'Partial compatibility',
@@ -295,7 +295,7 @@ const en = {
         noNumbers: 'Dimensions values must be numbers',
         shareButton: {
           title: 'Check out this tank',
-          message: 'Please take a look to the tank in this link\n %{url}',
+          message: 'Please take a look to the tank in this link',
         },
         validation: {
           name:{

@@ -222,8 +222,8 @@ const es = {
         otherNames: 'Otros nombres',
         scientificNameSynonyms: 'Nombres científicos sinónimos',
         shareButton: {
-          title: 'Echa un vistazo a esta especie',
-          message: 'Me gustaría que vieras la especie %{name} en el enlace\n %{url}',
+          title: 'accuarium',
+          message: 'Especie %{name} en accuarium',
         },
         fullCompatibility: 'Compatibilidad total',
         notFullCompatibility: 'Semi compatible',
@@ -294,8 +294,8 @@ const es = {
         emptyValues: 'Completa las dimensiones del tanque',
         noNumbers: 'Las dimensiones tienen que ser números',
         shareButton: {
-          title: 'Echa un vistazo a este tanque',
-          message: 'Me gustaría que vieras el proyecto de este enlace\n %{url}',
+          title: 'accuarium',
+          message: 'Proyecto %{name} en accuarium',
         },
         validation: {
           name:{
