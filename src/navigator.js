@@ -44,6 +44,7 @@ const ProfileStack = createStackNavigator();
 export default function Navigator() {
 
   const user = useSelector(state => state.user);
+  const isLoading = useSelector(state => state.user.isLoading);
   // const [user, setUser] = useState(null);
   const dispatch = useDispatch();
 
@@ -51,11 +52,13 @@ export default function Navigator() {
     headerShown: false,
   };
 
-  // useLayoutEffect(async() => {
-  //   const userData = JSON.parse(await AsyncStorage.getItem('user'));
-  //   console.log(userData);
-  //   dispatch(userActions.autoLogin(userData));
-  // }, []);
+  useLayoutEffect(() => {
+    async function loadUser() {
+      const userData = JSON.parse(await AsyncStorage.getItem('user'));
+      dispatch(userActions.autoLogin(userData));
+    }
+    loadUser();
+  }, []);
 
   function BottomNav() {
     return (
@@ -132,7 +135,7 @@ export default function Navigator() {
     <AppStack.Navigator
       screenOptions={screenOptions}
     >
-      { user.data != undefined && user.data.role.name.en == "admin" &&
+      { !isLoading && user.data != undefined && user.data.role.name.en == "admin" &&
         <>
           <AppStack.Screen name="Dashboard" component={Dashboard} />
           <AppStack.Screen name="AddSpecies" component={AddSpecies} />
@@ -144,7 +147,7 @@ export default function Navigator() {
           <AppStack.Screen name="AddCompatibility" component={AddCompatibility} />
         </>
       }
-      { user.data != undefined && user.data.accessToken ? (
+      { !isLoading && user.data != undefined && user.data.accessToken ? (
         <>
           <AppStack.Screen name="Home" component={BottomNav} />
         </>

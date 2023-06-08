@@ -166,6 +166,7 @@ function autoLogin(user) {
             else{
                 dispatch(alertActions.error('login.expired'));
                 dispatch(error());
+                navigator.navigate('Login');
             }
         }
     };
