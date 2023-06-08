@@ -15,7 +15,6 @@ import Verify from './screens/Verify';
 import Login from './screens/Login';
 import ResetPassword from './screens/ResetPassword';
 
-import Home from './screens/home';
 import Tanks from './screens/client/tank/Tanks';
 import Tank from './screens/client/tank/Tank';
 import AddTank from './screens/client/tank/AddTank';
@@ -23,15 +22,6 @@ import EditTank from './screens/client/tank/EditTank';
 import Species from './screens/client/species/Species';
 import SpeciesSearch from './screens/client/species/SpeciesSearch';
 import Profile from './screens/client/profile/Profile';
-
-import Dashboard from './screens/dashboard';
-import AddSpecies from './screens/dashboard/species/AddSpecies';
-import Livestock from './screens/dashboard/Livestock';
-import DashboardSpecies from './screens/dashboard/species/Species';
-import DashboardTanks from './screens/dashboard/tank/Tanks';
-import DashboardTank from './screens/dashboard/tank/Tank';
-import DashboardAddTank from './screens/dashboard/tank/AddTank';
-import AddCompatibility from './screens/dashboard/compatibility/AddCompatibility';
 
 import { actions as userActions } from './ducks/user';
 
