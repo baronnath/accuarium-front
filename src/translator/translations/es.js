@@ -323,6 +323,7 @@ const es = {
             format: 'El formato de la imagen debe ser jpg o jpeg',
           },
         },
+        notOwner: 'No puedes editar este tanque',
     },
     addTank: {
         slide1: {

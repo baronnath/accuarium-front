@@ -323,6 +323,7 @@ const en = {
             format: 'Image format must be jpg or jpeg',
           },
         },
+        notOwner: 'You can\'t edit this tank',
     },
     addTank: {
         slide1: {

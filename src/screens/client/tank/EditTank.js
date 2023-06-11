@@ -84,8 +84,10 @@ export default function EditTank({ route, navigation }) {
 
   // Restrict access to non owner users
   useEffect(() => {
-    if(tank.user._id != user._id)
+    if(!helpers.isEmpty(tank) && tank.user._id != user._id) {
       navigation.navigate('TankNav', { screen: 'Tanks' });
+      dispatch(alertActions.error('tank.notOwner'));
+    }
   }, [tank, user]);
 
   useEffect(() => {
