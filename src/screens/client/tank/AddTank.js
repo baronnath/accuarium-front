@@ -66,7 +66,7 @@ export default function AddTank({ navigation }) {
       height: tank.height,
       length: tank.length,
     }
-    calculateVolume(dimensions, user.units.length)
+    calculateVolume(dimensions)
       .then((liters) => {
         handleChange('liters', String(liters));
         dispatch(alertActions.success('tank.litersSuccess', { 'liters': unitConverter(liters, 'volume', 'base', user.units.volume) }));
@@ -183,7 +183,7 @@ export default function AddTank({ navigation }) {
               />
             </View>
           </View>
-          <TouchableOpacity style={{flex:0.3}}>
+          <TouchableOpacity style={{flex:0.3}} onPress={() => navigation.navigate('ProfileNav', { screen: 'Profile' })}>
             <Paragraph style={styles.link} fontWeight="bold">
               {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
             </Paragraph>

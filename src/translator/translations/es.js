@@ -260,10 +260,10 @@ const es = {
     tank: {
         litersSuccess: 'El volumen del tanque es %{liters}',
         alias: 'Nombre del tanque',
-        clickFormula: 'Haz clic en la fórmula para calcular el volumen del tanque',
+        clickFormula: 'Pulsa sobre la fórmula para calcular el volumen del tanque',
         warning: {
             title: 'Selecciona una especie principal',
-            subtitle: 'Haz clic en la imagen de la especie',
+            subtitle: 'Pulsa sobre la imagen de la especie',
         },
         notCompatibleParameters: 'Los parámetros no son compatibles',
         notCompatibleSpecies: 'Las especies no son compatibles',
@@ -338,7 +338,7 @@ const es = {
             title: 'Las medidas del tanque',
         },
         slide4: {
-            title: 'Haz clic en la fórmula para calcular el volumen del tanque',
+            title: 'Pulsa sobre la fórmula para calcular el volumen del tanque',
         },
         warning: {
             title: 'La unidad de medida configurada es %{unit} (%{unitAbbr})',

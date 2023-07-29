@@ -260,10 +260,10 @@ const en = {
     tank: {
         litersSuccess: 'Your tank volume is %{liters}',
         alias: 'Tank alias',
-        clickFormula: 'Click on the formula to calculate your tank volume',
+        clickFormula: 'Tap on the formula to calculate your tank volume',
         warning: {
             title: 'Select a main species',
-            subtitle: 'Click on the species image',
+            subtitle: 'Tap on the species image',
         },
         notCompatibleParameters: 'Parameters not compatible',
         notCompatibleSpecies: 'Species not compatible',
@@ -338,11 +338,11 @@ const en = {
             title: 'Your tank measures',
         },
         slide4: {
-            title: 'Click on the formula to calculate your tank volume',
+            title: 'Tap on the formula to calculate your tank volume',
         },
         warning: {
             title: 'Unit of measure is set to %{unit} (%{unitAbbr})',
-            subtitle: 'Click here to change your unit preference',
+            subtitle: 'Tap here to change your unit preference',
         },
         notValid: 'Tank data is not correct',
         addSpecies: 'Now add some fishes to your tank',

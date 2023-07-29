@@ -155,7 +155,7 @@ export default function Tank({ route, navigation }) {
               { param != 'ph' ?
                   <>
                     <Subheader style={styles.waterParam}>
-                      { `${unitConverter(tankParameters[param], measure, 'base', user.units[measure])}` }
+                      { `${tankParameters[param]}` }
                     </Subheader>
                     <Subheader style={styles.waterParamUnit}>
                       { i18n.t(`measures.${user.units[measure]}Abbr`) }

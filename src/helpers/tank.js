@@ -12,9 +12,9 @@ export function calculateVolume(dimensions, units = 'cm') {
     let { width, height, length } = dimensions;
 
     if(units != 'cm'){
-      width = unitConverter(width, 'length', 'base', units);
-      height = unitConverter(height, 'length', 'base', units);
-      length = unitConverter(length, 'length', 'base', units);
+      width = unitConverter(width, 'length', units);
+      height = unitConverter(height, 'length', units);
+      length = unitConverter(length, 'length', units);
     }
 
     return new Promise((resolve, reject) => {
