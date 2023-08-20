@@ -20,13 +20,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.nathanlosabe.accuarium",
-      "buildNumber": "1.3" //increase it for iOS
+      "buildNumber": "1.3"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 10,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [
@@ -44,7 +44,8 @@
           "photosPermission": "The app accesses your photos to let you upload your tank image."
         }
       ],
-      "@bugsnag/plugin-expo-eas-sourcemaps"
+      "@bugsnag/plugin-expo-eas-sourcemaps",
+      "expo-localization"
     ],
     "extra": {
       "eas": {
