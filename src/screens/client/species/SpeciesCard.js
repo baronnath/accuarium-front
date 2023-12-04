@@ -216,8 +216,8 @@ const SpeciesCard = ({ species, grid, main = null, setMain, ...props }) => {
                   description={i18n.t('species.scientificNameSynonyms')}
                   list={species.scientificNameSynonyms}
                   size="small"
-                  titleStyle={{textTransform: 'capitalize', marginBottom: 2}}
-                  listStyle={{textAlign: 'left', textTransform: 'capitalize'}}
+                  titleStyle={{marginBottom: 2}}
+                  listStyle={{textAlign: 'left'}}
                 />
                 { isFullCompatibility != null &&
                   <Paragraph
