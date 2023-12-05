@@ -183,7 +183,7 @@ export default function AddTank({ navigation }) {
               />
             </View>
           </View>
-          <TouchableOpacity style={{flex:0.3}} onPress={() => navigation.navigate('ProfileNav', { screen: 'Profile' })}>
+          <TouchableOpacity style={{flex:.5}} onPress={() => navigation.navigate('ProfileNav', { screen: 'Profile' })}>
             <Paragraph style={styles.link} fontWeight="bold">
               {i18n.t('addTank.warning.title', { unit: i18n.t(`measures.${user.units.length}`).toLowerCase(), unitAbbr: i18n.t(`measures.${user.units.length}Abbr`)})}
             </Paragraph>
