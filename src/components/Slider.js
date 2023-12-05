@@ -46,7 +46,7 @@ function Slider({items, button = null, height = null, ...props}){
 
   function _renderItem({item,index}){
       return (
-        <View style={styles.item}>
+        <View style={styles.item} removeClippedSubviews={false}>
           {item}
           {button && items.length != (index+1) &&
             <Button mode="outlined" style={styles.button} onPress={() => { carouselRef.current.snapToNext() }}>{button}</Button>
@@ -57,7 +57,7 @@ function Slider({items, button = null, height = null, ...props}){
 
   return (
 
-      <View style={styles.container}>
+      <View style={styles.container} removeClippedSubviews={false}>
       	<Carousel
           data={items}
           sliderWidth={sliderWidth}
@@ -65,6 +65,7 @@ function Slider({items, button = null, height = null, ...props}){
           renderItem={_renderItem}
           onSnapToItem = { index => setIndex(index) }
           ref={carouselRef}
+          removeClippedSubviews={false}
         />
         <Pagination
           dotsLength={items.length}
