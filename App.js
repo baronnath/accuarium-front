@@ -5,7 +5,7 @@ import { NavigationContainer, DarkTheme as NavigationDarkTheme } from '@react-na
 import { DarkTheme as PaperDarkTheme, Provider as PaperProvider } from 'react-native-paper';
 import { navigationRef } from './src/helpers/navigator';
 import { linkingRef } from './src/helpers/linking';
-import { AppRegistry, View } from 'react-native';
+import { AppRegistry, View, StatusBar } from 'react-native';
 import { Provider as StoreProvider } from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';
 import { loadAsync } from 'expo-font';
@@ -84,6 +84,7 @@ export default function App() {
     <View
       style={{ flex: 1 }}
       onLayout={onLayoutRootView}>
+        <StatusBar barStyle="light-content" />
         <StoreProvider store={store}>
         <PaperProvider theme={CombinedDarkTheme}>
           <NavigationContainer ref={navigationRef}  linking={linkingRef} theme={CombinedDarkTheme}>
