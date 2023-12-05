@@ -322,13 +322,13 @@ export default function SpeciesSearchFilter({ visible, setVisible, filters, chan
       // textAlign: 'right',
     },
     leftSwitch: {
-      flex: 1,
+      flex: .7,
       // color: theme.colors.lightText,
       textAlign: 'left',
       alignSelf: 'center',
     },
     centerSwitch: {
-      flex: 7,
+      flex: 3,
       textAlign: 'left',
       marginTop: 15,
     },
