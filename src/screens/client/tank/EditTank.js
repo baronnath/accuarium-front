@@ -259,7 +259,7 @@ export default function EditTank({ route, navigation }) {
 
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: image.uri + '?' + new Date() }} // Date is added to avoid image to cache
+                source={{ uri: image.uri }} // Date is added to avoid image to cache
                 style={styles.image}
               />
               <IconButton

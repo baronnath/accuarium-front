@@ -37,7 +37,7 @@ export async function pickImage (callback) {
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsEditing: true,
     aspect: [4, 3],
-    quality: 1,
+    quality: .5,
     base64: true,
   });
 
