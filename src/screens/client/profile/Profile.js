@@ -199,17 +199,18 @@ export default function Profile({ route, navigation }) {
               </TouchableOpacity>
             </View>
             
+
+            <Button
+              icon="logout-variant"
+              onPress={signOut}
+              mode="outlined"
+              style={styles.logout}
+            >
+              {i18n.t('general.logout')}
+            </Button>
+            <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
           </View>
 
-          <Button
-            icon="logout-variant"
-            onPress={signOut}
-            mode="outlined"
-            style={styles.logout}
-          >
-            {i18n.t('general.logout')}
-          </Button>
-          <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
         </>
       }
       
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    paddingTop: 100,
+    paddingTop: 30,
     flexDirection:'column',
   },
   container: {
