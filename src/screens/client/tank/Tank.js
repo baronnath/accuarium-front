@@ -9,6 +9,7 @@ import { StyleSheet, View, Image, ScrollView, TouchableOpacity } from 'react-nat
 import TankDeleteModal from './TankDeleteModal';
 import TankMenu from './TankMenu';
 import Background from '../../../components/Background';
+import BackButton from '../../../components/BackButton';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Header from '../../../components/Header';
 import Paragraph from '../../../components/Paragraph';
@@ -204,6 +205,7 @@ export default function Tank({ route, navigation }) {
             !isEmpty(tank) &&
               <View style={styles.container} showsVerticalScrollIndicator={false}>
                 <View style={styles.headerContainer}>
+                  <BackButton navigation={navigation} />
                   <MaterialCommunityIcons
                     name="fishbowl-outline"
                     size={36}
@@ -213,12 +215,13 @@ export default function Tank({ route, navigation }) {
                   <Header style={styles.header}>
                     {tank.name}
                   </Header>
+                  <OptionsMenu>
+                    <TankMenu tank={tank}  deleteTank={setDeleteModalVisible}/>
+                  </OptionsMenu>
+
                 </View>
                 
-                <OptionsMenu>
-                  <TankMenu tank={tank}  deleteTank={setDeleteModalVisible}/>
-                </OptionsMenu>
-
+                
                 {/* Volumen, measures and main species */}
                 <View style={styles.row}>
                   <View style={{flex:1,justifyContent:'flex-start'}}>
@@ -393,7 +396,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   header: {
     alignSelf: 'stretch',

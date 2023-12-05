@@ -12,6 +12,7 @@ import Svg, { Path } from 'react-native-svg';
 import SpeciesMenu from './SpeciesMenu';
 import OptionsMenu from '../../../components/OptionsMenu';
 import Background from '../../../components/Background';
+import BackButton from '../../../components/BackButton';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
 import Surface from '../../../components/Surface';
@@ -258,19 +259,22 @@ export default function Species({ route, navigation }) {
     <Background justify="top">
       { species ?
         <>
-          { species.group &&
-              <View style={styles.topLeft}>
-                <GroupIcon
-                  name={species.group.icon} 
-                  color={theme.colors.lightText}
-                  size={36}
-                />
-              </View>
-          }
+          <View style={styles.topLeft}>
+            <BackButton navigation={navigation} style={{alignSelf: 'start'}}/>
+            { species.group &&
+                  <GroupIcon
+                    name={species.group.icon} 
+                    color={theme.colors.lightText}
+                    size={36}
+                    style={{marginTop: theme.container.padding}}
+                  />
+            }
+            <OptionsMenu>
+              <SpeciesMenu species={species} />
+            </OptionsMenu>
+          </View>
 
-          <OptionsMenu>
-            <SpeciesMenu species={species} />
-          </OptionsMenu>
+          
 
           {/* Species name and other names */}
           {species.name && species.name[locale] != undefined && 
@@ -411,14 +415,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     flexDirection:'column',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   topLeft: {
-    alignSelf: 'stretch',
+    flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginTop: 10,
-    marginLeft: 10,
+    alignSelf: 'stretch',
+    // marginTop: 10,
+    // marginLeft: 10,
   },
   header: {
     paddingBottom: 0,

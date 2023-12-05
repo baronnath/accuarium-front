@@ -3,26 +3,31 @@
 import React, { memo } from 'react';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { theme } from '../theme';
 
 type Props = {
   goBack: () => void;
 };
 
-const BackButton = ({ goBack }: Props) => (
-  <TouchableOpacity onPress={goBack} style={styles.container}>
-    <Image style={styles.image} source={require('../assets/arrow_back.png')} />
+const BackButton = ({ navigation: { goBack } }) => (
+  <TouchableOpacity onPress={() => goBack()} style={styles.container}>
+    <MaterialCommunityIcons
+      name="chevron-left"
+      size={36}
+      color={theme.colors.lightText}
+      style={{marginTop: theme.container.padding}}
+    />
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 10 + getStatusBarHeight(),
-    left: 10,
-  },
-  image: {
-    width: 24,
-    height: 24,
+    paddingRight: 8,
+    marginTop: 0,
+    // position: 'absolute',
+    // top: 10 + getStatusBarHeight(),
+    // left: 10,
   },
 });
 
