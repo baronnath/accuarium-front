@@ -67,7 +67,9 @@ function Register ({ navigation }) {
 
   return (
     <Background style={styles.container} justify="top">
-      <BackButton goBack={() => navigation.navigate('Login')} />
+      <View style={{width: '100%'}}>
+        <BackButton navigation={navigation} style={{alignSelf: 'start'}}/>
+      </View>
 
       <Logo />
 

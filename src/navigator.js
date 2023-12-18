@@ -147,5 +147,6 @@ const styles = StyleSheet.create({
   bottomNav: {
     height: theme.bottomNav.height,
     backgroundColor: theme.colors.primary,
+    alignItems: 'center',
   },
 });

@@ -69,7 +69,7 @@ const Verify = ({ navigation }) => {
   function resendCode() {
   	axios.get(backend.url + '/user/verify/resend', { params: { email: email }})
 	    .then(res => {
-	        dispatch(alertActions.success(res.data.message));
+	        dispatch(alertActions.success(res.data.message, false));
 	    })
 	    .catch(err => {
 	        let message;
@@ -82,7 +82,9 @@ const Verify = ({ navigation }) => {
 
   return (
     <Background style={styles.container} justify="top">
-      <BackButton goBack={() => navigation.navigate('Register')} />
+      <View style={{width: '100%'}}>
+        <BackButton navigation={navigation} style={{alignSelf: 'start'}}/>
+      </View>
 
       <Logo />
 

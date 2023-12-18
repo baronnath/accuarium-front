@@ -3,6 +3,7 @@ const en = {
         tank: {
             one: 'Tank',
             other: 'Tanks', 
+            my: 'My tanks',
         },
         species: {
             one: 'Species',

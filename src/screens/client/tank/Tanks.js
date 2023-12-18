@@ -44,7 +44,7 @@ export default function Tanks({ navigation }) {
       <Background justify="top" style={styles.background}>
 
         <Header>
-          {i18n.t('general.tank.other')}
+          {i18n.t('general.tank.my')}
         </Header>
 
           { isLoading ?

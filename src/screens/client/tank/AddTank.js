@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Background from '../../../components/Background';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
+import BackButton from '../../../components/BackButton';
 import Paragraph from '../../../components/Paragraph';
 import Slider from '../../../components/Slider';
 import Spinner from '../../../components/Spinner';
@@ -233,7 +234,9 @@ export default function AddTank({ navigation }) {
 
   return (
     <Background>
-
+      <View style={{width: '100%'}}>
+        <BackButton navigation={navigation} style={{alignSelf: 'start'}}/>
+      </View>
       <Slider items={sliderItems} button={i18n.t('general.next')} />
 
     </Background>

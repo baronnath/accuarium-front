@@ -2,7 +2,8 @@ const es = {
     general: {
         tank: {
             one: 'Tanque',
-            other: 'Tanques', 
+            other: 'Tanques',
+            my: 'Mis tanques',
         },
         species: {
             one: 'Especie',

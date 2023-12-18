@@ -17,6 +17,7 @@ import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
 import TextInput from '../../../components/TextInput';
 import Button from '../../../components/Button';
+import BackButton from '../../../components/BackButton';
 import Paragraph from '../../../components/Paragraph';
 import Spinner from '../../../components/Spinner';
 import Warning from '../../../components/Warning';
@@ -239,9 +240,12 @@ export default function EditTank({ route, navigation }) {
 
   return (
     <Background justify="top" style={styles.background}>
-      <Header>
-      {i18n.t('tank.editTank')}
-      </Header>
+      <View style={styles.headerContainer}>
+        <BackButton navigation={navigation} />
+        <Header style={styles.header}>
+          {i18n.t('tank.editTank')}
+        </Header>
+      </View>
       {
         !helpers.isEmpty(editedTank) &&
           <View style={styles.formContainer}>
@@ -391,6 +395,18 @@ export default function EditTank({ route, navigation }) {
 
 const styles = StyleSheet.create({
   background: {
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '100%',
+  },
+  header: {
+    alignSelf: 'stretch',
+    paddingLeft: theme.container.padding,
+    paddingRight: theme.container.padding * 2,
+    fontSize: 22,
+    color: theme.colors.lightText,
   },
   formContainer: {
     flex: 1,

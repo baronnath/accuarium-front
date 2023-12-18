@@ -18,15 +18,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.nathanlosabe.accuarium",
-      "buildNumber": "1.4"
+      "buildNumber": "1.6"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "versionCode": 12,
+      "versionCode": 13,
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.nathanlosabe.accuarium",
       "blockedPermissions": [

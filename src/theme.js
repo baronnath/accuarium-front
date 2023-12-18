@@ -52,7 +52,7 @@ export const theme = {
     surface: '#0f1419',
     // onSurface: '#FFFFFF',
     placeholder: color('#c5c6c7').alpha(0.54).rgb().string(),
-    disabled: color('#c5c6c7').alpha(0.26).rgb().string(),
+    disabled: color('#c5c6c7').alpha(0.6).rgb().string(),
     transparent: color('#000000').alpha(0).rgb().string(),
   },
   container: {
@@ -60,7 +60,7 @@ export const theme = {
     padding: 20,
   },
   bottomNav: {
-    height: 50,
+    height: 60,
   },
   roundness: 5,
 };
