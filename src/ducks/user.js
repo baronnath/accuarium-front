@@ -32,35 +32,39 @@ export const types = {
     AUTOLOGIN_ERROR: 'AUTOLOGIN_ERROR',
     LOGOUT_REQUEST: 'LOGOUT_REQUEST',
     LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
-	LOGOUT_ERROR: 'LOGOUT_ERROR',
+    LOGOUT_ERROR: 'LOGOUT_ERROR',
     SENDRESETEMAIL_REQUEST: 'SENDRESETEMAIL_REQUEST',
     SENDRESETEMAIL_SUCCESS: 'SENDRESETEMAIL_SUCCESS',
     SENDRESETEMAIL_ERROR: 'SENDRESETEMAIL_ERROR',
     RESET_REQUEST: 'RESET_REQUEST',
     RESET_SUCCESS: 'RESET_SUCCESS',
     RESET_ERROR: 'RESET_ERROR',
+    DELETE_REQUEST: 'DELETE_REQUEST',
+    DELETE_SUCCESS: 'DELETE_SUCCESS',
+    DELETE_ERROR: 'DELETE_ERROR',
 }
 
 // Reducers
 export default (state = defaultState, action) => {
-	switch(action.type){
+    switch(action.type){
         // Request
         case types.GETUSER_REQUEST:
-		case types.UPDATEUSER_REQUEST:
-		case types.REGISTER_REQUEST:
+        case types.UPDATEUSER_REQUEST:
+        case types.REGISTER_REQUEST:
         case types.VERIFY_REQUEST:
         case types.LOGIN_REQUEST:
         case types.AUTOLOGIN_REQUEST:
         case types.LOGOUT_REQUEST:
         case types.SENDRESETEMAIL_REQUEST:
         case types.RESET_REQUEST:
+        case types.DELETE_REQUEST:
             return { 
                 ...state,
                 isLoading: true,
             };
         // Error
         case types.GETUSER_ERROR:
-		case types.UPDATEUSER_ERROR:
+        case types.UPDATEUSER_ERROR:
         case types.REGISTER_ERROR:
         case types.VERIFY_ERROR:
         case types.LOGIN_ERROR:
@@ -68,10 +72,11 @@ export default (state = defaultState, action) => {
         case types.LOGOUT_ERROR:
         case types.SENDRESETEMAIL_ERROR:
         case types.RESET_ERROR:
+        case types.DELETE_ERROR:
             return {
                 ...state,
                 isLoading: false,
-            };
+            }
         // Success 
         case types.GETUSER_SUCCESS:
         case types.UPDATEUSER_SUCCESS:
@@ -88,12 +93,17 @@ export default (state = defaultState, action) => {
             }
         // Logout
         case types.LOGOUT_SUCCESS:
+        case types.DELETE_SUCCESS:
             return {
+                ...state,
                 isLoading: false,
-            };
-		default:
-			return state
-	}
+                data: {
+                    accessToken: null,
+                }
+            }
+        default:
+            return state
+    }
 }
 
 const defaultState = {
@@ -186,9 +196,9 @@ function logout(user) {
         axios.post(backend.url + '/user/logout', user)
             .then(async(res) => {
                 dispatch(success());
-                dispatch(alertActions.success(res.data.message, false));
                 await AsyncStorage.removeItem('user');
-                navigator.navigate('Login');
+                await setHeaders();
+                // dispatch(alertActions.success(res.data.message, false));
             })
             .catch(err => {
                 dispatch(error());
@@ -380,18 +390,27 @@ function resetPassword(user) {
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+function _delete(user) {
     return dispatch => {
-        dispatch(request(id));
 
-        userService.delete(id)
-            .then(
-                user => dispatch(success(id)),
-                error => dispatch(failure(id, error.toString()))
-            );
+        const params = {
+            email: user.email,
+        }
+
+        axios.delete(backend.url + '/user', {params: params })
+            .then(async(res) => {
+                dispatch(success());
+                await AsyncStorage.removeItem('user');
+                await setHeaders();
+                dispatch(alertActions.success(res.data.message, false));
+            })
+            .catch(err => {
+                dispatch(error());
+                handleAlert(err);
+            });
     };
 
     function request(id) { return { type: types.DELETE_REQUEST, id } }
     function success(id) { return { type: types.DELETE_SUCCESS, id } }
-    function failure(id, error) { return { type: types.DELETE_FAILURE, id, error } }
+    function error() { return { type: types.DELETE_ERROR } }
 }

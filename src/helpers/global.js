@@ -13,7 +13,8 @@ export function handleAlert(err){
   let message = i18n.t('server.connectionError');
   if(err.response != undefined){ // Errors with response comes from the api response
     message = err.response.data.message
-    if(err.response.data.error.statusCode >= 500) // Only critical errors
+    console.log(err)
+    if(err.response.data.error != undefined && err.response.data.error.statusCode >= 500) // Only critical errors
       Bugsnag.notify(err); 
   }
   else{

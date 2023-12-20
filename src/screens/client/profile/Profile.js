@@ -8,6 +8,7 @@ import helpers from '../../../helpers/helpers';
 import { backend } from '../../../../app.json';
 import { StyleSheet, View, Platform, TouchableOpacity} from 'react-native';
 import { Avatar, RadioButton } from 'react-native-paper';
+import UserDeleteModal from './UserDeleteModal';
 import Background from '../../../components/Background';
 import Header from '../../../components/Header';
 import Subheader from '../../../components/Subheader';
@@ -32,6 +33,7 @@ export default function Profile({ route, navigation }) {
   const [isUnitsDialogVisible, setUnitsDialogVisible] = useState(false);
   const [unit, setUnit] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const i18n = translator(editedUser.locale);
 
@@ -107,19 +109,19 @@ export default function Profile({ route, navigation }) {
    
   return (
     <Background justify="top" style={styles.background}>
-      { !helpers.isEmpty(editedUser) && 
-        <>
-          <Avatar.Text
-            size={100}
-            label={helpers.getInitials(editedUser.name)}
-            // color={theme.colors.surface}
-            labelStyle={styles.avatar}
-          />
-          <Header>
-            {helpers.ucFirst(editedUser.name)}
-          </Header>
+      { user.accessToken && !helpers.isEmpty(editedUser) && 
+        <View style={styles.container}>
+          <View style={{alignItems: 'center'}}>
+            <Avatar.Text
+              size={100}
+              label={helpers.getInitials(editedUser.name)}
+              // color={theme.colors.surface}
+              labelStyle={styles.avatar}
+            />
+            <Header>
+              {helpers.ucFirst(editedUser.name)}
+            </Header>
 
-          <View style={styles.container}>
             <View style={styles.row}>
               <Paragraph style={styles.leftSide}>{i18n.t('general.language')}</Paragraph>
               <Paragraph fontWeight='bold' style={styles.centerSide}>{editedUser.locale}</Paragraph>
@@ -198,20 +200,28 @@ export default function Profile({ route, navigation }) {
                 />
               </TouchableOpacity>
             </View>
-            
+          </View>
 
+          <View>
+            <Button
+              icon="account-remove-outline"
+              onPress={setDeleteModalVisible}
+              mode="outlined"
+              labelStyle={{color: theme.colors.warning}}
+            >
+              {i18n.t('general.delete')}
+            </Button>
             <Button
               icon="logout-variant"
               onPress={signOut}
               mode="outlined"
-              style={styles.logout}
             >
               {i18n.t('general.logout')}
             </Button>
             <Button onPress={onSubmit}>{i18n.t('general.save')}</Button>
           </View>
 
-        </>
+        </View>
       }
       
       <Dialog
@@ -273,6 +283,9 @@ export default function Profile({ route, navigation }) {
           </RadioButton.Group>
         }
       </Dialog>
+
+      <UserDeleteModal isVisible={isDeleteModalVisible} setVisible={setDeleteModalVisible} /> 
+
     </Background>
   );
 }
@@ -288,8 +301,10 @@ const styles = StyleSheet.create({
     flexDirection:'column',
   },
   container: {
-    flex: 1,
-    alignSelf: 'stretch',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   row: {
     flexDirection: 'row',

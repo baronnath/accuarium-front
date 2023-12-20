@@ -258,6 +258,12 @@ const es = {
       byTankCompatibility: 'compat. de tanque',
       byParams: 'párams.',
     },
+    user: {
+      deleteModal: {
+        title: '¿Estás seguro?',
+        description: 'No podrás revertir esto',
+      },
+    },
     tank: {
         litersSuccess: 'El volumen del tanque es %{liters}',
         alias: 'Nombre del tanque',

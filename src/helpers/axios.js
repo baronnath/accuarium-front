@@ -8,7 +8,7 @@ const ax = require('axios');
 // const https = require('https');
 
 export const axios = ax.default.create({
-	timeout: 1200, // 0.1sec
+	timeout: 600, // 0.1sec
 
 	// Keep alive pools and reuses TCP connections so it's faster
 	// httpAgget: new http.Agent({ keepAlive: true}),
@@ -19,9 +19,11 @@ export const axios = ax.default.create({
 })
 
 export const setHeaders = async (user) => {
-	if(!user) {
+	if(!user)
 		user = await AsyncStorage.getItem('user');
-	}
+	
+	if(!user)
+		return
 
 	const token = user.accessToken;
 	axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;

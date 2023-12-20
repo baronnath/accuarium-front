@@ -258,6 +258,12 @@ const en = {
       byTankCompatibility: 'by tank compat.',
       byParams: 'by params',
     },
+    user: {
+      deleteModal: {
+        title: 'Are you sure?',
+        description: 'You won\'t be able to revert this',
+      },
+    },
     tank: {
         litersSuccess: 'Your tank volume is %{liters}',
         alias: 'Tank alias',
